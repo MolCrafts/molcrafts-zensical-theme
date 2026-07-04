@@ -4,19 +4,23 @@ Shared Zensical theme extension for MolCrafts documentation sites.
 
 ## Install
 
-The theme is not on PyPI yet, so consuming sites cannot pin it as a normal
-dependency — install it into the same environment that builds the docs:
-
 ```bash
-pip install -e .
+pip install molcrafts-zensical-theme
 ```
 
-> **Note:** because there is no released package, a site's `zensical.toml` can
-> reference `theme.name = "molcrafts"` but its `pyproject.toml` cannot yet
-> declare the theme in a dependency group. Doc builds therefore depend on this
-> package being installed out-of-band (editable install, or once published, a
-> version/git pin). Publishing to PyPI would make doc builds reproducible from
-> a dependency group alone.
+Consuming sites should pin the theme in the dependency group that builds their
+docs so builds stay reproducible:
+
+```toml
+[dependency-groups]
+docs = [
+  "zensical>=0.0.45",
+  "molcrafts-zensical-theme>=0.1.0",
+]
+```
+
+For theme development, install the checkout in editable mode instead
+(`pip install -e .`).
 
 ## Use
 
