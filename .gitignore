@@ -1,0 +1,30 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pyre/
+.cache/
+.coverage
+htmlcov/
+
+# Packaging/build outputs
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Zensical build outputs
+site/
+examples/*/site/
+
+# Local environments and editor state
+.venv/
+venv/
+.env
+.env.*
+.DS_Store
+.idea/
+.vscode/

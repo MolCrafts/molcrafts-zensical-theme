@@ -1,0 +1,25 @@
+[project]
+site_name = "MolCrafts Theme"
+site_description = "Example site for the MolCrafts Zensical theme."
+site_author = "MolCrafts"
+site_url = "https://molcrafts.github.io/theme-example/"
+docs_dir = "docs"
+site_dir = "site"
+copyright = "Copyright &copy; 2026 MolCrafts"
+
+nav = [
+  { "Home" = "index.md" },
+  { "Components" = "components.md" },
+]
+
+[project.theme]
+name = "molcrafts"
+
+[project.extra.molcrafts]
+product = "molpy"
+accent = "#0284c7"
+accent_soft = "rgba(2, 132, 199, 0.14)"
+
+[[project.extra.social]]
+icon = "fontawesome/brands/github"
+link = "https://github.com/MolCrafts"

@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block styles %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ 'assets/stylesheets/molcrafts.css' | url }}">
+{% endblock %}
+
+{% block hero %}
+  {% if page.meta and page.meta.hero %}
+    {% set hero = page.meta.hero %}
+    <section class="molcrafts-home-hero" aria-labelledby="molcrafts-home-hero-title">
+      <div class="molcrafts-home-hero__inner md-grid">
+        <div class="molcrafts-home-hero__copy">
+          <p class="molcrafts-home-hero__kicker">Manual</p>
+          <h1 id="molcrafts-home-hero-title">{{ hero.title | d(config.site_name, true) }}</h1>
+          {% if hero.description %}
+            <p class="molcrafts-home-hero__description">{{ hero.description }}</p>
+          {% endif %}
+          {% if hero.actions %}
+            <nav class="molcrafts-home-hero__actions" aria-label="Primary">
+              {% for action in hero.actions %}
+                <a class="molcrafts-home-hero__button{% if action.style == 'primary' %} molcrafts-home-hero__button--primary{% endif %}" href="{{ action.href | url }}">
+                  <span>{{ action.label }}</span>
+                </a>
+              {% endfor %}
+            </nav>
+          {% endif %}
+        </div>
+        {% if hero.install or hero.badges %}
+          <aside class="molcrafts-home-hero__aside">
+            {% if hero.install %}
+              {% set cmd = hero.install.command | d(hero.install, true) %}
+              <div class="molcrafts-home-hero__install">
+                <span class="molcrafts-home-hero__install-label">{{ hero.install.label | d("Install", true) }}</span>
+                <div class="molcrafts-home-hero__install-row">
+                  <code>{{ cmd }}</code>
+                  <button class="molcrafts-home-hero__install-copy" type="button" data-molcrafts-copy="{{ cmd }}" aria-label="Copy install command">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                  </button>
+                </div>
+              </div>
+            {% endif %}
+            {% if hero.badges %}
+              <div class="molcrafts-home-hero__badges">
+                {% for badge in hero.badges %}
+                  <a href="{{ badge.href }}" target="_blank" rel="noopener">
+                    <img src="{{ badge.img }}" alt="{{ badge.alt | d('badge', true) }}" loading="lazy">
+                  </a>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </aside>
+          <script>
+            for (const btn of document.querySelectorAll(".molcrafts-home-hero__install-copy")) {
+              btn.addEventListener("click", function () {
+                navigator.clipboard.writeText(this.dataset.molcraftsCopy).then(() => {
+                  this.classList.add("molcrafts-home-hero__install-copy--done");
+                  setTimeout(() => this.classList.remove("molcrafts-home-hero__install-copy--done"), 1600);
+                });
+              });
+            }
+          </script>
+        {% endif %}
+      </div>
+    </section>
+  {% endif %}
+{% endblock %}
+
+{% block extrahead %}
+  {{ super() }}
+  <meta name="theme-color" content="#18432b">
+  {% if config.extra.molcrafts %}
+    {% set product = config.extra.molcrafts.product | d("", true) %}
+    {% set accent = config.extra.molcrafts.accent | d("", true) %}
+    {% set accent_soft = config.extra.molcrafts.accent_soft | d("", true) %}
+  {% endif %}
+  {% if product %}
+    <script>
+      document.documentElement.dataset.molcraftsProduct = "{{ product }}";
+    </script>
+  {% endif %}
+  {#
+    Per-product brand colours live in each product's zensical.toml
+    ([project.extra.molcrafts].accent / .accent_soft), not in this theme.
+    The theme only supplies the common palette/layout plus the default accent;
+    the two config values are injected below and override that default. When a
+    product sets accent_soft, it is used verbatim; otherwise it is derived from
+    the primary accent.
+  #}
+  {% if accent %}
+    <style>
+      {% if product %}html[data-molcrafts-product="{{ product }}"] body{% else %}[data-md-color-scheme="molcrafts"], [data-md-color-scheme="molcrafts-slate"]{% endif %} {
+        --molcrafts-product-accent: {{ accent }};
+        --molcrafts-product-accent-soft: {{ accent_soft | d("color-mix(in srgb, " ~ accent ~ " 14%, transparent)", true) }};
+      }
+    </style>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,908 @@
+:root {
+  --molcrafts-forest: #18432b;
+  --molcrafts-forest-light: #2a6744;
+  --molcrafts-forest-dark: #0e2b1b;
+  --molcrafts-cream: #fbf6e4;
+  --molcrafts-cream-soft: #fffaf0;
+  --molcrafts-sand: #f2da9d;
+  --molcrafts-sand-strong: #c8841d;
+  --molcrafts-ink: #14271d;
+  --molcrafts-muted: #657268;
+  --molcrafts-radius: 0.5rem;
+  --molcrafts-shadow: 0 0.55rem 1.6rem rgba(24, 67, 43, 0.12);
+}
+
+/*
+ * Per-product accent colours are NOT defined here. Each product declares its own
+ * primary (主) and secondary (副) accent in its own zensical.toml:
+ *
+ *   [project.extra.molcrafts]
+ *   product = "molpy"
+ *   accent = "#0284c7"
+ *   accent_soft = "rgba(2, 132, 199, 0.14)"
+ *
+ * main.html reads those two values and injects them as
+ * --molcrafts-product-accent / --molcrafts-product-accent-soft. This theme owns
+ * only the common palette below; the default accent (brand forest/sand) applies
+ * to any product that does not set its own.
+ *
+ * Colours the map previously assigned, for reference when wiring each product's
+ * config: molvis #7c3aed, molnex/molcfg #0f766e, molrec #c2410c,
+ * molexp/molmcp #4f46e5, mollog #0ea5e9, molq/molqrc #db2777.
+ */
+
+[data-md-color-scheme="molcrafts"] {
+  --molcrafts-product-accent: var(--molcrafts-forest);
+  --molcrafts-product-accent-soft: rgba(24, 67, 43, 0.12);
+  --md-default-fg-color: rgba(20, 39, 29, 0.92);
+  --md-default-fg-color--light: rgba(20, 39, 29, 0.66);
+  --md-default-fg-color--lighter: rgba(20, 39, 29, 0.42);
+  --md-default-fg-color--lightest: rgba(20, 39, 29, 0.18);
+  --md-default-bg-color: var(--molcrafts-cream);
+  --md-default-bg-color--light: rgba(251, 246, 228, 0.72);
+  --md-default-bg-color--lighter: rgba(251, 246, 228, 0.36);
+  --md-default-bg-color--lightest: rgba(251, 246, 228, 0.16);
+  --md-primary-fg-color: var(--molcrafts-forest);
+  --md-primary-fg-color--light: var(--molcrafts-forest-light);
+  --md-primary-fg-color--dark: var(--molcrafts-forest-dark);
+  --md-primary-bg-color: var(--molcrafts-cream);
+  --md-accent-fg-color: var(--molcrafts-sand-strong);
+  --md-accent-fg-color--transparent: rgba(200, 132, 29, 0.16);
+  --md-accent-bg-color: var(--molcrafts-ink);
+  --md-code-fg-color: #264136;
+  --md-code-bg-color: #f5ecd2;
+  --md-code-hl-color: rgba(242, 218, 157, 0.45);
+  --md-code-hl-number-color: #a15c09;
+  --md-code-hl-special-color: #0f766e;
+  --md-code-hl-function-color: #1d5f3a;
+  --md-code-hl-constant-color: #7c3aed;
+  --md-code-hl-keyword-color: #0b7285;
+  --md-code-hl-string-color: #2f7d46;
+  --md-code-hl-name-color: var(--molcrafts-ink);
+  --md-code-hl-operator-color: #4b6356;
+  --md-code-hl-punctuation-color: #4b6356;
+  --md-code-hl-comment-color: #7b857c;
+  --md-code-hl-generic-color: #4b6356;
+  --md-code-hl-variable-color: #8a5a14;
+  --md-typeset-a-color: #1f6b43;
+  --md-typeset-mark-color: rgba(242, 218, 157, 0.5);
+  --md-typeset-table-color: rgba(24, 67, 43, 0.14);
+  --md-typeset-kbd-color: #fffaf0;
+  --md-typeset-kbd-accent-color: #ead39a;
+  --md-typeset-kbd-border-color: #d4bb7c;
+  --md-admonition-fg-color: var(--molcrafts-ink);
+  --md-admonition-bg-color: #fffaf0;
+  --md-footer-bg-color: #153923;
+  --md-footer-bg-color--dark: #102c1b;
+  --md-footer-fg-color: rgba(251, 246, 228, 0.92);
+  --md-footer-fg-color--light: rgba(251, 246, 228, 0.72);
+  --md-footer-fg-color--lighter: rgba(251, 246, 228, 0.46);
+}
+
+[data-md-color-scheme="molcrafts-slate"] {
+  --md-hue: 148;
+  --molcrafts-product-accent: var(--molcrafts-sand);
+  --molcrafts-product-accent-soft: rgba(242, 218, 157, 0.14);
+  --md-default-fg-color: rgba(236, 242, 232, 0.88);
+  --md-default-fg-color--light: rgba(236, 242, 232, 0.64);
+  --md-default-fg-color--lighter: rgba(236, 242, 232, 0.38);
+  --md-default-fg-color--lightest: rgba(236, 242, 232, 0.16);
+  --md-default-bg-color: #101811;
+  --md-default-bg-color--light: rgba(16, 24, 17, 0.76);
+  --md-default-bg-color--lighter: rgba(16, 24, 17, 0.44);
+  --md-default-bg-color--lightest: rgba(16, 24, 17, 0.18);
+  --md-primary-fg-color: #2f7d50;
+  --md-primary-fg-color--light: #55a572;
+  --md-primary-fg-color--dark: #173d26;
+  --md-primary-bg-color: #fbf6e4;
+  --md-accent-fg-color: #f2da9d;
+  --md-accent-fg-color--transparent: rgba(242, 218, 157, 0.16);
+  --md-accent-bg-color: #101811;
+  --md-code-fg-color: #d8e2d8;
+  --md-code-bg-color: #14251a;
+  --md-code-hl-color: rgba(242, 218, 157, 0.18);
+  --md-code-hl-number-color: #f2c27c;
+  --md-code-hl-special-color: #7dd3c7;
+  --md-code-hl-function-color: #8ecfa0;
+  --md-code-hl-constant-color: #c4b5fd;
+  --md-code-hl-keyword-color: #8bd0e8;
+  --md-code-hl-string-color: #a6d98a;
+  --md-code-hl-name-color: #eef5ec;
+  --md-code-hl-operator-color: #9ead9f;
+  --md-code-hl-punctuation-color: #9ead9f;
+  --md-code-hl-comment-color: #7b8b7c;
+  --md-code-hl-generic-color: #9ead9f;
+  --md-code-hl-variable-color: #f2da9d;
+  --md-typeset-a-color: #8ecfa0;
+  --md-typeset-mark-color: rgba(242, 218, 157, 0.22);
+  --md-typeset-table-color: rgba(236, 242, 232, 0.14);
+  --md-typeset-kbd-color: #17271d;
+  --md-typeset-kbd-accent-color: #284733;
+  --md-typeset-kbd-border-color: #355c41;
+  --md-admonition-fg-color: #ecf2e8;
+  --md-admonition-bg-color: #142117;
+  --md-footer-bg-color: #0d2114;
+  --md-footer-bg-color--dark: #09170e;
+  --md-footer-fg-color: rgba(251, 246, 228, 0.92);
+  --md-footer-fg-color--light: rgba(251, 246, 228, 0.72);
+  --md-footer-fg-color--lighter: rgba(251, 246, 228, 0.46);
+}
+
+.md-header {
+  background: linear-gradient(90deg, var(--molcrafts-forest-dark), var(--molcrafts-forest));
+  color: var(--molcrafts-cream);
+  box-shadow: 0 0.15rem 0.6rem rgba(14, 43, 27, 0.18);
+}
+
+.md-header__button.md-logo {
+  margin: 0.2rem 0.25rem 0.2rem 0;
+  padding: 0.18rem;
+}
+
+.md-header__button.md-logo img,
+.md-nav__button.md-logo img {
+  height: 1.55rem;
+  padding: 0.1rem;
+  background: var(--molcrafts-cream);
+  border-radius: 0.4rem;
+}
+
+.md-header__topic,
+.md-tabs__link,
+.md-nav__title {
+  font-weight: 700;
+}
+
+.md-tabs {
+  background: color-mix(in srgb, var(--md-default-bg-color) 92%, var(--md-primary-fg-color));
+  border-bottom: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 18%, transparent);
+}
+
+.md-tabs__link {
+  opacity: 0.78;
+}
+
+.md-tabs__link--active,
+.md-tabs__link:is(:focus, :hover) {
+  color: var(--molcrafts-product-accent);
+  opacity: 1;
+}
+
+.md-main__inner {
+  margin-top: 1rem;
+}
+
+.md-grid {
+  max-width: 1320px;
+}
+
+.molcrafts-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.molcrafts-home-hero {
+  position: relative;
+  min-height: 25rem;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background:
+    linear-gradient(115deg, rgba(251, 246, 228, 0.98) 0%, rgba(251, 246, 228, 0.92) 42%, rgba(242, 218, 157, 0.24) 100%),
+    linear-gradient(90deg, rgba(24, 67, 43, 0.1) 0 1px, transparent 1px 100%),
+    linear-gradient(0deg, rgba(24, 67, 43, 0.08) 0 1px, transparent 1px 100%),
+    linear-gradient(135deg, rgba(24, 67, 43, 0.08), rgba(24, 67, 43, 0) 46%),
+    var(--md-default-bg-color);
+  background-size: auto, 4.4rem 4.4rem, 4.4rem 4.4rem, auto, auto;
+  border-bottom: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 16%, transparent);
+}
+
+[data-md-color-scheme="molcrafts-slate"] .molcrafts-home-hero {
+  background:
+    linear-gradient(115deg, rgba(16, 24, 17, 0.98) 0%, rgba(16, 24, 17, 0.92) 42%, rgba(47, 125, 80, 0.22) 100%),
+    linear-gradient(90deg, rgba(251, 246, 228, 0.08) 0 1px, transparent 1px 100%),
+    linear-gradient(0deg, rgba(251, 246, 228, 0.06) 0 1px, transparent 1px 100%),
+    linear-gradient(135deg, rgba(242, 218, 157, 0.08), rgba(242, 218, 157, 0) 46%),
+    var(--md-default-bg-color);
+  background-size: auto, 4.4rem 4.4rem, 4.4rem 4.4rem, auto, auto;
+}
+
+.molcrafts-home-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(110deg, transparent 0 48%, rgba(24, 67, 43, 0.08) 48% 48.35%, transparent 48.35% 100%),
+    linear-gradient(110deg, transparent 0 64%, rgba(24, 67, 43, 0.06) 64% 64.25%, transparent 64.25% 100%),
+    repeating-linear-gradient(110deg, transparent 0 1.4rem, rgba(24, 67, 43, 0.035) 1.4rem 1.45rem, transparent 1.45rem 3.9rem);
+  transform: translate3d(0, 0, 0);
+  animation: molcrafts-manual-drift 28s linear infinite;
+}
+
+.molcrafts-home-hero::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 5rem;
+  pointer-events: none;
+  background: linear-gradient(0deg, var(--md-default-bg-color), transparent);
+}
+
+@keyframes molcrafts-manual-drift {
+  from {
+    background-position: 0 0, 0 0, 0 0;
+  }
+
+  to {
+    background-position: 6rem 0, 8rem 0, 12rem 0;
+  }
+}
+
+.molcrafts-home-hero__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 4.6rem 1.6rem 4rem;
+}
+
+.molcrafts-home-hero__copy {
+  max-width: 42rem;
+}
+
+.molcrafts-home-hero__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  margin: 0 0 1.05rem;
+  color: var(--molcrafts-product-accent);
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.molcrafts-home-hero__kicker::before {
+  content: "";
+  width: 1.6rem;
+  height: 0.1rem;
+  background: currentColor;
+}
+
+.molcrafts-home-hero h1 {
+  margin: 0;
+  color: var(--md-default-fg-color);
+  font-size: 3.4rem;
+  font-weight: 850;
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+
+.molcrafts-home-hero__description {
+  max-width: 34rem;
+  margin: 1.25rem 0 0;
+  color: var(--md-default-fg-color--light);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.molcrafts-home-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1.65rem;
+}
+
+.molcrafts-home-hero__button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.35rem;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 28%, transparent);
+  border-radius: var(--molcrafts-radius);
+  color: var(--md-default-fg-color);
+  background: color-mix(in srgb, var(--md-default-bg-color) 78%, transparent);
+  font-size: 0.75rem;
+  font-weight: 800;
+  line-height: 1.2;
+  box-shadow: 0 0.45rem 1rem rgba(24, 67, 43, 0.08);
+  transition: color 160ms ease, border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
+}
+
+.molcrafts-home-hero__button::after {
+  content: "";
+  width: 0.42rem;
+  height: 0.42rem;
+  margin-left: 0.45rem;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  transform: rotate(45deg);
+}
+
+.molcrafts-home-hero__button--primary {
+  color: var(--md-primary-bg-color);
+  border-color: var(--md-primary-fg-color);
+  background: var(--md-primary-fg-color);
+}
+
+.molcrafts-home-hero__button:is(:focus, :hover) {
+  color: var(--molcrafts-product-accent);
+  border-color: var(--molcrafts-product-accent);
+  transform: translateY(-1px);
+}
+
+.molcrafts-home-hero__button--primary:is(:focus, :hover) {
+  color: var(--md-accent-bg-color);
+  background: var(--molcrafts-product-accent);
+}
+
+/* Optional right-hand hero aside: install command (one-click copy) + badges,
+   driven by hero.install / hero.badges front matter. */
+.molcrafts-home-hero__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2.5rem;
+}
+
+.molcrafts-home-hero__aside {
+  display: grid;
+  gap: 0.7rem;
+  min-width: 17rem;
+  max-width: 21rem;
+}
+
+.molcrafts-home-hero__install {
+  padding: 0.85rem 1rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--molcrafts-product-accent) 30%, transparent);
+  border-radius: var(--molcrafts-radius);
+  background: color-mix(in srgb, var(--md-default-bg-color) 74%, transparent);
+  box-shadow: 0 0.55rem 1.5rem rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(6px);
+}
+
+.molcrafts-home-hero__install-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--molcrafts-product-accent);
+  font-size: 0.62rem;
+  font-weight: 850;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.molcrafts-home-hero__install-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.molcrafts-home-hero__install-row code {
+  flex: 1;
+  padding: 0.5rem 0.62rem;
+  border-radius: 0.4rem;
+  background: color-mix(in srgb, var(--md-code-bg-color) 86%, transparent);
+  color: var(--md-code-fg-color);
+  font-family: var(--md-code-font);
+  font-size: 0.7rem;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+.molcrafts-home-hero__install-copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem;
+  border: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 26%, transparent);
+  border-radius: 0.4rem;
+  color: var(--md-default-fg-color--light);
+  background: transparent;
+  cursor: pointer;
+  transition: color 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.molcrafts-home-hero__install-copy:is(:focus, :hover) {
+  color: var(--molcrafts-product-accent);
+  border-color: var(--molcrafts-product-accent);
+  transform: translateY(-1px);
+}
+
+.molcrafts-home-hero__install-copy svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.molcrafts-home-hero__install-copy svg:last-child {
+  display: none;
+}
+
+.molcrafts-home-hero__install-copy--done svg:first-child {
+  display: none;
+}
+
+.molcrafts-home-hero__install-copy--done svg:last-child {
+  display: block;
+  color: var(--molcrafts-product-accent);
+}
+
+.molcrafts-home-hero__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.molcrafts-home-hero__badges img {
+  display: block;
+  height: 1.15rem;
+  border-radius: 0.2rem;
+}
+
+@media screen and (max-width: 68em) {
+  .molcrafts-home-hero__inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.6rem;
+  }
+
+  .molcrafts-home-hero__aside {
+    width: 100%;
+    max-width: 26rem;
+  }
+}
+
+/* Hero entrance: the copy rises in with a slight stagger on page load. The
+   ambient ::before drift is independent; both honour prefers-reduced-motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .molcrafts-home-hero__kicker,
+  .molcrafts-home-hero h1,
+  .molcrafts-home-hero__description,
+  .molcrafts-home-hero__actions,
+  .molcrafts-home-hero__aside {
+    animation: molcrafts-hero-rise 620ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  }
+
+  .molcrafts-home-hero h1 {
+    animation-delay: 90ms;
+  }
+
+  .molcrafts-home-hero__description {
+    animation-delay: 180ms;
+  }
+
+  .molcrafts-home-hero__actions {
+    animation-delay: 270ms;
+  }
+
+  .molcrafts-home-hero__aside {
+    animation-delay: 360ms;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .molcrafts-home-hero::before {
+    animation: none;
+  }
+}
+
+@keyframes molcrafts-hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.65rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3 {
+  color: var(--md-default-fg-color);
+  letter-spacing: 0;
+}
+
+.md-typeset h1 {
+  font-weight: 800;
+}
+
+.md-typeset h2 {
+  border-bottom: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 16%, transparent);
+}
+
+.md-typeset a {
+  text-underline-offset: 0.16em;
+}
+
+.md-typeset a:is(:focus, :hover) {
+  color: var(--molcrafts-product-accent);
+}
+
+.md-typeset .md-button {
+  border-radius: var(--molcrafts-radius);
+  font-weight: 700;
+}
+
+.md-typeset .md-button--primary {
+  background: var(--md-primary-fg-color);
+  border-color: var(--md-primary-fg-color);
+  color: var(--md-primary-bg-color);
+}
+
+.md-typeset .md-button:is(:focus, :hover) {
+  border-color: var(--molcrafts-product-accent);
+  color: var(--molcrafts-product-accent);
+}
+
+.md-typeset .md-button--primary:is(:focus, :hover) {
+  background: var(--molcrafts-product-accent);
+  color: var(--md-accent-bg-color);
+}
+
+.md-typeset code,
+.md-typeset pre,
+.md-typeset kbd {
+  border-radius: 0.4rem;
+}
+
+.md-typeset pre > code {
+  border: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 14%, transparent);
+}
+
+.md-typeset .admonition,
+.md-typeset details {
+  border-radius: var(--molcrafts-radius);
+  box-shadow: none;
+}
+
+.md-typeset .grid.cards > ul > li,
+.md-typeset .grid > .card {
+  border-color: color-mix(in srgb, var(--md-primary-fg-color) 14%, transparent);
+  border-radius: var(--molcrafts-radius);
+  box-shadow: none;
+}
+
+.md-typeset .grid.cards > ul > li:is(:focus-within, :hover),
+.md-typeset .grid > .card:is(:focus-within, :hover) {
+  border-color: color-mix(in srgb, var(--molcrafts-product-accent) 42%, transparent);
+  box-shadow: var(--molcrafts-shadow);
+}
+
+.md-typeset .molcrafts-manual-home {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 1.85rem 1.35rem 0;
+}
+
+.md-typeset .molcrafts-manual-section {
+  display: grid;
+  grid-template-columns: minmax(13rem, 0.42fr) minmax(0, 1fr);
+  gap: 1.2rem 2.4rem;
+  align-items: start;
+  margin: 0;
+  padding: 1.55rem 0;
+  border-top: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 14%, transparent);
+}
+
+.md-typeset .molcrafts-manual-section:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.md-typeset .molcrafts-manual-section__header {
+  position: sticky;
+  top: 4rem;
+}
+
+/* Compact sections carry a closing paragraph after the code/content, which
+   lands in column 1 row 2 — directly beneath the sticky header. When the
+   header pins on scroll it slides over that paragraph. Keep these headers in
+   normal flow so short intro sections never overlap their own body. */
+.md-typeset .molcrafts-manual-section--compact .molcrafts-manual-section__header {
+  position: static;
+}
+
+.md-typeset .molcrafts-manual-eyebrow {
+  display: block;
+  margin-bottom: 0.42rem;
+  color: var(--molcrafts-product-accent);
+  font-size: 0.62rem;
+  font-weight: 850;
+  letter-spacing: 0;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.md-typeset .molcrafts-manual-section__header h2 {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 1.35rem;
+  line-height: 1.22;
+}
+
+.md-typeset .molcrafts-manual-section__header p {
+  margin: 0.58rem 0 0;
+  color: var(--md-default-fg-color--light);
+  font-size: 0.78rem;
+  line-height: 1.62;
+}
+
+.md-typeset .molcrafts-manual-index {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border-top: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 16%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 16%, transparent);
+}
+
+.md-typeset .molcrafts-manual-index a {
+  display: grid;
+  grid-template-columns: 2.8rem minmax(9rem, 0.42fr) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.72rem 0;
+  border-top: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 10%, transparent);
+  color: var(--md-default-fg-color);
+  text-decoration: none;
+  transition: color 160ms ease, background-color 160ms ease, padding-left 160ms ease;
+}
+
+.md-typeset .molcrafts-manual-index a:first-child {
+  border-top: 0;
+}
+
+.md-typeset .molcrafts-manual-index a:is(:focus, :hover) {
+  padding-left: 0.45rem;
+  color: var(--molcrafts-product-accent);
+  background: var(--molcrafts-product-accent-soft);
+}
+
+.md-typeset .molcrafts-manual-index span {
+  color: var(--md-default-fg-color--lighter);
+  font-size: 0.66rem;
+  font-weight: 850;
+  line-height: 1.35;
+}
+
+.md-typeset .molcrafts-manual-index strong {
+  color: inherit;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.md-typeset .molcrafts-manual-index em {
+  color: var(--md-default-fg-color--light);
+  font-size: 0.68rem;
+  font-style: normal;
+  line-height: 1.5;
+}
+
+.md-typeset .molcrafts-workflow-list {
+  border-top: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 16%, transparent);
+}
+
+.md-typeset .molcrafts-workflow-list > article {
+  display: grid;
+  grid-template-columns: 7.2rem minmax(0, 1fr);
+  gap: 0.35rem 1rem;
+  min-width: 0;
+  padding: 0.95rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 12%, transparent);
+}
+
+.md-typeset .molcrafts-workflow-list__meta {
+  grid-row: 1 / span 3;
+  color: var(--md-default-fg-color--lighter);
+  font-size: 0.62rem;
+  font-weight: 850;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.md-typeset .molcrafts-workflow-list h3 {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.25;
+}
+
+.md-typeset .molcrafts-workflow-list p {
+  margin: 0;
+  color: var(--md-default-fg-color--light);
+  font-size: 0.68rem;
+  line-height: 1.52;
+}
+
+.md-typeset .molcrafts-workflow-list .highlight,
+.md-typeset .molcrafts-workflow-list pre {
+  margin: 0.38rem 0 0;
+}
+
+.md-typeset .molcrafts-workflow-list pre > code {
+  padding: 0.62rem;
+  border-left: 0.16rem solid color-mix(in srgb, var(--molcrafts-product-accent) 45%, transparent);
+  font-size: 0.6rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.md-typeset .molcrafts-feature-matrix {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+  border-top: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 16%, transparent);
+}
+
+.md-typeset .molcrafts-feature-matrix > div {
+  display: grid;
+  grid-template-columns: minmax(9.5rem, 0.34fr) minmax(0, 1fr);
+  gap: 1.2rem;
+  padding: 0.72rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 12%, transparent);
+}
+
+.md-typeset .molcrafts-feature-matrix dt {
+  color: var(--md-default-fg-color);
+  font-size: 0.74rem;
+  font-weight: 850;
+  line-height: 1.35;
+}
+
+.md-typeset .molcrafts-feature-matrix dd {
+  margin: 0;
+  color: var(--md-default-fg-color--light);
+  font-size: 0.67rem;
+  line-height: 1.5;
+}
+
+.md-typeset .molcrafts-doc-map {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2rem;
+  border-top: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 16%, transparent);
+}
+
+.md-typeset .molcrafts-doc-map section {
+  padding: 0.8rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 12%, transparent);
+}
+
+.md-typeset .molcrafts-doc-map h3 {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.md-typeset .molcrafts-doc-map p {
+  margin: 0.38rem 0 0;
+  color: var(--md-default-fg-color--light);
+  font-size: 0.68rem;
+  line-height: 1.5;
+}
+
+.md-search__form,
+.md-search__input,
+.md-search__output,
+.md-search-result__meta {
+  border-radius: var(--molcrafts-radius);
+}
+
+.md-nav__link:is(:focus, :hover),
+.md-nav__link--active {
+  color: var(--molcrafts-product-accent);
+}
+
+.md-footer {
+  margin-top: 2rem;
+}
+
+@media screen and (max-width: 76.2344em) {
+  .md-nav--primary .md-nav__title[for="__drawer"] {
+    background: var(--md-primary-fg-color);
+    color: var(--md-primary-bg-color);
+  }
+}
+
+@media screen and (max-width: 60em) {
+  .molcrafts-home-hero {
+    min-height: 24rem;
+    background:
+      linear-gradient(135deg, rgba(251, 246, 228, 0.98) 0%, rgba(251, 246, 228, 0.9) 56%, rgba(242, 218, 157, 0.2) 100%),
+      linear-gradient(90deg, rgba(24, 67, 43, 0.09) 0 1px, transparent 1px 100%),
+      linear-gradient(0deg, rgba(24, 67, 43, 0.07) 0 1px, transparent 1px 100%);
+    background-size: auto, 3.2rem 3.2rem, 3.2rem 3.2rem;
+  }
+
+  [data-md-color-scheme="molcrafts-slate"] .molcrafts-home-hero {
+    background:
+      linear-gradient(135deg, rgba(16, 24, 17, 0.98) 0%, rgba(16, 24, 17, 0.9) 56%, rgba(47, 125, 80, 0.2) 100%),
+      linear-gradient(90deg, rgba(251, 246, 228, 0.08) 0 1px, transparent 1px 100%),
+      linear-gradient(0deg, rgba(251, 246, 228, 0.06) 0 1px, transparent 1px 100%);
+    background-size: auto, 3.2rem 3.2rem, 3.2rem 3.2rem;
+  }
+
+  .molcrafts-home-hero__inner {
+    padding: 3.4rem 1rem 3.2rem;
+  }
+
+  .molcrafts-home-hero h1 {
+    font-size: 2.45rem;
+    line-height: 1.06;
+  }
+
+  .molcrafts-home-hero__description {
+    font-size: 0.88rem;
+  }
+
+  .md-typeset .molcrafts-manual-home {
+    padding: 1.55rem 1rem 0;
+  }
+
+  .md-typeset .molcrafts-manual-section {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.95rem;
+    padding: 1.35rem 0;
+  }
+
+  .md-typeset .molcrafts-manual-section__header {
+    position: static;
+  }
+
+  .md-typeset .molcrafts-manual-index a {
+    grid-template-columns: 2.6rem minmax(8rem, 0.42fr) minmax(0, 1fr);
+  }
+
+  .md-typeset .molcrafts-feature-matrix,
+  .md-typeset .molcrafts-doc-map {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media screen and (max-width: 36em) {
+  .molcrafts-home-hero {
+    min-height: 23rem;
+  }
+
+  .molcrafts-home-hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .molcrafts-home-hero__button {
+    justify-content: space-between;
+  }
+
+  .md-typeset .molcrafts-manual-home {
+    padding: 1.15rem 0.75rem 0;
+  }
+
+  .md-typeset .molcrafts-manual-section {
+    padding: 1.1rem 0;
+  }
+
+  .md-typeset .molcrafts-manual-section__header h2 {
+    font-size: 1.12rem;
+  }
+
+  .md-typeset .molcrafts-manual-index a,
+  .md-typeset .molcrafts-workflow-list > article,
+  .md-typeset .molcrafts-feature-matrix > div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .md-typeset .molcrafts-manual-index em,
+  .md-typeset .molcrafts-workflow-list__meta {
+    grid-row: auto;
+  }
+}
