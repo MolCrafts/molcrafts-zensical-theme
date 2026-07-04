@@ -213,4 +213,65 @@ compact table of contents for returning users.
 
 </section>
 
+<section class="molcrafts-manual-section molcrafts-manual-section--stack" markdown>
+
+<div class="molcrafts-manual-section__header" markdown>
+
+<span class="molcrafts-manual-eyebrow">Templates</span>
+
+## Three-column card grid
+
+The `--stack` frame gives content the full width, so a `molcrafts-manual-grid`
+with `--cols-3` has room to breathe. It steps down to two columns, then one, on
+narrower screens.
+
+</div>
+
+<div class="molcrafts-manual-grid molcrafts-manual-grid--cols-3">
+  <a href="components/">
+    <strong>Build</strong>
+    <em>Assemble systems from atoms, residues, and polymer parts.</em>
+  </a>
+  <a href="components/">
+    <strong>Type</strong>
+    <em>Assign OPLS-AA, GAFF, or custom SMARTS-based parameters.</em>
+  </a>
+  <a href="components/">
+    <strong>Export</strong>
+    <em>Write LAMMPS, GROMACS, PDB, XYZ, and HDF5 outputs.</em>
+  </a>
+</div>
+
+</section>
+
+<section class="molcrafts-manual-section" markdown>
+
+<div class="molcrafts-manual-section__header" markdown>
+
+<span class="molcrafts-manual-eyebrow">Templates</span>
+
+## Vertical list
+
+`molcrafts-manual-list` pairs a short label with a description and works inside
+the default two-column frame.
+
+</div>
+
+<div class="molcrafts-manual-list">
+  <a href="components/">
+    <strong>parser</strong>
+    <em>Turn SMILES, SMARTS, and BigSMILES strings into structures.</em>
+  </a>
+  <a href="components/">
+    <strong>builder</strong>
+    <em>Grow linear, branched, and cyclic polymers reproducibly.</em>
+  </a>
+  <a href="components/">
+    <strong>compute</strong>
+    <em>Run RDF, MSD, clustering, and neighbor-list analyses.</em>
+  </a>
+</div>
+
+</section>
+
 </div>

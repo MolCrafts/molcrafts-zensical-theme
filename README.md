@@ -99,6 +99,8 @@ are plain HTML with `markdown` where inner Markdown is wanted):
 |---|---|
 | `molcrafts-manual-section` | A titled row; pair with `molcrafts-manual-section__header` + `molcrafts-manual-eyebrow` |
 | `molcrafts-manual-index` | Numbered "find the right page" entry list (`<a><span>01</span><strong>…</strong><em>…</em></a>`) |
+| `molcrafts-manual-grid` | Responsive card grid; add `--cols-2` or `--cols-3` (see templates below) |
+| `molcrafts-manual-list` | Vertical row list of `label`/`description` pairs (lighter than `manual-index`) |
 | `molcrafts-workflow-list` | Side-labelled `<article>`s, each with a `molcrafts-workflow-list__meta` tag and a code block |
 | `molcrafts-feature-matrix` | Two-column `<dl>` of capability `<dt>`/`<dd>` pairs |
 | `molcrafts-doc-map` | Grid of `<section><h3>…</h3><p>…</p></section>` linking to nav areas |
@@ -106,6 +108,49 @@ are plain HTML with `markdown` where inner Markdown is wanted):
 
 See `examples/basic/docs/index.md` for a complete, copyable example, and the
 molpy / molpack `docs/index.md` for production use.
+
+### Section templates
+
+A section is built from two orthogonal, opt-in choices so a sub-manual picks a
+layout instead of relying on grid auto-placement. Pick a **frame** (how the
+titled block splits its label from its content) and drop a **content template**
+(how the items inside are arranged) into it.
+
+**Frames** — modifiers on `molcrafts-manual-section`:
+
+| Modifier | Layout |
+|---|---|
+| *(none)* | Two columns: a sticky label column beside the content |
+| `--compact` | Two columns with a static label; a trailing paragraph stacks under the label while the content (e.g. a code block) spans the second column |
+| `--stack` | Single column: eyebrow + title on top, content full width below — use to host wide content or a three-column grid |
+
+**Content templates** — drop one into a frame's body (or straight into
+`molcrafts-manual-home`):
+
+| Template | Arrangement |
+|---|---|
+| `molcrafts-manual-grid molcrafts-manual-grid--cols-2` | Two-column card grid → one column on narrow screens |
+| `molcrafts-manual-grid molcrafts-manual-grid--cols-3` | Three-column card grid → two, then one |
+| `molcrafts-manual-list` | Vertical list of rows |
+| `molcrafts-manual-index` | Numbered entry list |
+
+Each card / row is an `<a>` (link, with accent hover) or a `<div>`, holding a
+`<strong>` label and an `<em>` or `<p>` description. A three-column grid needs
+the room a `--stack` frame gives it:
+
+```html
+<section class="molcrafts-manual-section molcrafts-manual-section--stack" markdown>
+  <div class="molcrafts-manual-section__header" markdown>
+    <span class="molcrafts-manual-eyebrow">Capabilities</span>
+    ## What molpy gives you
+  </div>
+  <div class="molcrafts-manual-grid molcrafts-manual-grid--cols-3">
+    <a href="build/"><strong>Build</strong><em>Assemble systems from parts.</em></a>
+    <a href="type/"><strong>Type</strong><em>Assign force-field parameters.</em></a>
+    <a href="export/"><strong>Export</strong><em>Write LAMMPS, GROMACS, PDB.</em></a>
+  </div>
+</section>
+```
 
 ## Local Example
 
