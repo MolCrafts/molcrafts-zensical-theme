@@ -67,27 +67,39 @@ not have. It has two parts: a **hero** driven by page front-matter, and a set of
 
 Set a `hero` mapping in the home page's front-matter; the theme's `main.html`
 renders it above the content. Every field is optional except that a hero only
-renders when the `hero` key is present. The eyebrow above the title is always
-"Manual" — it is not configurable.
+renders when the `hero` key is present. The eyebrow above the title defaults to
+"Manual" and can be changed with `hero.kicker`.
 
 ```yaml
 ---
 title: molpack
 hide: [navigation, toc]
 hero:
+  kicker: Manual
   title: molpack                  # defaults to site_name if omitted
   description: One or two sentences of positioning.
   actions:                        # buttons; style "primary" fills, else outline
     - { label: Get started, href: getting_started/, style: primary }
     - { label: Guide, href: concepts/ }
-  install:                        # right-hand card with a copy button;
-    label: Install                #   plain string works too, shorthand
-    command: pip install molpack  #   for { command: … }
+  install:                        # right-hand card with copyable tabs
+    label: Install
+    methods:
+      - { label: pip, command: pip install molpack }
+      - { label: uv, command: uv add molpack }
+      - { label: source, command: pip install -e . }
   badges:                         # badge row under the install card
     - img: https://img.shields.io/pypi/v/molpack
       href: https://pypi.org/project/molpack/
       alt: PyPI version
 ---
+```
+
+For a single install command, the old shorthand still works:
+
+```yaml
+hero:
+  install:
+    command: pip install molpack
 ```
 
 ### Manual-home components (body)

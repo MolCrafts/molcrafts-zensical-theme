@@ -35,8 +35,8 @@
   --molcrafts-product-accent: var(--molcrafts-forest);
   --molcrafts-product-accent-soft: rgba(24, 67, 43, 0.12);
   --md-default-fg-color: rgba(20, 39, 29, 0.92);
-  --md-default-fg-color--light: rgba(20, 39, 29, 0.66);
-  --md-default-fg-color--lighter: rgba(20, 39, 29, 0.42);
+  --md-default-fg-color--light: rgba(20, 39, 29, 0.72);
+  --md-default-fg-color--lighter: rgba(20, 39, 29, 0.5);
   --md-default-fg-color--lightest: rgba(20, 39, 29, 0.18);
   --md-default-bg-color: var(--molcrafts-cream);
   --md-default-bg-color--light: rgba(251, 246, 228, 0.72);
@@ -84,8 +84,8 @@
   --molcrafts-product-accent: var(--molcrafts-sand);
   --molcrafts-product-accent-soft: rgba(242, 218, 157, 0.14);
   --md-default-fg-color: rgba(236, 242, 232, 0.88);
-  --md-default-fg-color--light: rgba(236, 242, 232, 0.64);
-  --md-default-fg-color--lighter: rgba(236, 242, 232, 0.38);
+  --md-default-fg-color--light: rgba(236, 242, 232, 0.7);
+  --md-default-fg-color--lighter: rgba(236, 242, 232, 0.48);
   --md-default-fg-color--lightest: rgba(236, 242, 232, 0.16);
   --md-default-bg-color: #101811;
   --md-default-bg-color--light: rgba(16, 24, 17, 0.76);
@@ -193,6 +193,7 @@
   min-height: 25rem;
   display: flex;
   align-items: center;
+  isolation: isolate;
   overflow: hidden;
   background:
     linear-gradient(115deg, rgba(251, 246, 228, 0.98) 0%, rgba(251, 246, 228, 0.92) 42%, rgba(242, 218, 157, 0.24) 100%),
@@ -225,6 +226,13 @@
     repeating-linear-gradient(110deg, transparent 0 1.4rem, rgba(24, 67, 43, 0.035) 1.4rem 1.45rem, transparent 1.45rem 3.9rem);
   transform: translate3d(0, 0, 0);
   animation: molcrafts-manual-drift 28s linear infinite;
+}
+
+[data-md-color-scheme="molcrafts-slate"] .molcrafts-home-hero::before {
+  background:
+    linear-gradient(110deg, transparent 0 48%, rgba(242, 218, 157, 0.07) 48% 48.35%, transparent 48.35% 100%),
+    linear-gradient(110deg, transparent 0 64%, rgba(242, 218, 157, 0.05) 64% 64.25%, transparent 64.25% 100%),
+    repeating-linear-gradient(110deg, transparent 0 1.4rem, rgba(251, 246, 228, 0.025) 1.4rem 1.45rem, transparent 1.45rem 3.9rem);
 }
 
 .molcrafts-home-hero::after {
@@ -277,13 +285,54 @@
   background: currentColor;
 }
 
+/*
+ * Hero title gradient. Auto-derived from the product's primary (主) accent
+ * `--molcrafts-product-accent`: a deepened shade → the accent → a light tint
+ * (the soft, 副, direction). Every product that sets an accent in its
+ * zensical.toml gets a gradient title for free — no per-product CSS.
+ *
+ * The stops are built with OKLCH relative-colour syntax (`oklch(from … l c h)`)
+ * so lightness moves while HUE and CHROMA stay put — the gradient stays vivid
+ * and on-hue instead of washing out the way an sRGB mix toward #fff/#000 does.
+ * The whole gradient is gated behind `@supports`; without relative-colour
+ * support the title falls back to the solid accent below (never invisible).
+ *
+ * A product that wants a bespoke multi-hue gradient (e.g. molpy) can still
+ * override `.molcrafts-home-hero h1` from its own extra_css, which loads after
+ * this file and, when scoped by product, wins on specificity.
+ */
 .molcrafts-home-hero h1 {
   margin: 0;
-  color: var(--md-default-fg-color);
+  color: var(--molcrafts-product-accent); /* fallback: solid accent title */
   font-size: 3.4rem;
   font-weight: 850;
   line-height: 1.05;
   letter-spacing: 0;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .molcrafts-home-hero h1 {
+    --molcrafts-title-grad-from: oklch(from var(--molcrafts-product-accent) clamp(0, calc(l - 0.16), 1) c h);
+    --molcrafts-title-grad-mid: var(--molcrafts-product-accent);
+    --molcrafts-title-grad-to: oklch(from var(--molcrafts-product-accent) clamp(0, calc(l + 0.22), 0.95) c h);
+    background: linear-gradient(
+      100deg,
+      var(--molcrafts-title-grad-from) 0%,
+      var(--molcrafts-title-grad-mid) 48%,
+      var(--molcrafts-title-grad-to) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Dark scheme reuses the same injected product accent, so lift every stop's
+     lightness to keep the title luminous against the slate background. */
+  [data-md-color-scheme="molcrafts-slate"] .molcrafts-home-hero h1 {
+    --molcrafts-title-grad-from: oklch(from var(--molcrafts-product-accent) clamp(0, calc(l + 0.06), 1) c h);
+    --molcrafts-title-grad-mid: oklch(from var(--molcrafts-product-accent) clamp(0, calc(l + 0.20), 1) c h);
+    --molcrafts-title-grad-to: oklch(from var(--molcrafts-product-accent) clamp(0, calc(l + 0.34), 0.96) c h);
+  }
 }
 
 .molcrafts-home-hero__description {
@@ -355,28 +404,90 @@
 
 .molcrafts-home-hero__aside {
   display: grid;
-  gap: 0.7rem;
-  min-width: 17rem;
-  max-width: 21rem;
+  gap: 0.72rem;
+  min-width: 18.5rem;
+  max-width: 23rem;
+}
+
+.molcrafts-home-hero__aside::before {
+  content: "";
+  display: block;
+  height: 6.4rem;
+  border: 1px solid color-mix(in srgb, var(--molcrafts-product-accent) 24%, transparent);
+  border-radius: var(--molcrafts-radius);
+  background:
+    radial-gradient(circle at 18% 34%, var(--molcrafts-product-accent) 0 0.2rem, transparent 0.22rem),
+    radial-gradient(circle at 42% 62%, color-mix(in srgb, var(--molcrafts-product-accent) 72%, var(--md-default-bg-color)) 0 0.16rem, transparent 0.18rem),
+    radial-gradient(circle at 67% 32%, color-mix(in srgb, var(--molcrafts-product-accent) 58%, var(--md-default-bg-color)) 0 0.18rem, transparent 0.2rem),
+    radial-gradient(circle at 82% 68%, var(--molcrafts-product-accent) 0 0.17rem, transparent 0.19rem),
+    linear-gradient(24deg, transparent 0 31%, color-mix(in srgb, var(--molcrafts-product-accent) 28%, transparent) 31% 32%, transparent 32% 100%),
+    linear-gradient(148deg, transparent 0 42%, color-mix(in srgb, var(--molcrafts-product-accent) 24%, transparent) 42% 43%, transparent 43% 100%),
+    linear-gradient(90deg, color-mix(in srgb, var(--md-default-bg-color) 76%, transparent), color-mix(in srgb, var(--molcrafts-product-accent-soft) 68%, transparent));
+  box-shadow: 0 0.55rem 1.4rem rgba(0, 0, 0, 0.06);
+  opacity: 0.96;
 }
 
 .molcrafts-home-hero__install {
   padding: 0.85rem 1rem 1rem;
   border: 1px solid color-mix(in srgb, var(--molcrafts-product-accent) 30%, transparent);
   border-radius: var(--molcrafts-radius);
-  background: color-mix(in srgb, var(--md-default-bg-color) 74%, transparent);
+  background: color-mix(in srgb, var(--md-default-bg-color) 86%, transparent);
   box-shadow: 0 0.55rem 1.5rem rgba(0, 0, 0, 0.08);
   backdrop-filter: blur(6px);
 }
 
 .molcrafts-home-hero__install-label {
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.45rem;
   color: var(--molcrafts-product-accent);
   font-size: 0.62rem;
   font-weight: 850;
   line-height: 1.2;
   text-transform: uppercase;
+}
+
+.molcrafts-home-hero__install-tabs {
+  display: inline-flex;
+  gap: 0.18rem;
+  max-width: 100%;
+  margin-bottom: 0.58rem;
+  padding: 0.14rem;
+  border: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 14%, transparent);
+  border-radius: 0.42rem;
+  background: color-mix(in srgb, var(--md-default-bg-color) 64%, transparent);
+  overflow-x: auto;
+}
+
+.molcrafts-home-hero__install-tab {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.55rem;
+  padding: 0.3rem 0.5rem;
+  border: 0;
+  border-radius: 0.3rem;
+  color: var(--md-default-fg-color--light);
+  background: transparent;
+  font: inherit;
+  font-size: 0.62rem;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 160ms ease, background-color 160ms ease;
+}
+
+.molcrafts-home-hero__install-tab:is(:focus, :hover) {
+  color: var(--molcrafts-product-accent);
+}
+
+.molcrafts-home-hero__install-tab--active {
+  color: var(--molcrafts-product-accent);
+  background: var(--molcrafts-product-accent-soft);
+}
+
+.molcrafts-home-hero__install-panel[hidden] {
+  display: none;
 }
 
 .molcrafts-home-hero__install-row {
@@ -562,8 +673,59 @@
 
 .md-typeset .admonition,
 .md-typeset details {
+  border: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 12%, transparent);
+  border-left: 0.18rem solid var(--molcrafts-product-accent);
+  border-radius: var(--molcrafts-radius);
+  background: color-mix(in srgb, var(--md-admonition-bg-color) 88%, var(--molcrafts-product-accent-soft));
+  box-shadow: none;
+}
+
+.md-typeset .admonition-title,
+.md-typeset summary {
+  background: transparent;
+}
+
+.md-typeset .admonition-title {
+  border-bottom: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 10%, transparent);
+}
+
+.md-typeset table:not([class]) {
+  border: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 14%, transparent);
   border-radius: var(--molcrafts-radius);
   box-shadow: none;
+}
+
+.md-typeset table:not([class]) th {
+  background: color-mix(in srgb, var(--molcrafts-product-accent-soft) 72%, var(--md-default-bg-color));
+  color: var(--md-default-fg-color);
+}
+
+.md-typeset table:not([class]) td,
+.md-typeset table:not([class]) th {
+  border-color: color-mix(in srgb, var(--md-primary-fg-color) 12%, transparent);
+}
+
+.md-typeset .tabbed-labels {
+  border-bottom: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 16%, transparent);
+}
+
+.md-typeset .tabbed-labels > label {
+  color: var(--md-default-fg-color--light);
+  font-weight: 700;
+  transition: color 160ms ease;
+}
+
+.md-typeset .tabbed-labels > label:is(:focus, :hover) {
+  color: var(--molcrafts-product-accent);
+}
+
+.md-typeset .tabbed-set:has(> input:nth-child(1):checked) .tabbed-labels > label:nth-child(1),
+.md-typeset .tabbed-set:has(> input:nth-child(2):checked) .tabbed-labels > label:nth-child(2),
+.md-typeset .tabbed-set:has(> input:nth-child(3):checked) .tabbed-labels > label:nth-child(3),
+.md-typeset .tabbed-set:has(> input:nth-child(4):checked) .tabbed-labels > label:nth-child(4),
+.md-typeset .tabbed-set:has(> input:nth-child(5):checked) .tabbed-labels > label:nth-child(5),
+.md-typeset .tabbed-set:has(> input:nth-child(6):checked) .tabbed-labels > label:nth-child(6) {
+  color: var(--molcrafts-product-accent);
 }
 
 .md-typeset .grid.cards > ul > li,
@@ -586,6 +748,7 @@
 }
 
 .md-typeset .molcrafts-manual-section {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(13rem, 0.42fr) minmax(0, 1fr);
   gap: 1.2rem 2.4rem;
@@ -593,6 +756,18 @@
   margin: 0;
   padding: 1.55rem 0;
   border-top: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 14%, transparent);
+}
+
+.md-typeset .molcrafts-manual-section:not(:first-child)::before {
+  content: "";
+  position: absolute;
+  top: 1.55rem;
+  left: -0.78rem;
+  width: 0.16rem;
+  height: 2.45rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--molcrafts-product-accent), transparent);
+  opacity: 0.78;
 }
 
 .md-typeset .molcrafts-manual-section:first-child {
@@ -648,7 +823,7 @@
 .md-typeset .molcrafts-manual-section__header p {
   margin: 0.58rem 0 0;
   color: var(--md-default-fg-color--light);
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   line-height: 1.62;
 }
 
@@ -696,7 +871,7 @@
 
 .md-typeset .molcrafts-manual-index em {
   color: var(--md-default-fg-color--light);
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   font-style: normal;
   line-height: 1.5;
 }
@@ -732,7 +907,7 @@
 .md-typeset .molcrafts-workflow-list p {
   margin: 0;
   color: var(--md-default-fg-color--light);
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   line-height: 1.52;
 }
 
@@ -775,7 +950,7 @@
 .md-typeset .molcrafts-feature-matrix dd {
   margin: 0;
   color: var(--md-default-fg-color--light);
-  font-size: 0.67rem;
+  font-size: 0.69rem;
   line-height: 1.5;
 }
 
@@ -800,7 +975,7 @@
 .md-typeset .molcrafts-doc-map p {
   margin: 0.38rem 0 0;
   color: var(--md-default-fg-color--light);
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   line-height: 1.5;
 }
 
@@ -860,17 +1035,19 @@
   border: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 14%, transparent);
   border-radius: var(--molcrafts-radius);
   color: var(--md-default-fg-color);
+  background: color-mix(in srgb, var(--md-default-bg-color) 82%, transparent);
   text-decoration: none;
 }
 
 .md-typeset .molcrafts-manual-grid > a {
-  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease, transform 160ms ease;
 }
 
 .md-typeset .molcrafts-manual-grid > a:is(:focus, :hover) {
   border-color: color-mix(in srgb, var(--molcrafts-product-accent) 42%, transparent);
   background: var(--molcrafts-product-accent-soft);
   color: var(--molcrafts-product-accent);
+  transform: translateY(-1px);
 }
 
 .md-typeset .molcrafts-manual-grid strong {
@@ -885,7 +1062,7 @@
   display: block;
   margin: 0.3rem 0 0;
   color: var(--md-default-fg-color--light);
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-style: normal;
   line-height: 1.5;
 }
@@ -946,6 +1123,10 @@
   color: var(--molcrafts-product-accent);
 }
 
+.md-nav--secondary .md-nav__title {
+  color: var(--md-default-fg-color);
+}
+
 .md-footer {
   margin-top: 2rem;
 }
@@ -959,7 +1140,7 @@
 
 @media screen and (max-width: 60em) {
   .molcrafts-home-hero {
-    min-height: 24rem;
+    min-height: auto;
     background:
       linear-gradient(135deg, rgba(251, 246, 228, 0.98) 0%, rgba(251, 246, 228, 0.9) 56%, rgba(242, 218, 157, 0.2) 100%),
       linear-gradient(90deg, rgba(24, 67, 43, 0.09) 0 1px, transparent 1px 100%),
@@ -976,7 +1157,8 @@
   }
 
   .molcrafts-home-hero__inner {
-    padding: 3.4rem 1rem 3.2rem;
+    gap: 1.25rem;
+    padding: 3rem 1rem 2.6rem;
   }
 
   .molcrafts-home-hero h1 {
@@ -986,6 +1168,14 @@
 
   .molcrafts-home-hero__description {
     font-size: 0.88rem;
+  }
+
+  .molcrafts-home-hero__aside {
+    gap: 0.55rem;
+  }
+
+  .molcrafts-home-hero__aside::before {
+    height: 4.8rem;
   }
 
   .md-typeset .molcrafts-manual-home {
@@ -1036,16 +1226,42 @@
 
 @media screen and (max-width: 36em) {
   .molcrafts-home-hero {
-    min-height: 23rem;
+    min-height: auto;
+  }
+
+  .molcrafts-home-hero__inner {
+    padding: 2.2rem 0.75rem 2.1rem;
+  }
+
+  .molcrafts-home-hero h1 {
+    font-size: 2.25rem;
+  }
+
+  .molcrafts-home-hero__description {
+    margin-top: 0.85rem;
   }
 
   .molcrafts-home-hero__actions {
     flex-direction: column;
     align-items: stretch;
+    gap: 0.48rem;
+    margin-top: 1.15rem;
   }
 
   .molcrafts-home-hero__button {
     justify-content: space-between;
+  }
+
+  .molcrafts-home-hero__aside::before {
+    display: none;
+  }
+
+  .molcrafts-home-hero__install {
+    padding: 0.72rem;
+  }
+
+  .molcrafts-home-hero__install-row code {
+    font-size: 0.66rem;
   }
 
   .md-typeset .molcrafts-manual-home {
@@ -1054,6 +1270,10 @@
 
   .md-typeset .molcrafts-manual-section {
     padding: 1.1rem 0;
+  }
+
+  .md-typeset .molcrafts-manual-section::before {
+    left: -0.42rem;
   }
 
   .md-typeset .molcrafts-manual-section__header h2 {
