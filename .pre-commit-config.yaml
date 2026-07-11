@@ -1,12 +1,8 @@
 # Pre-commit hooks for molcrafts-zensical-theme.
 #
-# Two layers:
-#   pre-commit  -> fast file-hygiene checks (run on every commit)
-#   pre-push    -> full CI-parity gate: build + twine check + example builds
-#                  (mirrors .github/workflows/ci.yml, runs on every push)
-#
-# Install both hook types with:  pre-commit install --install-hooks
-default_install_hook_types: [pre-commit, pre-push]
+# Run all local checks through pre-commit. Distribution and example-site builds
+# are verified independently by .github/workflows/ci.yml.
+default_install_hook_types: [pre-commit]
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -19,13 +15,3 @@ repos:
       - id: check-merge-conflict
       - id: check-case-conflict
       - id: check-added-large-files
-
-  - repo: local
-    hooks:
-      - id: ci-parity
-        name: CI parity (build + twine check + example site builds)
-        entry: scripts/ci-local.sh
-        language: system
-        pass_filenames: false
-        always_run: true
-        stages: [pre-push]

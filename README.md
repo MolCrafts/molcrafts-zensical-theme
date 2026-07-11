@@ -56,6 +56,10 @@ tabs, section indexes, instant navigation, code-copy controls, search
 highlighting and suggestions, and TOC following. Consuming sites should not
 re-list these `features`/`palette` in their own `zensical.toml` — the theme
 already supplies them, and an inline list only risks drifting from the defaults.
+For a normal documentation site, setting `name = "molcrafts"` is the complete
+visual setup: typography, both color modes, component colors, and navigation
+behavior are owned by the theme. Product accent settings and the home-page
+components below are optional customization, not required theme tokens.
 
 ## Home page
 

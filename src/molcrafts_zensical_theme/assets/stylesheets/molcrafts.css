@@ -8,8 +8,18 @@
   --molcrafts-sand-strong: #c8841d;
   --molcrafts-ink: #14271d;
   --molcrafts-muted: #657268;
-  --molcrafts-radius: 0.5rem;
-  --molcrafts-shadow: 0 0.55rem 1.6rem rgba(24, 67, 43, 0.12);
+  /* Print-manual radius: tight corners, never blob-y SaaS. */
+  --molcrafts-radius-sm: 0.28rem;
+  --molcrafts-radius: 0.4rem;
+  --molcrafts-radius-lg: 0.55rem;
+  --molcrafts-shadow-sm: 0 0.08rem 0.28rem rgba(24, 67, 43, 0.05);
+  --molcrafts-shadow: 0 0.35rem 0.95rem rgba(24, 67, 43, 0.08);
+  --molcrafts-shadow-lg: 0 0.65rem 1.55rem rgba(24, 67, 43, 0.11);
+  --molcrafts-rule: color-mix(in srgb, var(--md-primary-fg-color) 14%, transparent);
+  --molcrafts-rule-strong: color-mix(in srgb, var(--md-primary-fg-color) 22%, transparent);
+  --molcrafts-paper: color-mix(in srgb, var(--md-default-bg-color) 88%, #fff);
+  --molcrafts-paper-elevated: color-mix(in srgb, var(--md-default-bg-color) 72%, #fff);
+  --molcrafts-focus-ring: 0 0 0 2px var(--md-default-bg-color), 0 0 0 4px var(--molcrafts-product-accent);
 }
 
 /*
@@ -31,13 +41,23 @@
  * molexp/molmcp #4f46e5, mollog #0ea5e9, molq/molqrc #db2777.
  */
 
-[data-md-color-scheme="molcrafts"] {
+/*
+ * Use Zensical's standard scheme names so all of its light/dark component
+ * semantics apply automatically. The legacy names remain supported for pages
+ * with a palette choice cached before this theme switched to default/slate.
+ */
+:is([data-md-color-scheme="default"], [data-md-color-scheme="molcrafts"]) {
   --molcrafts-product-accent: var(--molcrafts-forest);
   --molcrafts-product-accent-soft: rgba(24, 67, 43, 0.12);
+  --molcrafts-paper: #fffdf6;
+  --molcrafts-paper-elevated: #fffaf0;
+  --molcrafts-shadow-sm: 0 0.08rem 0.28rem rgba(24, 67, 43, 0.05);
+  --molcrafts-shadow: 0 0.35rem 0.95rem rgba(24, 67, 43, 0.08);
+  --molcrafts-shadow-lg: 0 0.65rem 1.55rem rgba(24, 67, 43, 0.11);
   --md-default-fg-color: rgba(20, 39, 29, 0.92);
-  --md-default-fg-color--light: rgba(20, 39, 29, 0.72);
-  --md-default-fg-color--lighter: rgba(20, 39, 29, 0.5);
-  --md-default-fg-color--lightest: rgba(20, 39, 29, 0.18);
+  --md-default-fg-color--light: rgba(20, 39, 29, 0.7);
+  --md-default-fg-color--lighter: rgba(20, 39, 29, 0.48);
+  --md-default-fg-color--lightest: rgba(20, 39, 29, 0.16);
   --md-default-bg-color: var(--molcrafts-cream);
   --md-default-bg-color--light: rgba(251, 246, 228, 0.72);
   --md-default-bg-color--lighter: rgba(251, 246, 228, 0.36);
@@ -50,7 +70,9 @@
   --md-accent-fg-color--transparent: rgba(200, 132, 29, 0.16);
   --md-accent-bg-color: var(--molcrafts-ink);
   --md-code-fg-color: #264136;
-  --md-code-bg-color: #f5ecd2;
+  --md-code-bg-color: #f3e9cb;
+  --md-code-bg-color--light: rgba(243, 233, 203, 0.9);
+  --md-code-bg-color--lighter: rgba(243, 233, 203, 0.54);
   --md-code-hl-color: rgba(242, 218, 157, 0.45);
   --md-code-hl-number-color: #a15c09;
   --md-code-hl-special-color: #0f766e;
@@ -65,8 +87,10 @@
   --md-code-hl-generic-color: #4b6356;
   --md-code-hl-variable-color: #8a5a14;
   --md-typeset-a-color: #1f6b43;
+  --md-typeset-color: var(--md-default-fg-color);
   --md-typeset-mark-color: rgba(242, 218, 157, 0.5);
   --md-typeset-table-color: rgba(24, 67, 43, 0.14);
+  --md-typeset-table-color--light: rgba(24, 67, 43, 0.035);
   --md-typeset-kbd-color: #fffaf0;
   --md-typeset-kbd-accent-color: #ead39a;
   --md-typeset-kbd-border-color: #d4bb7c;
@@ -77,16 +101,24 @@
   --md-footer-fg-color: rgba(251, 246, 228, 0.92);
   --md-footer-fg-color--light: rgba(251, 246, 228, 0.72);
   --md-footer-fg-color--lighter: rgba(251, 246, 228, 0.46);
+  color-scheme: light;
 }
 
-[data-md-color-scheme="molcrafts-slate"] {
+:is([data-md-color-scheme="slate"], [data-md-color-scheme="molcrafts-slate"]) {
   --md-hue: 148;
   --molcrafts-product-accent: var(--molcrafts-sand);
   --molcrafts-product-accent-soft: rgba(242, 218, 157, 0.14);
-  --md-default-fg-color: rgba(236, 242, 232, 0.88);
-  --md-default-fg-color--light: rgba(236, 242, 232, 0.7);
-  --md-default-fg-color--lighter: rgba(236, 242, 232, 0.48);
-  --md-default-fg-color--lightest: rgba(236, 242, 232, 0.16);
+  --molcrafts-paper: #141c15;
+  --molcrafts-paper-elevated: #182119;
+  --molcrafts-shadow-sm: 0 0.08rem 0.28rem rgba(0, 0, 0, 0.22);
+  --molcrafts-shadow: 0 0.4rem 1.05rem rgba(0, 0, 0, 0.28);
+  --molcrafts-shadow-lg: 0 0.75rem 1.7rem rgba(0, 0, 0, 0.34);
+  --molcrafts-rule: color-mix(in srgb, var(--md-default-fg-color) 12%, transparent);
+  --molcrafts-rule-strong: color-mix(in srgb, var(--md-default-fg-color) 18%, transparent);
+  --md-default-fg-color: rgba(236, 242, 232, 0.9);
+  --md-default-fg-color--light: rgba(236, 242, 232, 0.68);
+  --md-default-fg-color--lighter: rgba(236, 242, 232, 0.46);
+  --md-default-fg-color--lightest: rgba(236, 242, 232, 0.14);
   --md-default-bg-color: #101811;
   --md-default-bg-color--light: rgba(16, 24, 17, 0.76);
   --md-default-bg-color--lighter: rgba(16, 24, 17, 0.44);
@@ -100,6 +132,8 @@
   --md-accent-bg-color: #101811;
   --md-code-fg-color: #d8e2d8;
   --md-code-bg-color: #14251a;
+  --md-code-bg-color--light: rgba(20, 37, 26, 0.9);
+  --md-code-bg-color--lighter: rgba(20, 37, 26, 0.54);
   --md-code-hl-color: rgba(242, 218, 157, 0.18);
   --md-code-hl-number-color: #f2c27c;
   --md-code-hl-special-color: #7dd3c7;
@@ -114,8 +148,10 @@
   --md-code-hl-generic-color: #9ead9f;
   --md-code-hl-variable-color: #f2da9d;
   --md-typeset-a-color: #8ecfa0;
+  --md-typeset-color: var(--md-default-fg-color);
   --md-typeset-mark-color: rgba(242, 218, 157, 0.22);
   --md-typeset-table-color: rgba(236, 242, 232, 0.14);
+  --md-typeset-table-color--light: rgba(236, 242, 232, 0.035);
   --md-typeset-kbd-color: #17271d;
   --md-typeset-kbd-accent-color: #284733;
   --md-typeset-kbd-border-color: #355c41;
@@ -126,12 +162,33 @@
   --md-footer-fg-color: rgba(251, 246, 228, 0.92);
   --md-footer-fg-color--light: rgba(251, 246, 228, 0.72);
   --md-footer-fg-color--lighter: rgba(251, 246, 228, 0.46);
+  --md-shadow-z1: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.12), 0 0 0.05rem rgba(255, 255, 255, 0.1);
+  --md-shadow-z2: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.25), 0 0 0.05rem rgba(255, 255, 255, 0.22);
+  --md-shadow-z3: 0 0.5rem 2rem rgba(0, 0, 0, 0.4), 0 0 0.05rem rgba(0, 0, 0, 0.35);
+  --color-foreground: 236 242 232;
+  --color-background: 16 24 17;
+  --color-background-subtle: 20 33 23;
+  --color-backdrop: 9 15 10;
+  color-scheme: dark;
+}
+
+:is([data-md-color-scheme="slate"], [data-md-color-scheme="molcrafts-slate"]) .md-header__title,
+:is([data-md-color-scheme="slate"], [data-md-color-scheme="molcrafts-slate"]) :is(h1, h2, h3, h4, h5, h6) {
+  color: #f4f8f2;
+}
+
+:is([data-md-color-scheme="default"], [data-md-color-scheme="molcrafts"]) img:is([src$="#gh-dark-mode-only"], [src$="#only-dark"]),
+:is([data-md-color-scheme="slate"], [data-md-color-scheme="molcrafts-slate"]) img:is([src$="#gh-light-mode-only"], [src$="#only-light"]) {
+  display: none;
 }
 
 .md-header {
-  background: linear-gradient(90deg, var(--molcrafts-forest-dark), var(--molcrafts-forest));
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 55%),
+    linear-gradient(90deg, var(--molcrafts-forest-dark), var(--molcrafts-forest) 62%, var(--molcrafts-forest-light));
   color: var(--molcrafts-cream);
-  box-shadow: 0 0.15rem 0.6rem rgba(14, 43, 27, 0.18);
+  box-shadow: 0 0.12rem 0.45rem rgba(14, 43, 27, 0.16);
+  border-bottom: 1px solid rgba(14, 43, 27, 0.35);
 }
 
 .md-header__button.md-logo {
@@ -144,22 +201,30 @@
   height: 1.55rem;
   padding: 0.1rem;
   background: var(--molcrafts-cream);
-  border-radius: 0.4rem;
+  border-radius: var(--molcrafts-radius-sm);
+  box-shadow: inset 0 0 0 1px rgba(24, 67, 43, 0.08);
 }
 
 .md-header__topic,
 .md-tabs__link,
 .md-nav__title {
   font-weight: 700;
+  letter-spacing: 0.01em;
 }
 
 .md-tabs {
-  background: color-mix(in srgb, var(--md-default-bg-color) 92%, var(--md-primary-fg-color));
-  border-bottom: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 18%, transparent);
+  background: color-mix(in srgb, var(--md-default-bg-color) 94%, var(--md-primary-fg-color));
+  border-bottom: 1px solid var(--molcrafts-rule-strong);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 35%, transparent);
+}
+
+:is([data-md-color-scheme="slate"], [data-md-color-scheme="molcrafts-slate"]) .md-tabs {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 .md-tabs__link {
-  opacity: 0.78;
+  opacity: 0.72;
+  letter-spacing: 0.02em;
 }
 
 .md-tabs__link--active,
@@ -168,12 +233,31 @@
   opacity: 1;
 }
 
+.md-tabs__link:focus-visible {
+  outline: none;
+  box-shadow: var(--molcrafts-focus-ring);
+  border-radius: var(--molcrafts-radius-sm);
+}
+
 .md-main__inner {
-  margin-top: 1rem;
+  margin-top: 1.15rem;
 }
 
 .md-grid {
   max-width: 1320px;
+}
+
+/* Shared keyboard focus for interactive theme chrome. */
+.molcrafts-home-hero__button:focus-visible,
+.molcrafts-home-hero__install-tab:focus-visible,
+.molcrafts-home-hero__install-copy:focus-visible,
+.md-typeset .molcrafts-manual-index a:focus-visible,
+.md-typeset .molcrafts-manual-grid > a:focus-visible,
+.md-typeset .molcrafts-manual-list > a:focus-visible,
+.md-typeset .md-button:focus-visible,
+.md-nav__link:focus-visible {
+  outline: none;
+  box-shadow: var(--molcrafts-focus-ring);
 }
 
 .molcrafts-sr-only {
@@ -195,51 +279,62 @@
   align-items: center;
   isolation: isolate;
   overflow: hidden;
+  /* Paper plate + quiet margin rules + warm wash — printed manual, not dashboard. */
   background:
-    linear-gradient(115deg, rgba(251, 246, 228, 0.98) 0%, rgba(251, 246, 228, 0.92) 42%, rgba(242, 218, 157, 0.24) 100%),
-    linear-gradient(90deg, rgba(24, 67, 43, 0.1) 0 1px, transparent 1px 100%),
-    linear-gradient(0deg, rgba(24, 67, 43, 0.08) 0 1px, transparent 1px 100%),
-    linear-gradient(135deg, rgba(24, 67, 43, 0.08), rgba(24, 67, 43, 0) 46%),
+    linear-gradient(115deg, rgba(251, 246, 228, 0.98) 0%, rgba(251, 246, 228, 0.94) 48%, rgba(242, 218, 157, 0.18) 100%),
+    linear-gradient(90deg, rgba(24, 67, 43, 0.065) 0 1px, transparent 1px 100%),
+    linear-gradient(0deg, rgba(24, 67, 43, 0.05) 0 1px, transparent 1px 100%),
+    linear-gradient(135deg, rgba(24, 67, 43, 0.05), rgba(24, 67, 43, 0) 48%),
     var(--md-default-bg-color);
-  background-size: auto, 4.4rem 4.4rem, 4.4rem 4.4rem, auto, auto;
-  border-bottom: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 16%, transparent);
+  background-size: auto, 5rem 5rem, 5rem 5rem, auto, auto;
+  border-bottom: 1px solid var(--molcrafts-rule-strong);
+  box-shadow: inset 0 -1px 0 color-mix(in srgb, #fff 40%, transparent);
 }
 
-[data-md-color-scheme="molcrafts-slate"] .molcrafts-home-hero {
+:is([data-md-color-scheme="slate"], [data-md-color-scheme="molcrafts-slate"]) .molcrafts-home-hero {
   background:
-    linear-gradient(115deg, rgba(16, 24, 17, 0.98) 0%, rgba(16, 24, 17, 0.92) 42%, rgba(47, 125, 80, 0.22) 100%),
-    linear-gradient(90deg, rgba(251, 246, 228, 0.08) 0 1px, transparent 1px 100%),
-    linear-gradient(0deg, rgba(251, 246, 228, 0.06) 0 1px, transparent 1px 100%),
-    linear-gradient(135deg, rgba(242, 218, 157, 0.08), rgba(242, 218, 157, 0) 46%),
+    linear-gradient(115deg, rgba(16, 24, 17, 0.98) 0%, rgba(16, 24, 17, 0.94) 48%, rgba(47, 125, 80, 0.16) 100%),
+    linear-gradient(90deg, rgba(251, 246, 228, 0.055) 0 1px, transparent 1px 100%),
+    linear-gradient(0deg, rgba(251, 246, 228, 0.04) 0 1px, transparent 1px 100%),
+    linear-gradient(135deg, rgba(242, 218, 157, 0.06), rgba(242, 218, 157, 0) 48%),
     var(--md-default-bg-color);
-  background-size: auto, 4.4rem 4.4rem, 4.4rem 4.4rem, auto, auto;
+  background-size: auto, 5rem 5rem, 5rem 5rem, auto, auto;
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.03);
 }
 
+/* Fine diagonal rules + sparse paper grain; slow drift only when motion is ok. */
 .molcrafts-home-hero::before {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
+  opacity: 0.9;
   background:
-    linear-gradient(110deg, transparent 0 48%, rgba(24, 67, 43, 0.08) 48% 48.35%, transparent 48.35% 100%),
-    linear-gradient(110deg, transparent 0 64%, rgba(24, 67, 43, 0.06) 64% 64.25%, transparent 64.25% 100%),
-    repeating-linear-gradient(110deg, transparent 0 1.4rem, rgba(24, 67, 43, 0.035) 1.4rem 1.45rem, transparent 1.45rem 3.9rem);
+    linear-gradient(110deg, transparent 0 47.5%, rgba(24, 67, 43, 0.06) 47.5% 47.8%, transparent 47.8% 100%),
+    linear-gradient(110deg, transparent 0 63%, rgba(24, 67, 43, 0.045) 63% 63.22%, transparent 63.22% 100%),
+    repeating-linear-gradient(110deg, transparent 0 1.7rem, rgba(24, 67, 43, 0.028) 1.7rem 1.74rem, transparent 1.74rem 4.4rem),
+    radial-gradient(circle at 18% 22%, rgba(24, 67, 43, 0.03) 0 0.5px, transparent 0.7px),
+    radial-gradient(circle at 72% 68%, rgba(24, 67, 43, 0.025) 0 0.45px, transparent 0.65px);
+  background-size: auto, auto, auto, 3.2rem 3.2rem, 4.1rem 4.1rem;
   transform: translate3d(0, 0, 0);
-  animation: molcrafts-manual-drift 28s linear infinite;
+  animation: molcrafts-manual-drift 36s linear infinite;
 }
 
-[data-md-color-scheme="molcrafts-slate"] .molcrafts-home-hero::before {
+:is([data-md-color-scheme="slate"], [data-md-color-scheme="molcrafts-slate"]) .molcrafts-home-hero::before {
   background:
-    linear-gradient(110deg, transparent 0 48%, rgba(242, 218, 157, 0.07) 48% 48.35%, transparent 48.35% 100%),
-    linear-gradient(110deg, transparent 0 64%, rgba(242, 218, 157, 0.05) 64% 64.25%, transparent 64.25% 100%),
-    repeating-linear-gradient(110deg, transparent 0 1.4rem, rgba(251, 246, 228, 0.025) 1.4rem 1.45rem, transparent 1.45rem 3.9rem);
+    linear-gradient(110deg, transparent 0 47.5%, rgba(242, 218, 157, 0.055) 47.5% 47.8%, transparent 47.8% 100%),
+    linear-gradient(110deg, transparent 0 63%, rgba(242, 218, 157, 0.04) 63% 63.22%, transparent 63.22% 100%),
+    repeating-linear-gradient(110deg, transparent 0 1.7rem, rgba(251, 246, 228, 0.02) 1.7rem 1.74rem, transparent 1.74rem 4.4rem),
+    radial-gradient(circle at 18% 22%, rgba(251, 246, 228, 0.03) 0 0.5px, transparent 0.7px),
+    radial-gradient(circle at 72% 68%, rgba(251, 246, 228, 0.02) 0 0.45px, transparent 0.65px);
+  background-size: auto, auto, auto, 3.2rem 3.2rem, 4.1rem 4.1rem;
 }
 
 .molcrafts-home-hero::after {
   content: "";
   position: absolute;
   inset: auto 0 0;
-  height: 5rem;
+  height: 4.25rem;
   pointer-events: none;
   background: linear-gradient(0deg, var(--md-default-bg-color), transparent);
 }
@@ -258,7 +353,7 @@
   position: relative;
   z-index: 1;
   width: 100%;
-  padding: 4.6rem 1.6rem 4rem;
+  padding: 4.8rem 1.6rem 4.15rem;
 }
 
 .molcrafts-home-hero__copy {
@@ -268,21 +363,22 @@
 .molcrafts-home-hero__kicker {
   display: inline-flex;
   align-items: center;
-  gap: 0.42rem;
-  margin: 0 0 1.05rem;
+  gap: 0.5rem;
+  margin: 0 0 1.15rem;
   color: var(--molcrafts-product-accent);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: 0;
+  line-height: 1.25;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
 .molcrafts-home-hero__kicker::before {
   content: "";
-  width: 1.6rem;
-  height: 0.1rem;
+  width: 1.75rem;
+  height: 1px;
   background: currentColor;
+  opacity: 0.9;
 }
 
 /*
@@ -304,10 +400,10 @@
 .molcrafts-home-hero h1 {
   margin: 0;
   color: var(--molcrafts-product-accent); /* fallback: solid accent title */
-  font-size: 3.4rem;
+  font-size: 3.45rem;
   font-weight: 850;
-  line-height: 1.05;
-  letter-spacing: 0;
+  line-height: 1.04;
+  letter-spacing: -0.025em;
 }
 
 @supports (color: oklch(from red l c h)) {
@@ -328,7 +424,7 @@
 
   /* Dark scheme reuses the same injected product accent, so lift every stop's
      lightness to keep the title luminous against the slate background. */
-  [data-md-color-scheme="molcrafts-slate"] .molcrafts-home-hero h1 {
+  :is([data-md-color-scheme="slate"], [data-md-color-scheme="molcrafts-slate"]) .molcrafts-home-hero h1 {
     --molcrafts-title-grad-from: oklch(from var(--molcrafts-product-accent) clamp(0, calc(l + 0.06), 1) c h);
     --molcrafts-title-grad-mid: oklch(from var(--molcrafts-product-accent) clamp(0, calc(l + 0.20), 1) c h);
     --molcrafts-title-grad-to: oklch(from var(--molcrafts-product-accent) clamp(0, calc(l + 0.34), 0.96) c h);
@@ -337,60 +433,67 @@
 
 .molcrafts-home-hero__description {
   max-width: 34rem;
-  margin: 1.25rem 0 0;
+  margin: 1.35rem 0 0;
   color: var(--md-default-fg-color--light);
-  font-size: 1rem;
-  line-height: 1.65;
+  font-size: 1.02rem;
+  line-height: 1.68;
+  letter-spacing: 0.005em;
 }
 
 .molcrafts-home-hero__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.65rem;
-  margin-top: 1.65rem;
+  gap: 0.6rem;
+  margin-top: 1.8rem;
 }
 
 .molcrafts-home-hero__button {
   display: inline-flex;
   align-items: center;
-  min-height: 2.35rem;
-  padding: 0.55rem 0.9rem;
-  border: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 28%, transparent);
+  min-height: 2.4rem;
+  padding: 0.55rem 0.95rem;
+  border: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 26%, transparent);
   border-radius: var(--molcrafts-radius);
   color: var(--md-default-fg-color);
-  background: color-mix(in srgb, var(--md-default-bg-color) 78%, transparent);
-  font-size: 0.75rem;
+  background: var(--molcrafts-paper);
+  font-size: 0.74rem;
   font-weight: 800;
   line-height: 1.2;
-  box-shadow: 0 0.45rem 1rem rgba(24, 67, 43, 0.08);
-  transition: color 160ms ease, border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
+  letter-spacing: 0.02em;
+  box-shadow: var(--molcrafts-shadow-sm);
+  transition: color 160ms ease, border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
 .molcrafts-home-hero__button::after {
   content: "";
-  width: 0.42rem;
-  height: 0.42rem;
-  margin-left: 0.45rem;
-  border-top: 2px solid currentColor;
-  border-right: 2px solid currentColor;
+  width: 0.38rem;
+  height: 0.38rem;
+  margin-left: 0.5rem;
+  border-top: 1.5px solid currentColor;
+  border-right: 1.5px solid currentColor;
   transform: rotate(45deg);
+  opacity: 0.85;
 }
 
 .molcrafts-home-hero__button--primary {
   color: var(--md-primary-bg-color);
   border-color: var(--md-primary-fg-color);
   background: var(--md-primary-fg-color);
+  box-shadow: var(--molcrafts-shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 .molcrafts-home-hero__button:is(:focus, :hover) {
   color: var(--molcrafts-product-accent);
   border-color: var(--molcrafts-product-accent);
+  box-shadow: var(--molcrafts-shadow);
   transform: translateY(-1px);
 }
 
 .molcrafts-home-hero__button--primary:is(:focus, :hover) {
   color: var(--md-accent-bg-color);
   background: var(--molcrafts-product-accent);
+  border-color: var(--molcrafts-product-accent);
+  box-shadow: 0 0 0 3px var(--molcrafts-product-accent-soft), var(--molcrafts-shadow);
 }
 
 /* Optional right-hand hero aside: install command (one-click copy) + badges,
@@ -404,57 +507,51 @@
 
 .molcrafts-home-hero__aside {
   display: grid;
-  gap: 0.72rem;
+  gap: 0.7rem;
   min-width: 18.5rem;
   max-width: 23rem;
 }
 
-.molcrafts-home-hero__aside::before {
-  content: "";
-  display: block;
-  height: 6.4rem;
-  border: 1px solid color-mix(in srgb, var(--molcrafts-product-accent) 24%, transparent);
-  border-radius: var(--molcrafts-radius);
-  background:
-    radial-gradient(circle at 18% 34%, var(--molcrafts-product-accent) 0 0.2rem, transparent 0.22rem),
-    radial-gradient(circle at 42% 62%, color-mix(in srgb, var(--molcrafts-product-accent) 72%, var(--md-default-bg-color)) 0 0.16rem, transparent 0.18rem),
-    radial-gradient(circle at 67% 32%, color-mix(in srgb, var(--molcrafts-product-accent) 58%, var(--md-default-bg-color)) 0 0.18rem, transparent 0.2rem),
-    radial-gradient(circle at 82% 68%, var(--molcrafts-product-accent) 0 0.17rem, transparent 0.19rem),
-    linear-gradient(24deg, transparent 0 31%, color-mix(in srgb, var(--molcrafts-product-accent) 28%, transparent) 31% 32%, transparent 32% 100%),
-    linear-gradient(148deg, transparent 0 42%, color-mix(in srgb, var(--molcrafts-product-accent) 24%, transparent) 42% 43%, transparent 43% 100%),
-    linear-gradient(90deg, color-mix(in srgb, var(--md-default-bg-color) 76%, transparent), color-mix(in srgb, var(--molcrafts-product-accent-soft) 68%, transparent));
-  box-shadow: 0 0.55rem 1.4rem rgba(0, 0, 0, 0.06);
-  opacity: 0.96;
+.molcrafts-home-hero__install {
+  position: relative;
+  padding: 0.95rem 1.05rem 1.05rem;
+  border: 1px solid color-mix(in srgb, var(--molcrafts-product-accent) 26%, transparent);
+  border-radius: var(--molcrafts-radius-lg);
+  background: var(--molcrafts-paper-elevated);
+  box-shadow: var(--molcrafts-shadow);
 }
 
-.molcrafts-home-hero__install {
-  padding: 0.85rem 1rem 1rem;
-  border: 1px solid color-mix(in srgb, var(--molcrafts-product-accent) 30%, transparent);
-  border-radius: var(--molcrafts-radius);
-  background: color-mix(in srgb, var(--md-default-bg-color) 86%, transparent);
-  box-shadow: 0 0.55rem 1.5rem rgba(0, 0, 0, 0.08);
-  backdrop-filter: blur(6px);
+.molcrafts-home-hero__install::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 1rem;
+  right: 1rem;
+  height: 2px;
+  border-radius: 0 0 1px 1px;
+  background: linear-gradient(90deg, var(--molcrafts-product-accent), color-mix(in srgb, var(--molcrafts-product-accent) 20%, transparent));
 }
 
 .molcrafts-home-hero__install-label {
   display: block;
-  margin-bottom: 0.45rem;
+  margin-bottom: 0.5rem;
   color: var(--molcrafts-product-accent);
-  font-size: 0.62rem;
+  font-size: 0.64rem;
   font-weight: 850;
-  line-height: 1.2;
+  line-height: 1.25;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
 .molcrafts-home-hero__install-tabs {
   display: inline-flex;
-  gap: 0.18rem;
+  gap: 0.15rem;
   max-width: 100%;
-  margin-bottom: 0.58rem;
-  padding: 0.14rem;
-  border: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 14%, transparent);
-  border-radius: 0.42rem;
-  background: color-mix(in srgb, var(--md-default-bg-color) 64%, transparent);
+  margin-bottom: 0.62rem;
+  padding: 0.12rem;
+  border: 1px solid var(--molcrafts-rule);
+  border-radius: var(--molcrafts-radius);
+  background: color-mix(in srgb, var(--md-default-bg-color) 70%, transparent);
   overflow-x: auto;
 }
 
@@ -462,16 +559,17 @@
   appearance: none;
   display: inline-flex;
   align-items: center;
-  min-height: 1.55rem;
-  padding: 0.3rem 0.5rem;
+  min-height: 1.58rem;
+  padding: 0.3rem 0.52rem;
   border: 0;
-  border-radius: 0.3rem;
+  border-radius: var(--molcrafts-radius-sm);
   color: var(--md-default-fg-color--light);
   background: transparent;
   font: inherit;
-  font-size: 0.62rem;
+  font-size: 0.64rem;
   font-weight: 800;
   line-height: 1;
+  letter-spacing: 0.04em;
   white-space: nowrap;
   cursor: pointer;
   transition: color 160ms ease, background-color 160ms ease;
@@ -498,13 +596,14 @@
 
 .molcrafts-home-hero__install-row code {
   flex: 1;
-  padding: 0.5rem 0.62rem;
-  border-radius: 0.4rem;
-  background: color-mix(in srgb, var(--md-code-bg-color) 86%, transparent);
+  padding: 0.55rem 0.68rem;
+  border: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 10%, transparent);
+  border-radius: var(--molcrafts-radius-sm);
+  background: color-mix(in srgb, var(--md-code-bg-color) 92%, transparent);
   color: var(--md-code-fg-color);
   font-family: var(--md-code-font);
-  font-size: 0.7rem;
-  line-height: 1.4;
+  font-size: 0.72rem;
+  line-height: 1.45;
   white-space: nowrap;
   overflow-x: auto;
 }
@@ -513,18 +612,19 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.45rem;
-  border: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 26%, transparent);
-  border-radius: 0.4rem;
+  padding: 0.48rem;
+  border: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 22%, transparent);
+  border-radius: var(--molcrafts-radius-sm);
   color: var(--md-default-fg-color--light);
-  background: transparent;
+  background: var(--molcrafts-paper);
   cursor: pointer;
-  transition: color 160ms ease, border-color 160ms ease, transform 160ms ease;
+  transition: color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
 .molcrafts-home-hero__install-copy:is(:focus, :hover) {
   color: var(--molcrafts-product-accent);
   border-color: var(--molcrafts-product-accent);
+  box-shadow: var(--molcrafts-shadow-sm);
   transform: translateY(-1px);
 }
 
@@ -549,13 +649,15 @@
 .molcrafts-home-hero__badges {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: 0.42rem;
+  padding-top: 0.1rem;
 }
 
 .molcrafts-home-hero__badges img {
   display: block;
   height: 1.15rem;
-  border-radius: 0.2rem;
+  border-radius: var(--molcrafts-radius-sm);
+  opacity: 0.94;
 }
 
 @media screen and (max-width: 68em) {
@@ -621,7 +723,7 @@
 .md-typeset h2,
 .md-typeset h3 {
   color: var(--md-default-fg-color);
-  letter-spacing: 0;
+  letter-spacing: -0.015em;
 }
 
 .md-typeset h1 {
@@ -629,11 +731,13 @@
 }
 
 .md-typeset h2 {
-  border-bottom: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 16%, transparent);
+  border-bottom: 1px solid var(--molcrafts-rule);
+  padding-bottom: 0.28rem;
 }
 
 .md-typeset a {
-  text-underline-offset: 0.16em;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: from-font;
 }
 
 .md-typeset a:is(:focus, :hover) {
@@ -643,6 +747,8 @@
 .md-typeset .md-button {
   border-radius: var(--molcrafts-radius);
   font-weight: 700;
+  letter-spacing: 0.015em;
+  box-shadow: var(--molcrafts-shadow-sm);
 }
 
 .md-typeset .md-button--primary {
@@ -654,30 +760,33 @@
 .md-typeset .md-button:is(:focus, :hover) {
   border-color: var(--molcrafts-product-accent);
   color: var(--molcrafts-product-accent);
+  box-shadow: var(--molcrafts-shadow);
 }
 
 .md-typeset .md-button--primary:is(:focus, :hover) {
   background: var(--molcrafts-product-accent);
   color: var(--md-accent-bg-color);
+  box-shadow: 0 0 0 3px var(--molcrafts-product-accent-soft), var(--molcrafts-shadow);
 }
 
 .md-typeset code,
 .md-typeset pre,
 .md-typeset kbd {
-  border-radius: 0.4rem;
+  border-radius: var(--molcrafts-radius-sm);
 }
 
 .md-typeset pre > code {
-  border: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 14%, transparent);
+  border: 1px solid var(--molcrafts-rule);
+  box-shadow: var(--molcrafts-shadow-sm);
 }
 
 .md-typeset .admonition,
 .md-typeset details {
-  border: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 12%, transparent);
-  border-left: 0.18rem solid var(--molcrafts-product-accent);
+  border: 1px solid var(--molcrafts-rule);
+  border-left: 0.15rem solid var(--molcrafts-product-accent);
   border-radius: var(--molcrafts-radius);
-  background: color-mix(in srgb, var(--md-admonition-bg-color) 88%, var(--molcrafts-product-accent-soft));
-  box-shadow: none;
+  background: color-mix(in srgb, var(--md-admonition-bg-color) 90%, var(--molcrafts-product-accent-soft));
+  box-shadow: var(--molcrafts-shadow-sm);
 }
 
 .md-typeset .admonition-title,
@@ -690,28 +799,32 @@
 }
 
 .md-typeset table:not([class]) {
-  border: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 14%, transparent);
+  border: 1px solid var(--molcrafts-rule);
   border-radius: var(--molcrafts-radius);
-  box-shadow: none;
+  box-shadow: var(--molcrafts-shadow-sm);
+  overflow: hidden;
 }
 
 .md-typeset table:not([class]) th {
-  background: color-mix(in srgb, var(--molcrafts-product-accent-soft) 72%, var(--md-default-bg-color));
+  background: color-mix(in srgb, var(--molcrafts-product-accent-soft) 68%, var(--molcrafts-paper));
   color: var(--md-default-fg-color);
+  font-weight: 750;
+  letter-spacing: 0.01em;
 }
 
 .md-typeset table:not([class]) td,
 .md-typeset table:not([class]) th {
-  border-color: color-mix(in srgb, var(--md-primary-fg-color) 12%, transparent);
+  border-color: color-mix(in srgb, var(--md-primary-fg-color) 11%, transparent);
 }
 
 .md-typeset .tabbed-labels {
-  border-bottom: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 16%, transparent);
+  border-bottom: 1px solid var(--molcrafts-rule-strong);
 }
 
 .md-typeset .tabbed-labels > label {
   color: var(--md-default-fg-color--light);
   font-weight: 700;
+  letter-spacing: 0.02em;
   transition: color 160ms ease;
 }
 
@@ -730,48 +843,49 @@
 
 .md-typeset .grid.cards > ul > li,
 .md-typeset .grid > .card {
-  border-color: color-mix(in srgb, var(--md-primary-fg-color) 14%, transparent);
+  border-color: var(--molcrafts-rule);
   border-radius: var(--molcrafts-radius);
-  box-shadow: none;
+  background: var(--molcrafts-paper);
+  box-shadow: var(--molcrafts-shadow-sm);
 }
 
 .md-typeset .grid.cards > ul > li:is(:focus-within, :hover),
 .md-typeset .grid > .card:is(:focus-within, :hover) {
-  border-color: color-mix(in srgb, var(--molcrafts-product-accent) 42%, transparent);
+  border-color: color-mix(in srgb, var(--molcrafts-product-accent) 40%, transparent);
   box-shadow: var(--molcrafts-shadow);
 }
 
 .md-typeset .molcrafts-manual-home {
   max-width: 1080px;
   margin: 0 auto;
-  padding: 1.85rem 1.35rem 0;
+  padding: 2.1rem 1.35rem 0.5rem;
 }
 
 .md-typeset .molcrafts-manual-section {
   position: relative;
   display: grid;
   grid-template-columns: minmax(13rem, 0.42fr) minmax(0, 1fr);
-  gap: 1.2rem 2.4rem;
+  gap: 1.35rem 2.55rem;
   align-items: start;
   margin: 0;
-  padding: 1.55rem 0;
-  border-top: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 14%, transparent);
+  padding: 1.95rem 0;
+  border-top: 1px solid var(--molcrafts-rule);
 }
 
 .md-typeset .molcrafts-manual-section:not(:first-child)::before {
   content: "";
   position: absolute;
-  top: 1.55rem;
-  left: -0.78rem;
-  width: 0.16rem;
-  height: 2.45rem;
-  border-radius: 999px;
-  background: linear-gradient(180deg, var(--molcrafts-product-accent), transparent);
-  opacity: 0.78;
+  top: 1.95rem;
+  left: -0.72rem;
+  width: 0.12rem;
+  height: 2.7rem;
+  border-radius: 1px;
+  background: linear-gradient(180deg, var(--molcrafts-product-accent) 0%, color-mix(in srgb, var(--molcrafts-product-accent) 15%, transparent) 100%);
+  opacity: 0.88;
 }
 
 .md-typeset .molcrafts-manual-section:first-child {
-  padding-top: 0;
+  padding-top: 0.15rem;
   border-top: 0;
 }
 
@@ -803,12 +917,12 @@
 
 .md-typeset .molcrafts-manual-eyebrow {
   display: block;
-  margin-bottom: 0.42rem;
+  margin-bottom: 0.5rem;
   color: var(--molcrafts-product-accent);
-  font-size: 0.62rem;
+  font-size: 0.64rem;
   font-weight: 850;
-  letter-spacing: 0;
-  line-height: 1.2;
+  letter-spacing: 0.12em;
+  line-height: 1.25;
   text-transform: uppercase;
 }
 
@@ -816,34 +930,48 @@
   margin: 0;
   padding: 0;
   border: 0;
-  font-size: 1.35rem;
+  font-size: 1.38rem;
   line-height: 1.22;
+  letter-spacing: -0.018em;
 }
 
 .md-typeset .molcrafts-manual-section__header p {
-  margin: 0.58rem 0 0;
+  margin: 0.68rem 0 0;
   color: var(--md-default-fg-color--light);
-  font-size: 0.8rem;
-  line-height: 1.62;
+  font-size: 0.84rem;
+  line-height: 1.65;
 }
 
 .md-typeset .molcrafts-manual-index {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  border-top: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 16%, transparent);
-  border-bottom: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 16%, transparent);
+  border-top: 1px solid var(--molcrafts-rule-strong);
+  border-bottom: 1px solid var(--molcrafts-rule-strong);
 }
 
 .md-typeset .molcrafts-manual-index a {
+  position: relative;
   display: grid;
-  grid-template-columns: 2.8rem minmax(9rem, 0.42fr) minmax(0, 1fr);
+  grid-template-columns: 2.9rem minmax(9rem, 0.42fr) minmax(0, 1fr);
   gap: 1rem;
   align-items: baseline;
-  padding: 0.72rem 0;
-  border-top: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 10%, transparent);
+  padding: 0.78rem 0.55rem 0.78rem 0.55rem;
+  border-top: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 9%, transparent);
   color: var(--md-default-fg-color);
   text-decoration: none;
-  transition: color 160ms ease, background-color 160ms ease, padding-left 160ms ease;
+  transition: color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+}
+
+.md-typeset .molcrafts-manual-index a::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55rem;
+  bottom: 0.55rem;
+  width: 0;
+  border-radius: 1px;
+  background: var(--molcrafts-product-accent);
+  transition: width 160ms ease;
 }
 
 .md-typeset .molcrafts-manual-index a:first-child {
@@ -851,76 +979,86 @@
 }
 
 .md-typeset .molcrafts-manual-index a:is(:focus, :hover) {
-  padding-left: 0.45rem;
   color: var(--molcrafts-product-accent);
   background: var(--molcrafts-product-accent-soft);
 }
 
+.md-typeset .molcrafts-manual-index a:is(:focus, :hover)::before {
+  width: 2px;
+}
+
 .md-typeset .molcrafts-manual-index span {
   color: var(--md-default-fg-color--lighter);
-  font-size: 0.66rem;
-  font-weight: 850;
+  font-family: var(--md-code-font), ui-monospace, monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
   line-height: 1.35;
 }
 
 .md-typeset .molcrafts-manual-index strong {
   color: inherit;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   line-height: 1.35;
 }
 
 .md-typeset .molcrafts-manual-index em {
   color: var(--md-default-fg-color--light);
-  font-size: 0.7rem;
+  font-size: 0.74rem;
   font-style: normal;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 .md-typeset .molcrafts-workflow-list {
-  border-top: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 16%, transparent);
+  border-top: 1px solid var(--molcrafts-rule-strong);
 }
 
 .md-typeset .molcrafts-workflow-list > article {
   display: grid;
-  grid-template-columns: 7.2rem minmax(0, 1fr);
-  gap: 0.35rem 1rem;
+  grid-template-columns: 7.4rem minmax(0, 1fr);
+  gap: 0.4rem 1.1rem;
   min-width: 0;
-  padding: 0.95rem 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 12%, transparent);
+  padding: 1.05rem 0;
+  border-bottom: 1px solid var(--molcrafts-rule);
 }
 
 .md-typeset .molcrafts-workflow-list__meta {
   grid-row: 1 / span 3;
   color: var(--md-default-fg-color--lighter);
-  font-size: 0.62rem;
-  font-weight: 850;
-  line-height: 1.35;
+  font-family: var(--md-code-font), ui-monospace, monospace;
+  font-size: 0.64rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
   text-transform: uppercase;
 }
 
 .md-typeset .molcrafts-workflow-list h3 {
   margin: 0;
-  font-size: 0.86rem;
-  line-height: 1.25;
+  font-size: 0.9rem;
+  line-height: 1.28;
+  letter-spacing: -0.01em;
 }
 
 .md-typeset .molcrafts-workflow-list p {
   margin: 0;
   color: var(--md-default-fg-color--light);
-  font-size: 0.7rem;
-  line-height: 1.52;
+  font-size: 0.76rem;
+  line-height: 1.55;
 }
 
 .md-typeset .molcrafts-workflow-list .highlight,
 .md-typeset .molcrafts-workflow-list pre {
-  margin: 0.38rem 0 0;
+  margin: 0.42rem 0 0;
 }
 
 .md-typeset .molcrafts-workflow-list pre > code {
-  padding: 0.62rem;
-  border-left: 0.16rem solid color-mix(in srgb, var(--molcrafts-product-accent) 45%, transparent);
-  font-size: 0.6rem;
-  line-height: 1.5;
+  padding: 0.7rem 0.75rem;
+  border-left: 0.14rem solid color-mix(in srgb, var(--molcrafts-product-accent) 55%, transparent);
+  font-size: 0.7rem;
+  line-height: 1.55;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
@@ -929,54 +1067,56 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   margin: 0;
-  border-top: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 16%, transparent);
+  border-top: 1px solid var(--molcrafts-rule-strong);
 }
 
 .md-typeset .molcrafts-feature-matrix > div {
   display: grid;
   grid-template-columns: minmax(9.5rem, 0.34fr) minmax(0, 1fr);
-  gap: 1.2rem;
-  padding: 0.72rem 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 12%, transparent);
+  gap: 1.25rem;
+  padding: 0.82rem 0;
+  border-bottom: 1px solid var(--molcrafts-rule);
 }
 
 .md-typeset .molcrafts-feature-matrix dt {
   color: var(--md-default-fg-color);
-  font-size: 0.74rem;
+  font-size: 0.78rem;
   font-weight: 850;
-  line-height: 1.35;
+  line-height: 1.4;
+  letter-spacing: -0.005em;
 }
 
 .md-typeset .molcrafts-feature-matrix dd {
   margin: 0;
   color: var(--md-default-fg-color--light);
-  font-size: 0.69rem;
-  line-height: 1.5;
+  font-size: 0.74rem;
+  line-height: 1.55;
 }
 
 .md-typeset .molcrafts-doc-map {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0 2rem;
-  border-top: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 16%, transparent);
+  gap: 0 2.1rem;
+  border-top: 1px solid var(--molcrafts-rule-strong);
 }
 
 .md-typeset .molcrafts-doc-map section {
-  padding: 0.8rem 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 12%, transparent);
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--molcrafts-rule);
 }
 
 .md-typeset .molcrafts-doc-map h3 {
   margin: 0;
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   line-height: 1.35;
+  letter-spacing: -0.01em;
 }
 
 .md-typeset .molcrafts-doc-map p {
-  margin: 0.38rem 0 0;
+  margin: 0.42rem 0 0;
   color: var(--md-default-fg-color--light);
-  font-size: 0.7rem;
-  line-height: 1.5;
+  font-size: 0.74rem;
+  line-height: 1.55;
 }
 
 /* ------------------------------------------------------------------------ *
@@ -1029,42 +1169,62 @@
 }
 
 .md-typeset .molcrafts-manual-grid > * {
+  position: relative;
   display: block;
   min-width: 0;
-  padding: 0.9rem 1rem;
-  border: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 14%, transparent);
+  padding: 0.95rem 1.05rem;
+  border: 1px solid var(--molcrafts-rule);
   border-radius: var(--molcrafts-radius);
   color: var(--md-default-fg-color);
-  background: color-mix(in srgb, var(--md-default-bg-color) 82%, transparent);
+  background: var(--molcrafts-paper);
+  box-shadow: var(--molcrafts-shadow-sm);
   text-decoration: none;
 }
 
 .md-typeset .molcrafts-manual-grid > a {
-  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease, transform 160ms ease;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.md-typeset .molcrafts-manual-grid > a::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.7rem;
+  bottom: 0.7rem;
+  width: 0;
+  border-radius: 0 1px 1px 0;
+  background: var(--molcrafts-product-accent);
+  transition: width 160ms ease;
 }
 
 .md-typeset .molcrafts-manual-grid > a:is(:focus, :hover) {
-  border-color: color-mix(in srgb, var(--molcrafts-product-accent) 42%, transparent);
-  background: var(--molcrafts-product-accent-soft);
+  border-color: color-mix(in srgb, var(--molcrafts-product-accent) 40%, transparent);
+  background: color-mix(in srgb, var(--molcrafts-product-accent-soft) 70%, var(--molcrafts-paper));
   color: var(--molcrafts-product-accent);
+  box-shadow: var(--molcrafts-shadow);
   transform: translateY(-1px);
+}
+
+.md-typeset .molcrafts-manual-grid > a:is(:focus, :hover)::before {
+  width: 2px;
 }
 
 .md-typeset .molcrafts-manual-grid strong {
   display: block;
   color: inherit;
-  font-size: 0.82rem;
+  font-size: 0.84rem;
   line-height: 1.3;
+  letter-spacing: -0.01em;
 }
 
 .md-typeset .molcrafts-manual-grid em,
 .md-typeset .molcrafts-manual-grid p {
   display: block;
-  margin: 0.3rem 0 0;
+  margin: 0.35rem 0 0;
   color: var(--md-default-fg-color--light);
-  font-size: 0.72rem;
+  font-size: 0.76rem;
   font-style: normal;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 /* List template — a vertical list of rows, each a label + description. Lighter
@@ -1075,40 +1235,58 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  border-top: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 16%, transparent);
+  border-top: 1px solid var(--molcrafts-rule-strong);
 }
 
 .md-typeset .molcrafts-manual-list > * {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(8rem, 0.34fr) minmax(0, 1fr);
   gap: 0.35rem 1.4rem;
   align-items: baseline;
-  padding: 0.72rem 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 12%, transparent);
+  padding: 0.78rem 0.35rem 0.78rem 0.45rem;
+  border-bottom: 1px solid var(--molcrafts-rule);
   color: var(--md-default-fg-color);
   text-decoration: none;
 }
 
 .md-typeset .molcrafts-manual-list > a {
-  transition: color 160ms ease, padding-left 160ms ease;
+  transition: color 160ms ease, background-color 160ms ease;
+}
+
+.md-typeset .molcrafts-manual-list > a::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55rem;
+  bottom: 0.55rem;
+  width: 0;
+  border-radius: 1px;
+  background: var(--molcrafts-product-accent);
+  transition: width 160ms ease;
 }
 
 .md-typeset .molcrafts-manual-list > a:is(:focus, :hover) {
-  padding-left: 0.4rem;
   color: var(--molcrafts-product-accent);
+  background: var(--molcrafts-product-accent-soft);
+}
+
+.md-typeset .molcrafts-manual-list > a:is(:focus, :hover)::before {
+  width: 2px;
 }
 
 .md-typeset .molcrafts-manual-list strong {
   color: inherit;
-  font-size: 0.8rem;
-  line-height: 1.35;
+  font-family: var(--md-code-font), ui-monospace, monospace;
+  font-size: 0.78rem;
+  line-height: 1.4;
 }
 
 .md-typeset .molcrafts-manual-list em {
   color: var(--md-default-fg-color--light);
-  font-size: 0.7rem;
+  font-size: 0.74rem;
   font-style: normal;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 .md-search__form,
@@ -1125,10 +1303,12 @@
 
 .md-nav--secondary .md-nav__title {
   color: var(--md-default-fg-color);
+  letter-spacing: 0.02em;
 }
 
 .md-footer {
-  margin-top: 2rem;
+  margin-top: 2.4rem;
+  border-top: 1px solid rgba(14, 43, 27, 0.25);
 }
 
 @media screen and (max-width: 76.2344em) {
@@ -1142,50 +1322,46 @@
   .molcrafts-home-hero {
     min-height: auto;
     background:
-      linear-gradient(135deg, rgba(251, 246, 228, 0.98) 0%, rgba(251, 246, 228, 0.9) 56%, rgba(242, 218, 157, 0.2) 100%),
-      linear-gradient(90deg, rgba(24, 67, 43, 0.09) 0 1px, transparent 1px 100%),
-      linear-gradient(0deg, rgba(24, 67, 43, 0.07) 0 1px, transparent 1px 100%);
-    background-size: auto, 3.2rem 3.2rem, 3.2rem 3.2rem;
+      linear-gradient(135deg, rgba(251, 246, 228, 0.98) 0%, rgba(251, 246, 228, 0.92) 56%, rgba(242, 218, 157, 0.16) 100%),
+      linear-gradient(90deg, rgba(24, 67, 43, 0.06) 0 1px, transparent 1px 100%),
+      linear-gradient(0deg, rgba(24, 67, 43, 0.045) 0 1px, transparent 1px 100%);
+    background-size: auto, 3.6rem 3.6rem, 3.6rem 3.6rem;
   }
 
-  [data-md-color-scheme="molcrafts-slate"] .molcrafts-home-hero {
+  :is([data-md-color-scheme="slate"], [data-md-color-scheme="molcrafts-slate"]) .molcrafts-home-hero {
     background:
-      linear-gradient(135deg, rgba(16, 24, 17, 0.98) 0%, rgba(16, 24, 17, 0.9) 56%, rgba(47, 125, 80, 0.2) 100%),
-      linear-gradient(90deg, rgba(251, 246, 228, 0.08) 0 1px, transparent 1px 100%),
-      linear-gradient(0deg, rgba(251, 246, 228, 0.06) 0 1px, transparent 1px 100%);
-    background-size: auto, 3.2rem 3.2rem, 3.2rem 3.2rem;
+      linear-gradient(135deg, rgba(16, 24, 17, 0.98) 0%, rgba(16, 24, 17, 0.92) 56%, rgba(47, 125, 80, 0.14) 100%),
+      linear-gradient(90deg, rgba(251, 246, 228, 0.05) 0 1px, transparent 1px 100%),
+      linear-gradient(0deg, rgba(251, 246, 228, 0.04) 0 1px, transparent 1px 100%);
+    background-size: auto, 3.6rem 3.6rem, 3.6rem 3.6rem;
   }
 
   .molcrafts-home-hero__inner {
-    gap: 1.25rem;
-    padding: 3rem 1rem 2.6rem;
+    gap: 1.35rem;
+    padding: 3.1rem 1rem 2.7rem;
   }
 
   .molcrafts-home-hero h1 {
-    font-size: 2.45rem;
+    font-size: 2.5rem;
     line-height: 1.06;
   }
 
   .molcrafts-home-hero__description {
-    font-size: 0.88rem;
+    font-size: 0.92rem;
   }
 
   .molcrafts-home-hero__aside {
     gap: 0.55rem;
   }
 
-  .molcrafts-home-hero__aside::before {
-    height: 4.8rem;
-  }
-
   .md-typeset .molcrafts-manual-home {
-    padding: 1.55rem 1rem 0;
+    padding: 1.7rem 1rem 0.35rem;
   }
 
   .md-typeset .molcrafts-manual-section {
     grid-template-columns: minmax(0, 1fr);
-    gap: 0.95rem;
-    padding: 1.35rem 0;
+    gap: 1rem;
+    padding: 1.55rem 0;
   }
 
   /* Single column on narrow viewports — undo the desktop code-block span so
@@ -1252,32 +1428,30 @@
     justify-content: space-between;
   }
 
-  .molcrafts-home-hero__aside::before {
-    display: none;
-  }
-
   .molcrafts-home-hero__install {
-    padding: 0.72rem;
+    padding: 0.8rem 0.85rem 0.9rem;
   }
 
   .molcrafts-home-hero__install-row code {
-    font-size: 0.66rem;
+    font-size: 0.68rem;
   }
 
   .md-typeset .molcrafts-manual-home {
-    padding: 1.15rem 0.75rem 0;
+    padding: 1.25rem 0.75rem 0.25rem;
   }
 
   .md-typeset .molcrafts-manual-section {
-    padding: 1.1rem 0;
+    padding: 1.25rem 0;
   }
 
-  .md-typeset .molcrafts-manual-section::before {
-    left: -0.42rem;
+  .md-typeset .molcrafts-manual-section:not(:first-child)::before {
+    left: -0.38rem;
+    top: 1.25rem;
+    height: 2.2rem;
   }
 
   .md-typeset .molcrafts-manual-section__header h2 {
-    font-size: 1.12rem;
+    font-size: 1.16rem;
   }
 
   .md-typeset .molcrafts-manual-index a,

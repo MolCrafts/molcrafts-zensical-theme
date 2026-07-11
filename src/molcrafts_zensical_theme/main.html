@@ -166,7 +166,7 @@
   #}
   {% if accent %}
     <style>
-      {% if product %}html[data-molcrafts-product="{{ product }}"] body{% else %}[data-md-color-scheme="molcrafts"], [data-md-color-scheme="molcrafts-slate"]{% endif %} {
+      {% if product %}html[data-molcrafts-product="{{ product }}"] body{% else %}[data-md-color-scheme="default"], [data-md-color-scheme="slate"], [data-md-color-scheme="molcrafts"], [data-md-color-scheme="molcrafts-slate"]{% endif %} {
         --molcrafts-product-accent: {{ accent }};
         --molcrafts-product-accent-soft: {{ accent_soft | d("color-mix(in srgb, " ~ accent ~ " 14%, transparent)", true) }};
       }

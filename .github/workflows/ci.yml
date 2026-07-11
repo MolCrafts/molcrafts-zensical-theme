@@ -26,3 +26,10 @@ jobs:
           python -m pip install dist/*.whl
           zensical build -f examples/minimal/zensical.toml
           zensical build -f examples/basic/zensical.toml
+      - name: Verify zero-config theme defaults
+        run: |
+          grep -q 'assets/stylesheets/molcrafts.css' examples/minimal/site/index.html
+          grep -q 'data-md-color-scheme="default"' examples/minimal/site/index.html
+          grep -q 'data-md-color-scheme="slate"' examples/minimal/site/index.html
+          grep -q -- '--md-text-font:"Inter"' examples/minimal/site/index.html
+          grep -q 'color-scheme: dark' examples/minimal/site/assets/stylesheets/molcrafts.css

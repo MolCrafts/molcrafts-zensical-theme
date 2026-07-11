@@ -43,14 +43,14 @@ features:
 
 palette:
   - media: "(prefers-color-scheme: light)"
-    scheme: molcrafts
+    scheme: default
     primary: custom
     accent: custom
     toggle:
       icon: lucide/sun
       name: Switch to dark mode
   - media: "(prefers-color-scheme: dark)"
-    scheme: molcrafts-slate
+    scheme: slate
     primary: custom
     accent: custom
     toggle:
