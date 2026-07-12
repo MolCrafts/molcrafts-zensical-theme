@@ -1289,6 +1289,133 @@
   line-height: 1.55;
 }
 
+/* Browser-native MolCrafts embeds. The element rules are useful in any docs
+   page; the card/grid rules provide an optional catalog-style presentation. */
+.md-typeset :is(molvis-viewer, molplot-chart) {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  margin: 1.2rem 0;
+  overflow: hidden;
+  border: 1px solid var(--molcrafts-rule-strong);
+  border-radius: var(--molcrafts-radius);
+  background: var(--molcrafts-paper-elevated);
+  box-shadow: var(--molcrafts-shadow-sm);
+}
+
+.md-typeset molvis-viewer {
+  height: clamp(20rem, 52vw, 26rem);
+  min-height: 20rem;
+  isolation: isolate;
+}
+
+.md-typeset molplot-chart {
+  min-height: 19rem;
+  padding: 0.65rem;
+  overflow-x: auto;
+  background: #fff;
+  color: #14271d;
+}
+
+.md-typeset molplot-chart > div {
+  width: 100%;
+  min-height: 17.7rem;
+}
+
+.md-typeset :is(molvis-viewer, molplot-chart)[data-state="loading"] {
+  background:
+    linear-gradient(100deg, transparent 20%, var(--molcrafts-product-accent-soft) 45%, transparent 70%),
+    var(--molcrafts-paper-elevated);
+  background-size: 220% 100%;
+  animation: molcrafts-component-loading 1.8s ease-in-out infinite;
+}
+
+@keyframes molcrafts-component-loading {
+  to {
+    background-position: -220% 0;
+  }
+}
+
+.md-typeset .molcrafts-web-component-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.4rem 0 2rem;
+}
+
+.md-typeset .molcrafts-web-component-card {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--molcrafts-rule-strong);
+  border-radius: var(--molcrafts-radius-lg);
+  background: var(--molcrafts-paper);
+  box-shadow: var(--molcrafts-shadow);
+}
+
+.md-typeset .molcrafts-web-component-card figcaption {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.2rem 0.75rem;
+  align-items: baseline;
+  padding: 0.9rem 1rem 0.85rem;
+  border-bottom: 1px solid var(--molcrafts-rule);
+}
+
+.md-typeset .molcrafts-web-component-card figcaption strong {
+  color: var(--md-default-fg-color);
+  font-size: 0.86rem;
+  line-height: 1.35;
+}
+
+.md-typeset .molcrafts-web-component-card figcaption small {
+  grid-column: 1 / -1;
+  color: var(--md-default-fg-color--light);
+  font-size: 0.7rem;
+  line-height: 1.5;
+}
+
+.md-typeset .molcrafts-web-component-card__package {
+  grid-column: 2;
+  grid-row: 1;
+  padding: 0.12rem 0.38rem;
+  border-radius: var(--molcrafts-radius-sm);
+  background: var(--molcrafts-product-accent-soft);
+  color: var(--molcrafts-product-accent);
+  font-family: var(--md-code-font), ui-monospace, monospace;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.md-typeset .molcrafts-web-component-preview {
+  min-width: 0;
+  padding: 0.65rem;
+  background:
+    linear-gradient(135deg, var(--molcrafts-product-accent-soft), transparent 42%),
+    color-mix(in srgb, var(--md-default-bg-color) 88%, var(--molcrafts-paper));
+}
+
+.md-typeset .molcrafts-web-component-preview :is(molvis-viewer, molplot-chart) {
+  margin: 0;
+}
+
+.md-typeset .molcrafts-web-component-preview molvis-viewer {
+  height: clamp(20rem, 35vw, 23rem);
+}
+
+.md-typeset .molcrafts-web-component-preview--chart {
+  display: flex;
+  align-items: center;
+  min-height: calc(clamp(20rem, 35vw, 23rem) + 1.3rem);
+}
+
+.md-typeset .molcrafts-web-component-preview--chart molplot-chart {
+  flex: 1 1 auto;
+}
+
 .md-search__form,
 .md-search__input,
 .md-search__output,
@@ -1398,6 +1525,18 @@
     grid-template-columns: minmax(0, 1fr);
     gap: 0.15rem;
   }
+
+  .md-typeset .molcrafts-web-component-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .md-typeset .molcrafts-web-component-preview molvis-viewer {
+    height: clamp(20rem, 60vw, 24rem);
+  }
+
+  .md-typeset .molcrafts-web-component-preview--chart {
+    min-height: auto;
+  }
 }
 
 @media screen and (max-width: 36em) {
@@ -1464,5 +1603,33 @@
   .md-typeset .molcrafts-manual-index em,
   .md-typeset .molcrafts-workflow-list__meta {
     grid-row: auto;
+  }
+
+  .md-typeset :is(molvis-viewer, molplot-chart) {
+    border-radius: var(--molcrafts-radius-sm);
+  }
+
+  .md-typeset molvis-viewer,
+  .md-typeset .molcrafts-web-component-preview molvis-viewer {
+    height: 19rem;
+    min-height: 19rem;
+  }
+
+  .md-typeset molplot-chart {
+    padding: 0.4rem;
+  }
+
+  .md-typeset .molcrafts-web-component-card figcaption {
+    padding: 0.78rem 0.82rem 0.72rem;
+  }
+
+  .md-typeset .molcrafts-web-component-preview {
+    padding: 0.4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .md-typeset :is(molvis-viewer, molplot-chart)[data-state="loading"] {
+    animation: none;
   }
 }
