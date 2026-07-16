@@ -1,0 +1,86 @@
+[project]
+site_name = "MolCrafts Theme"
+site_description = "Example site for the MolCrafts Zensical theme."
+site_author = "MolCrafts"
+site_url = "https://molcrafts.github.io/theme-example/"
+docs_dir = "docs"
+site_dir = "site"
+copyright = "Copyright &copy; 2026 MolCrafts"
+extra_javascript = [
+  { path = "https://cdn.jsdelivr.net/npm/@molcrafts/molvis-core@latest/dist/elements.js", type = "module" },
+  { path = "http://localhost:4173/elements.js", type = "module" },
+]
+
+nav = [
+  { "Home" = "index.md" },
+  { "Components" = "components.md" },
+  { "C++ API" = "cpp.md" },
+  { "Web Components" = [
+    { "MolVis" = "molvis.md" },
+    { "MolPlot" = "molplot.md" },
+  ] },
+]
+
+[project.plugins.mkdocstrings]
+default_handler = "cpp"
+
+[project.plugins.mkdocstrings.handlers.cpp]
+input = ["cpp/include"]
+file_patterns = ["*.h", "*.hpp", "*.hh", "*.hxx", "*.cpp", "*.cc", "*.cxx"]
+build_dir = ".cache/mkdocstrings-cpp"
+
+[project.plugins.mkdocstrings.handlers.cpp.options]
+show_root_heading = true
+show_root_full_path = false
+members_order = "source"
+show_template_parameters = true
+show_enum_values = true
+separate_signature = true
+
+# Register MolPlot's fenced-block formatter. Declaring markdown_extensions
+# replaces Zensical's defaults, so keep the standard set alongside the custom
+# `molplot` fence.
+[project.markdown_extensions]
+abbr = {}
+admonition = {}
+attr_list = {}
+def_list = {}
+footnotes = {}
+md_in_html = {}
+
+[project.markdown_extensions.toc]
+permalink = true
+
+[project.markdown_extensions.pymdownx]
+betterem = {}
+caret = {}
+details = {}
+inlinehilite = {}
+keys = {}
+magiclink = {}
+mark = {}
+smartsymbols = {}
+tilde = {}
+arithmatex = { generic = true }
+emoji = { emoji_generator = "zensical.extensions.emoji.to_svg", emoji_index = "zensical.extensions.emoji.twemoji" }
+highlight = { anchor_linenums = true, line_spans = "__span", pygments_lang_class = true }
+tabbed = { alternate_style = true, combine_header_slug = true }
+tasklist = { custom_checkbox = true }
+
+[project.markdown_extensions.pymdownx.superfences]
+custom_fences = [
+  { name = "mermaid", class = "mermaid" },
+  { name = "molplot", class = "molplot", format = "molplot.mdx.molplot_fence", validator = "molplot.mdx.molplot_validator" },
+]
+
+[project.theme]
+name = "molcrafts"
+
+[project.extra.molcrafts]
+product = "molpy"
+accent = "#0284c7"
+accent_soft = "rgba(2, 132, 199, 0.14)"
+
+[[project.extra.social]]
+icon = "fontawesome/brands/github"
+link = "https://github.com/MolCrafts"

@@ -8,7 +8,7 @@
 {% block hero %}
   {% if page.meta and page.meta.hero %}
     {% set hero = page.meta.hero %}
-    <section class="molcrafts-home-hero" aria-labelledby="molcrafts-home-hero-title">
+    <section class="molcrafts-home-hero{% if hero.install and hero.install.align == 'left' %} molcrafts-home-hero--install-left{% endif %}" aria-labelledby="molcrafts-home-hero-title">
       <div class="molcrafts-home-hero__inner md-grid">
         <div class="molcrafts-home-hero__copy">
           <p class="molcrafts-home-hero__kicker">{{ hero.kicker | d("Manual", true) }}</p>

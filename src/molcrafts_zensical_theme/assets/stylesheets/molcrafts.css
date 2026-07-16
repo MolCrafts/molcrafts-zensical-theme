@@ -512,6 +512,20 @@
   max-width: 23rem;
 }
 
+/* Opt-in stacked hero: keep the install card on the same left edge as the
+   title/actions instead of treating it as a right-hand marketing aside. */
+.molcrafts-home-hero--install-left .molcrafts-home-hero__inner {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 1.65rem;
+}
+
+.molcrafts-home-hero--install-left .molcrafts-home-hero__aside {
+  width: 100%;
+  max-width: 32rem;
+}
+
 .molcrafts-home-hero__install {
   position: relative;
   padding: 0.95rem 1.05rem 1.05rem;
@@ -1294,7 +1308,6 @@
 .md-typeset :is(molvis-viewer, molplot-chart) {
   display: block;
   box-sizing: border-box;
-  width: 100%;
   max-width: 100%;
   margin: 1.2rem 0;
   overflow: hidden;
@@ -1305,22 +1318,98 @@
 }
 
 .md-typeset molvis-viewer {
+  width: 100%;
   height: clamp(20rem, 52vw, 26rem);
   min-height: 20rem;
   isolation: isolate;
 }
 
+/* Formatter-backed MolVis representation gallery. Each visible canvas is a
+   Babylon Engine View; the component owns one hidden WebGL engine canvas. */
+.md-typeset molvis-style-gallery {
+  display: block;
+  width: 100%;
+  margin: 1.5rem 0 2rem;
+}
+
+.md-typeset .molvis-style-gallery__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.md-typeset .molvis-style-gallery__card {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--molcrafts-rule-strong);
+  border-radius: var(--molcrafts-radius-lg);
+  background: var(--molcrafts-paper-elevated);
+  box-shadow: var(--molcrafts-shadow-sm);
+}
+
+.md-typeset .molvis-style-gallery__preview {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #33334d;
+}
+
+.md-typeset .molvis-style-gallery__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  outline: 0;
+  pointer-events: none;
+  touch-action: none;
+  user-select: none;
+}
+
+.md-typeset .molvis-style-gallery__caption {
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+  justify-content: space-between;
+  min-height: 2.8rem;
+  padding: 0.72rem 0.82rem;
+  border-top: 1px solid var(--molcrafts-rule);
+}
+
+.md-typeset .molvis-style-gallery__caption strong {
+  color: var(--md-default-fg-color);
+  font-size: 0.76rem;
+  line-height: 1.35;
+}
+
+.md-typeset .molvis-style-gallery__caption code {
+  padding: 0.08rem 0.3rem;
+  color: var(--molcrafts-product-accent);
+  font-size: 0.6rem;
+  white-space: nowrap;
+}
+
+.md-typeset molvis-style-gallery[data-state="loading"] .molvis-style-gallery__preview {
+  background:
+    linear-gradient(100deg, transparent 20%, var(--molcrafts-product-accent-soft) 45%, transparent 70%),
+    var(--molcrafts-paper-elevated);
+  background-size: 220% 100%;
+  animation: molcrafts-component-loading 1.8s ease-in-out infinite;
+}
+
+.md-typeset .molvis-style-gallery__error {
+  padding: 1rem;
+  border: 1px solid color-mix(in srgb, #b42318 45%, transparent);
+  border-radius: var(--molcrafts-radius);
+  background: color-mix(in srgb, #b42318 8%, var(--molcrafts-paper));
+  color: #b42318;
+  font-size: 0.76rem;
+}
+
 .md-typeset molplot-chart {
-  min-height: 19rem;
-  padding: 0.65rem;
   overflow-x: auto;
   background: #fff;
   color: #14271d;
-}
-
-.md-typeset molplot-chart > div {
-  width: 100%;
-  min-height: 17.7rem;
 }
 
 .md-typeset :is(molvis-viewer, molplot-chart)[data-state="loading"] {
@@ -1392,7 +1481,7 @@
 
 .md-typeset .molcrafts-web-component-preview {
   min-width: 0;
-  padding: 0.65rem;
+  padding: 0.35rem;
   background:
     linear-gradient(135deg, var(--molcrafts-product-accent-soft), transparent 42%),
     color-mix(in srgb, var(--md-default-bg-color) 88%, var(--molcrafts-paper));
@@ -1409,11 +1498,12 @@
 .md-typeset .molcrafts-web-component-preview--chart {
   display: flex;
   align-items: center;
-  min-height: calc(clamp(20rem, 35vw, 23rem) + 1.3rem);
+  justify-content: center;
+  min-height: auto;
 }
 
 .md-typeset .molcrafts-web-component-preview--chart molplot-chart {
-  flex: 1 1 auto;
+  flex: 0 1 auto;
 }
 
 .md-search__form,
@@ -1615,21 +1705,90 @@
     min-height: 19rem;
   }
 
-  .md-typeset molplot-chart {
-    padding: 0.4rem;
-  }
-
   .md-typeset .molcrafts-web-component-card figcaption {
     padding: 0.78rem 0.82rem 0.72rem;
   }
 
   .md-typeset .molcrafts-web-component-preview {
-    padding: 0.4rem;
+    padding: 0.25rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .md-typeset :is(molvis-viewer, molplot-chart)[data-state="loading"] {
+  .md-typeset :is(molvis-viewer, molplot-chart)[data-state="loading"],
+  .md-typeset molvis-style-gallery[data-state="loading"] .molvis-style-gallery__preview {
     animation: none;
+  }
+}
+
+@media screen and (max-width: 44em) {
+  .md-typeset .molvis-style-gallery__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Bundled mkdocstrings C++ handler. Zensical 0.0.45 renders handler
+   templates but does not emit their companion stylesheet, so the theme owns
+   the visible integration as part of its normal CSS bundle. */
+.md-typeset .cpp-object {
+  margin: 1.25rem 0;
+}
+
+.md-typeset .cpp-kind {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.35rem;
+  margin-bottom: 0.3rem;
+  padding: 0.08rem 0.42rem;
+  border: 0.05rem solid color-mix(in srgb, var(--molcrafts-product-accent) 28%, transparent);
+  border-radius: 999px;
+  background: var(--molcrafts-product-accent-soft);
+  color: var(--molcrafts-product-accent);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.md-typeset .cpp-signature pre {
+  margin: 0.5rem 0 0.85rem;
+  border: 0.05rem solid var(--molcrafts-rule);
+  border-radius: var(--molcrafts-radius-sm);
+  box-shadow: var(--molcrafts-shadow-sm);
+}
+
+.md-typeset .cpp-signature code {
+  white-space: pre-wrap;
+}
+
+.md-typeset :is(.cpp-params, .cpp-enum-values) {
+  overflow-x: auto;
+}
+
+.md-typeset :is(.cpp-params, .cpp-enum-values) table {
+  display: table;
+  width: 100%;
+}
+
+.md-typeset :is(.cpp-params, .cpp-enum-values) :is(th, td):first-child {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.md-typeset .cpp-location {
+  color: var(--md-default-fg-color--light);
+  font-size: 0.78rem;
+}
+
+.md-typeset .cpp-children {
+  margin-top: 1rem;
+  padding-left: 1rem;
+  border-left: 0.1rem solid var(--molcrafts-rule-strong);
+}
+
+@media screen and (max-width: 36em) {
+  .md-typeset .cpp-children {
+    padding-left: 0.65rem;
   }
 }

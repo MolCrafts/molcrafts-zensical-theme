@@ -1,0 +1,127 @@
+{% macro markdown_block(text, html_id, level) -%}
+  {%- if text -%}
+    {{ text|convert_markdown(level, html_id) }}
+  {%- endif -%}
+{%- endmacro %}
+
+{% macro parameter_table(title, parameters, html_id, level) -%}
+  {%- if parameters -%}
+    <div class="cpp-params">
+      <h{{ level if level <= 6 else 6 }}>{{ title }}</h{{ level if level <= 6 else 6 }}>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for parameter in parameters %}
+            <tr>
+              <td><code>{{ parameter.name }}</code></td>
+              <td><code>{{ parameter.type }}</code></td>
+              <td>
+                {{ markdown_block(parameter.description, html_id, level) }}
+                {%- if parameter.default %}
+                  <p><strong>Default:</strong> <code>{{ parameter.default }}</code></p>
+                {%- endif %}
+              </td>
+            </tr>
+          {%- endfor %}
+        </tbody>
+      </table>
+    </div>
+  {%- endif -%}
+{%- endmacro %}
+
+{% macro enum_table(values, html_id, level) -%}
+  {%- if values and config.show_enum_values -%}
+    <div class="cpp-enum-values">
+      <h{{ level if level <= 6 else 6 }}>Values</h{{ level if level <= 6 else 6 }}>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Initializer</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for value in values %}
+            <tr>
+              <td><code>{{ value.name }}</code></td>
+              <td>{%- if value.initializer %}<code>{{ value.initializer }}</code>{%- endif %}</td>
+              <td>{{ markdown_block(value.brief or value.description, html_id, level) }}</td>
+            </tr>
+          {%- endfor %}
+        </tbody>
+      </table>
+    </div>
+  {%- endif -%}
+{%- endmacro %}
+
+{% macro render_object(object, level, is_root=False) -%}
+  {%- set title = object.qualified_name if (is_root and config.show_root_full_path) else object.name -%}
+  {%- set show_heading = (not is_root) or config.show_root_heading -%}
+  {%- if show_heading %}
+    {{ title|heading(level if level <= 6 else 6, role=object.kind, id=object.html_id, toc_label=title) }}
+  {%- endif %}
+
+  <div class="doc doc-object cpp-object cpp-{{ object.kind }}">
+    <div class="cpp-kind">{{ object.display_kind }}</div>
+
+    {%- if object.signature %}
+      <div class="cpp-signature">
+        {%- if config.separate_signature %}
+          <pre><code class="language-cpp">{{ object.signature }}</code></pre>
+        {%- else %}
+          <code>{{ object.signature }}</code>
+        {%- endif %}
+      </div>
+    {%- endif %}
+
+    {%- if object.brief %}
+      <div class="cpp-brief">{{ markdown_block(object.brief, object.html_id, level) }}</div>
+    {%- endif %}
+
+    {%- if object.description %}
+      <div class="cpp-description">{{ markdown_block(object.description, object.html_id, level) }}</div>
+    {%- endif %}
+
+    {%- if config.show_template_parameters and object.template_parameters %}
+      {{ parameter_table("Template parameters", object.template_parameters, object.html_id, level + 1) }}
+    {%- endif %}
+
+    {%- if object.parameters %}
+      {{ parameter_table("Parameters", object.parameters, object.html_id, level + 1) }}
+    {%- endif %}
+
+    {%- if object.return_description %}
+      <div class="cpp-returns">
+        <h{{ (level + 1) if (level + 1) <= 6 else 6 }}>Returns</h{{ (level + 1) if (level + 1) <= 6 else 6 }}>
+        {{ markdown_block(object.return_description, object.html_id, level + 1) }}
+      </div>
+    {%- endif %}
+
+    {{ enum_table(object.enum_values, object.html_id, level + 1) }}
+
+    {%- if config.show_source_location and object.location %}
+      <p class="cpp-location">
+        <span>Defined in</span>
+        <code>{{ object.location.file }}{% if object.location.line %}:{{ object.location.line }}{% endif %}</code>
+      </p>
+    {%- endif %}
+
+    {%- set children = object.children|visible_children(config, is_root and object.kind != "function_group") %}
+    {%- if children %}
+      <div class="cpp-children">
+        {%- for child in children %}
+          {{ render_object(child, level + 1, False) }}
+        {%- endfor %}
+      </div>
+    {%- endif %}
+  </div>
+{%- endmacro %}
+
+{{ render_object(object, heading_level, root) }}

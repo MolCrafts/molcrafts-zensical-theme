@@ -22,6 +22,10 @@ docs = [
 For theme development, install the checkout in editable mode instead
 (`pip install -e .`).
 
+The distribution includes the MolCrafts C++ handler for `mkdocstrings`; a
+second Python package is not required. Rendering C++ API documentation still
+requires the `doxygen` executable to be available on `PATH`.
+
 ## Use
 
 Add the theme to a Zensical project:
@@ -61,6 +65,56 @@ visual setup: typography, both color modes, component colors, and navigation
 behavior are owned by the theme. Product accent settings and the home-page
 components below are optional customization, not required theme tokens.
 
+## MolVis formatter fences
+
+The theme exposes formatter entry points for MolVis embeds, so a documentation
+site can run `zensical build` or `zensical serve` without importing the MolVis
+Python package from a source checkout:
+
+```toml
+[project.markdown_extensions.pymdownx.superfences]
+custom_fences = [
+  { name = "molvis", class = "molvis", format = "molcrafts_zensical_theme.formatters.molvis_fence" },
+  { name = "molvis-gallery", class = "molvis-gallery", format = "molcrafts_zensical_theme.formatters.molvis_gallery_fence" },
+]
+```
+
+`molvis-gallery` accepts `src`, `format`, `representations`, `background`, and
+`rotation-speed`. The formatter validates author input and emits the
+`molvis-style-gallery` Web Component; authors do not need to insert raw HTML.
+When it finds `core/dist/elements.js` in the documentation project, it also
+stages that build under `docs/assets/molvis-core` so `zensical serve` uses the
+current checkout. Set `MOLVIS_ELEMENTS_DIR` and `MOLVIS_DOCS_ASSET_DIR` to
+override the source and destination; without a local bundle, the documentation
+loader can fall back to the published npm package.
+
+## C++ API reference
+
+Enable the bundled handler in the consuming project's `zensical.toml`:
+
+```toml
+[project.plugins.mkdocstrings]
+default_handler = "cpp"
+
+[project.plugins.mkdocstrings.handlers.cpp]
+input = ["include"]
+file_patterns = ["*.h", "*.hpp", "*.cpp"]
+build_dir = ".cache/mkdocstrings-cpp"
+
+[project.plugins.mkdocstrings.handlers.cpp.options]
+show_root_heading = true
+members_order = "source"
+separate_signature = true
+```
+
+Then use normal mkdocstrings directives in Markdown:
+
+```markdown
+::: my_namespace::MyClass
+    options:
+      members_order: source
+```
+
 ## Home page
 
 The theme ships a manual-style landing layout that a stock Zensical site does
@@ -87,6 +141,7 @@ hero:
     - { label: Guide, href: concepts/ }
   install:                        # right-hand card with copyable tabs
     label: Install
+    align: left                   # optional: stack below copy, left-aligned
     methods:
       - { label: pip, command: pip install molpack }
       - { label: uv, command: uv add molpack }
@@ -122,7 +177,7 @@ are plain HTML with `markdown` where inner Markdown is wanted):
 | `molcrafts-doc-map` | Grid of `<section><h3>…</h3><p>…</p></section>` linking to nav areas |
 | `molcrafts-sr-only` | Visually-hidden `<h1>` so the page still has a heading for a11y/search |
 
-See `examples/basic/docs/index.md` for a complete, copyable example, and the
+See `examples/docs/index.md` for a complete, copyable example, and the
 molpy / molpack `docs/index.md` for production use.
 
 ### Section templates
@@ -171,8 +226,8 @@ the room a `--stack` frame gives it:
 ## Local Example
 
 ```bash
-zensical build -f examples/basic/zensical.toml
-zensical serve -f examples/basic/zensical.toml
+zensical build -f examples/zensical.toml
+zensical serve -f examples/zensical.toml
 ```
 
 The usage surface is Zensical-native: configure sites with `zensical.toml`.

@@ -16,20 +16,28 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install Doxygen
+        run: sudo apt-get update && sudo apt-get install --yes doxygen
       - name: Build distributions
         run: |
-          python -m pip install build twine
+          python -m pip install build pytest twine
           python -m build
           twine check dist/*
       - name: Build example sites against the wheel
         run: |
-          python -m pip install dist/*.whl
-          zensical build -f examples/minimal/zensical.toml
-          zensical build -f examples/basic/zensical.toml
-      - name: Verify zero-config theme defaults
+          python -m pip install dist/*.whl molcrafts-molplot
+          python -m pytest
+          zensical build -f examples/zensical.toml
+      - name: Verify theme defaults
         run: |
-          grep -q 'assets/stylesheets/molcrafts.css' examples/minimal/site/index.html
-          grep -q 'data-md-color-scheme="default"' examples/minimal/site/index.html
-          grep -q 'data-md-color-scheme="slate"' examples/minimal/site/index.html
-          grep -q -- '--md-text-font:"Inter"' examples/minimal/site/index.html
-          grep -q 'color-scheme: dark' examples/minimal/site/assets/stylesheets/molcrafts.css
+          grep -q 'assets/stylesheets/molcrafts.css' examples/site/index.html
+          grep -q 'data-md-color-scheme="default"' examples/site/index.html
+          grep -q 'data-md-color-scheme="slate"' examples/site/index.html
+          grep -q -- '--md-text-font:"Inter"' examples/site/index.html
+          grep -q 'color-scheme: dark' examples/site/assets/stylesheets/molcrafts.css
+          grep -q '<molplot-chart preset="molplot" theme="auto" width="32rem" aspect="4:3">' examples/site/molplot/index.html
+          grep -q '"id": "conf-15"' examples/site/molplot/index.html
+          grep -q 'class="doc doc-object cpp-object cpp-class"' examples/site/cpp/index.html
+          grep -q 'Bundled mkdocstrings C++ handler' examples/site/assets/stylesheets/molcrafts.css
+          grep -q 'https://github.com/MolCrafts/molcrafts-zensical-theme' examples/site/index.html
+          grep -q 'MolCrafts Theme' examples/site/index.html

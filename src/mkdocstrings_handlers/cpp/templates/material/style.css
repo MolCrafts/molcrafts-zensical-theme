@@ -1,0 +1,45 @@
+.cpp-object {
+  margin: 1.25rem 0;
+}
+
+.cpp-kind {
+  color: var(--md-default-fg-color--light);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+}
+
+.cpp-signature pre {
+  margin: 0.5rem 0 0.75rem;
+}
+
+.cpp-signature code {
+  white-space: pre-wrap;
+}
+
+.cpp-params table,
+.cpp-enum-values table {
+  display: table;
+  width: 100%;
+}
+
+.cpp-params th:first-child,
+.cpp-params td:first-child,
+.cpp-enum-values th:first-child,
+.cpp-enum-values td:first-child {
+  white-space: nowrap;
+  width: 1%;
+}
+
+.cpp-location {
+  color: var(--md-default-fg-color--light);
+  font-size: 0.78rem;
+}
+
+.cpp-children {
+  border-left: 0.08rem solid var(--md-default-fg-color--lightest);
+  margin-top: 1rem;
+  padding-left: 1rem;
+}

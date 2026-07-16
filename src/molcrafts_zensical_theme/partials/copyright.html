@@ -1,0 +1,21 @@
+{#-
+  Override Zensical's generator line so MolCrafts sites credit both the
+  documentation engine and this theme (linked to the theme repository).
+-#}
+<div class="md-copyright">
+  {% if config.copyright %}
+    <div class="md-copyright__highlight">
+      {{ config.copyright }}
+    </div>
+  {% endif %}
+  {% if not config.extra.generator == false %}
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+    and
+    <a href="https://github.com/MolCrafts/molcrafts-zensical-theme" target="_blank" rel="noopener">
+      MolCrafts Theme
+    </a>
+  {% endif %}
+</div>

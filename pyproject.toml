@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "molcrafts-zensical-theme"
-version = "0.1.2"
+version = "0.2.0"
 description = "MolCrafts theme extension for Zensical documentation sites."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -25,7 +25,8 @@ classifiers = [
   "Topic :: Software Development :: Documentation",
 ]
 dependencies = [
-  "zensical>=0.0.45",
+  "mkdocstrings>=1.0.0",
+ "zensical>=0.0.45",
 ]
 
 [project.urls]
@@ -41,12 +42,19 @@ package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["molcrafts_zensical_theme*"]
+include = ["mkdocstrings_handlers.cpp*", "molcrafts_zensical_theme*"]
+namespaces = true
 
 [tool.setuptools.package-data]
 molcrafts_zensical_theme = [
   "mkdocs_theme.yml",
   "main.html",
+  "partials/*.html",
   "assets/images/*.svg",
   "assets/stylesheets/*.css",
+]
+"mkdocstrings_handlers.cpp" = [
+  "py.typed",
+  "templates/**/*.jinja",
+  "templates/**/*.css",
 ]
