@@ -141,7 +141,6 @@ hero:
     - { label: Guide, href: concepts/ }
   install:                        # right-hand card with copyable tabs
     label: Install
-    align: left                   # optional: stack below copy, left-aligned
     methods:
       - { label: pip, command: pip install molpack }
       - { label: uv, command: uv add molpack }

@@ -16,7 +16,7 @@ population-sized points, cluster shapes, and rich hover tooltips. Drag inside
 the chart to pan, use the mouse wheel over an axis to zoom that axis, use
 `shift+wheel` to zoom both axes, and `double-click` to reset.
 
-```molplot preset="molplot" theme="auto" width="32rem" aspect="4:3"
+```molplot preset="molplot" theme="auto"
 mark:
   type: point
   filled: true
@@ -93,9 +93,7 @@ encoding:
 |---|---|---|
 | `preset` | `molplot`, `molplot-paper` | `molplot` |
 | `theme` | `auto`, `light`, `dark` | `auto` |
-| `width` | Any CSS width, such as `24rem`, `32rem`, `100%` | `28rem` maximum |
-| `aspect` | A ratio such as `4:3`, `16:9`, `1:1` | `4:3` |
+| `type` | Chart type hint forwarded to MolPlot | (unset) |
 
-The formatter accepts YAML or JSON. MolPlot supplies the preset, responsive 4:3
-layout, and default interaction; the fenced body remains a portable Vega-Lite
-specification.
+The formatter accepts YAML or JSON. MolPlot supplies the preset, layout, and
+default interaction; the fenced body remains a portable Vega-Lite specification.

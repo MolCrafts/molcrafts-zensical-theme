@@ -500,7 +500,7 @@
    driven by hero.install / hero.badges front matter. */
 .molcrafts-home-hero__inner {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 2.5rem;
 }
@@ -508,22 +508,13 @@
 .molcrafts-home-hero__aside {
   display: grid;
   gap: 0.7rem;
-  min-width: 18.5rem;
+  /* The kicker is .875rem tall with a 1.15rem bottom margin. Offset the
+     fixed-width aside by that total so the card starts on the h1's top edge. */
+  width: 23rem;
+  min-width: 0;
   max-width: 23rem;
-}
-
-/* Opt-in stacked hero: keep the install card on the same left edge as the
-   title/actions instead of treating it as a right-hand marketing aside. */
-.molcrafts-home-hero--install-left .molcrafts-home-hero__inner {
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 1.65rem;
-}
-
-.molcrafts-home-hero--install-left .molcrafts-home-hero__aside {
-  width: 100%;
-  max-width: 32rem;
+  margin-top: 2.025rem;
+  margin-left: auto;
 }
 
 .molcrafts-home-hero__install {
@@ -610,6 +601,7 @@
 
 .molcrafts-home-hero__install-row code {
   flex: 1;
+  min-width: 0;
   padding: 0.55rem 0.68rem;
   border: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 10%, transparent);
   border-radius: var(--molcrafts-radius-sm);
@@ -684,6 +676,7 @@
   .molcrafts-home-hero__aside {
     width: 100%;
     max-width: 26rem;
+    margin-top: 0;
   }
 }
 
@@ -1318,6 +1311,7 @@
 }
 
 .md-typeset molvis-viewer {
+  position: relative;
   width: 100%;
   height: clamp(20rem, 52vw, 26rem);
   min-height: 20rem;

@@ -35,8 +35,9 @@ jobs:
           grep -q 'data-md-color-scheme="slate"' examples/site/index.html
           grep -q -- '--md-text-font:"Inter"' examples/site/index.html
           grep -q 'color-scheme: dark' examples/site/assets/stylesheets/molcrafts.css
-          grep -q '<molplot-chart preset="molplot" theme="auto" width="32rem" aspect="4:3">' examples/site/molplot/index.html
+          grep -q '<molplot-chart preset="molplot" theme="auto">' examples/site/molplot/index.html
           grep -q '"id": "conf-15"' examples/site/molplot/index.html
+
           grep -q 'class="doc doc-object cpp-object cpp-class"' examples/site/cpp/index.html
           grep -q 'Bundled mkdocstrings C++ handler' examples/site/assets/stylesheets/molcrafts.css
           grep -q 'https://github.com/MolCrafts/molcrafts-zensical-theme' examples/site/index.html
