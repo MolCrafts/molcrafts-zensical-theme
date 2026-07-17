@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "molcrafts-zensical-theme"
-version = "0.2.1"
+version = "0.2.2"
 description = "MolCrafts theme extension for Zensical documentation sites."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -26,7 +26,9 @@ classifiers = [
 ]
 dependencies = [
   "mkdocstrings>=1.0.0",
- "zensical>=0.0.45",
+  "zensical>=0.0.45",
+  # MolPlot fence bodies are usually YAML; JSON-only authoring works without it.
+  "pyyaml>=6.0",
 ]
 
 [project.urls]

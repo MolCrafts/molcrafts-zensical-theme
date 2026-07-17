@@ -1,12 +1,35 @@
-"""Formatter-backed MolVis components for MolCrafts documentation sites."""
+"""Doc-site fence formatters for MolVis and MolPlot Web Components.
+
+Both packages follow the **same contract**:
+
+1. **Build time (Python):** a superfences formatter in *this theme package*
+   turns a Markdown fence into a Web Component tag. Consuming sites only need
+   ``molcrafts-zensical-theme`` (+ zensical) — not the molvis / molplot
+   Python libraries.
+2. **Run time (browser):** the corresponding npm ``elements.js`` bundle
+   upgrades the custom element. Sites load it once via ``extra_javascript``
+   (CDN or a staged local copy).
+
+Optional local staging (monorepo / ``npm link``) uses the same resolution
+order for both:
+
+1. ``$ENV_ELEMENTS_DIR`` override
+2. ``node_modules/@molcrafts/<package>/dist``
+3. otherwise leave the CDN path alone
+
+Never stage monorepo-relative ``core/dist`` paths.
+"""
 
 from __future__ import annotations
 
 from html import escape
+import json
 import os
 from pathlib import Path
 import shutil
 from typing import Any, Mapping
+
+# ── MolVis vocabulary ──────────────────────────────────────────────────────
 
 FORMATS = {
     "pdb",
@@ -63,6 +86,10 @@ GALLERY_ATTRIBUTES = {
     "rotation-speed",
 }
 
+# ── MolPlot vocabulary ─────────────────────────────────────────────────────
+
+MOLPLOT_OPTIONS = ("preset", "theme", "type", "width", "aspect")
+
 
 def _tokens(value: str) -> set[str]:
     return {item for item in value.split() if item}
@@ -83,20 +110,21 @@ def _copy_if_changed(source: str, target: str) -> str:
     return shutil.copy2(source_path, target_path)
 
 
-def _stage_local_molvis_bundle() -> None:
-    """Copy a local MolVis elements build into the documentation assets.
+def _stage_npm_elements_bundle(
+    *,
+    env_var: str,
+    npm_package: str,
+    asset_subdir: str,
+) -> None:
+    """Stage ``@molcrafts/<npm_package>/dist`` under ``docs/assets/<asset_subdir>``.
 
-    This keeps ``zensical serve`` faithful to a MolVis source checkout instead
-    of silently loading an older npm release. Published documentation builds
-    can set ``MOLVIS_ELEMENTS_DIR`` explicitly; when no local build exists the
-    small browser loader falls back to the npm CDN.
+    Shared by MolVis and MolPlot so both web components resolve the same way.
     """
     cwd = Path.cwd()
-    configured = os.environ.get("MOLVIS_ELEMENTS_DIR")
+    configured = os.environ.get(env_var)
     candidates = [
         Path(configured).expanduser() if configured else None,
-        cwd / "core" / "dist",
-        cwd / "node_modules" / "@molcrafts" / "molvis-core" / "dist",
+        cwd / "node_modules" / "@molcrafts" / npm_package / "dist",
     ]
     source = next(
         (
@@ -111,9 +139,9 @@ def _stage_local_molvis_bundle() -> None:
         return
 
     assets_dir = Path(
-        os.environ.get("MOLVIS_DOCS_ASSET_DIR", cwd / "docs" / "assets")
+        os.environ.get("MOLCRAFTS_DOCS_ASSET_DIR", cwd / "docs" / "assets")
     )
-    target = assets_dir / "molvis-core"
+    target = assets_dir / asset_subdir
     if source == target.resolve():
         return
     target.mkdir(parents=True, exist_ok=True)
@@ -122,6 +150,24 @@ def _stage_local_molvis_bundle() -> None:
         target,
         dirs_exist_ok=True,
         copy_function=_copy_if_changed,
+    )
+
+
+def _stage_local_molvis_bundle() -> None:
+    """Stage ``@molcrafts/molvis-core`` into ``docs/assets/molvis-core``."""
+    _stage_npm_elements_bundle(
+        env_var="MOLVIS_ELEMENTS_DIR",
+        npm_package="molvis-core",
+        asset_subdir="molvis-core",
+    )
+
+
+def _stage_local_molplot_bundle() -> None:
+    """Stage ``@molcrafts/molplot`` into ``docs/assets/molplot``."""
+    _stage_npm_elements_bundle(
+        env_var="MOLPLOT_ELEMENTS_DIR",
+        npm_package="molplot",
+        asset_subdir="molplot",
     )
 
 
@@ -289,10 +335,98 @@ def molvis_gallery_fence(
     )
 
 
-# Zensical imports formatter callables while resolving its configuration. Stage
-# the bundle here so it is present before the static-asset scan starts. The
-# formatter calls above keep it fresh during a long-running development server.
+# ── MolPlot fence (same ownership model as MolVis) ─────────────────────────
+
+
+def _load_molplot_spec(source: str) -> Any:
+    """Parse a fenced body (YAML or JSON) into a Vega-Lite spec object."""
+    try:
+        import yaml
+    except ImportError:  # pragma: no cover - JSON-only fallback
+        return json.loads(source)
+    return yaml.safe_load(source)
+
+
+def render_molplot_element(
+    source: str,
+    *,
+    preset: str | None = None,
+    theme: str | None = None,
+    width: str | None = None,
+    aspect: str | None = None,
+) -> str:
+    """Build the ``<molplot-chart>`` HTML for a Vega-Lite ``source`` spec."""
+    try:
+        spec = _load_molplot_spec(source)
+    except Exception as exc:  # noqa: BLE001 - report parse errors inline
+        message = escape(f"molplot: invalid Vega-Lite spec — {exc}")
+        return f'<div class="molplot-error">{message}</div>'
+
+    attrs = ""
+    if preset:
+        attrs += f' preset="{escape(preset, quote=True)}"'
+    if theme:
+        attrs += f' theme="{escape(theme, quote=True)}"'
+    if width:
+        attrs += f' width="{escape(width, quote=True)}"'
+    if aspect:
+        attrs += f' aspect="{escape(aspect, quote=True)}"'
+
+    payload = json.dumps(spec)
+    return (
+        f'<div class="molplot">'
+        f"<molplot-chart{attrs}>"
+        f'<script type="application/json">{payload}</script>'
+        f"</molplot-chart>"
+        f"</div>"
+    )
+
+
+def molplot_validator(
+    language: str,
+    inputs: dict[str, str],
+    options: dict[str, Any],
+    attrs: dict[str, Any],
+    md: Any,
+) -> bool:
+    """Accept only known molplot fence-header options."""
+    del language, attrs, md
+    for key, value in inputs.items():
+        if key not in MOLPLOT_OPTIONS:
+            return False
+        options[key] = value
+    return True
+
+
+def molplot_fence(
+    source: str,
+    language: str,
+    css_class: str,
+    options: Mapping[str, Any],
+    md: Any,
+    **kwargs: Any,
+) -> str:
+    """Emit a ``molplot-chart`` Web Component from a Vega-Lite fence body."""
+    del language, css_class, md, kwargs
+    _stage_local_molplot_bundle()
+    return render_molplot_element(
+        source,
+        preset=options.get("preset"),
+        theme=options.get("theme"),
+        width=options.get("width"),
+        aspect=options.get("aspect"),
+    )
+
+
+# Stage bundles at import time so zensical's static-asset scan sees them.
 _stage_local_molvis_bundle()
+_stage_local_molplot_bundle()
 
 
-__all__ = ["molvis_fence", "molvis_gallery_fence"]
+__all__ = [
+    "molvis_fence",
+    "molvis_gallery_fence",
+    "molplot_fence",
+    "molplot_validator",
+    "render_molplot_element",
+]

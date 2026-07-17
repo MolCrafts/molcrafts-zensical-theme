@@ -15,7 +15,7 @@ docs so builds stay reproducible:
 [dependency-groups]
 docs = [
   "zensical>=0.0.45",
-  "molcrafts-zensical-theme>=0.1.0",
+  "molcrafts-zensical-theme>=0.2.2",
 ]
 ```
 
@@ -65,28 +65,44 @@ visual setup: typography, both color modes, component colors, and navigation
 behavior are owned by the theme. Product accent settings and the home-page
 components below are optional customization, not required theme tokens.
 
-## MolVis formatter fences
+## Web Component fences (MolVis + MolPlot) — one model
 
-The theme exposes formatter entry points for MolVis embeds, so a documentation
-site can run `zensical build` or `zensical serve` without importing the MolVis
-Python package from a source checkout:
+MolVis and MolPlot use the **same ownership split** so docs sites only depend
+on this theme (+ zensical):
+
+| Layer | Owner | What you install |
+|---|---|---|
+| Build-time fence (Markdown → HTML) | **this theme** | `pip install molcrafts-zensical-theme` |
+| Run-time Web Component | npm package on CDN (or staged `node_modules`) | nothing in Python |
 
 ```toml
+extra_javascript = [
+  { path = "https://cdn.jsdelivr.net/npm/@molcrafts/molvis-core@latest/dist/elements.js", type = "module" },
+  { path = "https://cdn.jsdelivr.net/npm/@molcrafts/molplot@latest/dist/elements.js", type = "module" },
+]
+
 [project.markdown_extensions.pymdownx.superfences]
 custom_fences = [
+  { name = "mermaid", class = "mermaid" },
   { name = "molvis", class = "molvis", format = "molcrafts_zensical_theme.formatters.molvis_fence" },
   { name = "molvis-gallery", class = "molvis-gallery", format = "molcrafts_zensical_theme.formatters.molvis_gallery_fence" },
+  { name = "molplot", class = "molplot", format = "molcrafts_zensical_theme.formatters.molplot_fence", validator = "molcrafts_zensical_theme.formatters.molplot_validator" },
 ]
 ```
 
-`molvis-gallery` accepts `src`, `format`, `representations`, `background`, and
-`rotation-speed`. The formatter validates author input and emits the
-`molvis-style-gallery` Web Component; authors do not need to insert raw HTML.
-When it finds `core/dist/elements.js` in the documentation project, it also
-stages that build under `docs/assets/molvis-core` so `zensical serve` uses the
-current checkout. Set `MOLVIS_ELEMENTS_DIR` and `MOLVIS_DOCS_ASSET_DIR` to
-override the source and destination; without a local bundle, the documentation
-loader can fall back to the published npm package.
+**MolVis:** `format="xyz"` etc.; gallery accepts `src`, `representations`,
+`rotation-speed`. **MolPlot:** fence body is a Vega-Lite spec (YAML or JSON);
+header options `preset` / `theme` / `width` / `aspect`.
+
+Local staging (optional): when
+`node_modules/@molcrafts/molvis-core` or `node_modules/@molcrafts/molplot` is
+present, the formatters copy `dist/` into `docs/assets/{molvis-core,molplot}/`.
+Overrides: `MOLVIS_ELEMENTS_DIR`, `MOLPLOT_ELEMENTS_DIR`,
+`MOLCRAFTS_DOCS_ASSET_DIR`. Monorepo-relative `core/dist` paths are never used.
+
+The paper-charting Python package (`molcrafts-molplot`) does **not** ship a
+Markdown fence — docs sites must use this theme.
+
 
 ## C++ API reference
 

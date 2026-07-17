@@ -20,7 +20,7 @@ page. It supports inline molecular text as well as remote structure files.
     <molvis-viewer format="xyz" representation="ball-and-stick" controls="view">
       <template data-molvis-source>
 3
-water
+name=water Connct="[0,1,0,2]"
 O  0.0000  0.0000  0.0000
 H  0.9572  0.0000  0.0000
 H -0.2390  0.9266  0.0000
@@ -63,7 +63,7 @@ Put multiline structure text in a hidden `template` and specify its format:
 <molvis-viewer format="xyz" representation="ball-and-stick">
   <template data-molvis-source>
 3
-water
+name=water Connct="[0,1,0,2]"
 O  0.0000  0.0000  0.0000
 H  0.9572  0.0000  0.0000
 H -0.2390  0.9266  0.0000

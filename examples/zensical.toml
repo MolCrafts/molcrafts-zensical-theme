@@ -8,7 +8,7 @@ site_dir = "site"
 copyright = "Copyright &copy; 2026 MolCrafts"
 extra_javascript = [
   { path = "https://cdn.jsdelivr.net/npm/@molcrafts/molvis-core@latest/dist/elements.js", type = "module" },
-  { path = "http://localhost:4173/elements.js", type = "module" },
+  { path = "https://cdn.jsdelivr.net/npm/@molcrafts/molplot@latest/dist/elements.js", type = "module" },
 ]
 
 nav = [
@@ -37,9 +37,9 @@ show_template_parameters = true
 show_enum_values = true
 separate_signature = true
 
-# Register MolPlot's fenced-block formatter. Declaring markdown_extensions
-# replaces Zensical's defaults, so keep the standard set alongside the custom
-# `molplot` fence.
+# Both MolVis and MolPlot fences live in the theme — no molplot Python package
+# required to build this site. Declaring markdown_extensions replaces Zensical
+# defaults, so keep the standard set alongside the custom fences.
 [project.markdown_extensions]
 abbr = {}
 admonition = {}
@@ -70,7 +70,9 @@ tasklist = { custom_checkbox = true }
 [project.markdown_extensions.pymdownx.superfences]
 custom_fences = [
   { name = "mermaid", class = "mermaid" },
-  { name = "molplot", class = "molplot", format = "molplot.mdx.molplot_fence", validator = "molplot.mdx.molplot_validator" },
+  { name = "molvis", class = "molvis", format = "molcrafts_zensical_theme.formatters.molvis_fence" },
+  { name = "molvis-gallery", class = "molvis-gallery", format = "molcrafts_zensical_theme.formatters.molvis_gallery_fence" },
+  { name = "molplot", class = "molplot", format = "molcrafts_zensical_theme.formatters.molplot_fence", validator = "molcrafts_zensical_theme.formatters.molplot_validator" },
 ]
 
 [project.theme]

@@ -1362,12 +1362,14 @@
 
 .md-typeset .molvis-style-gallery__caption {
   display: flex;
-  gap: 0.75rem;
-  align-items: baseline;
+  gap: 0.5rem;
+  align-items: center;
   justify-content: space-between;
-  min-height: 2.8rem;
-  padding: 0.72rem 0.82rem;
-  border-top: 1px solid var(--molcrafts-rule);
+  flex-wrap: wrap;
+  min-height: 0; /* allow height to shrink to content */
+  padding: 0.48rem 0.72rem; /* smaller "chin" */
+  /* border-top is applied only when the card actually has a caption
+     to avoid showing a separator when the caption element is missing/empty */
 }
 
 .md-typeset .molvis-style-gallery__caption strong {
@@ -1381,6 +1383,26 @@
   color: var(--molcrafts-product-accent);
   font-size: 0.6rem;
   white-space: nowrap;
+}
+
+/* Only show the caption separator when a caption exists. Use :has()
+   so cards without captions keep the card's rounded bottom corners and
+   don't display an inner dividing line. */
+.md-typeset .molvis-style-gallery__card:has(.molvis-style-gallery__caption) .molvis-style-gallery__caption {
+  border-top: 1px solid var(--molcrafts-rule);
+}
+
+/* When a card has a caption, remove the preview's bottom radius so the
+   caption edge aligns flush. When there's no caption, restore radius so
+   there's no visible seam (no "chin"). */
+.md-typeset .molvis-style-gallery__card:has(.molvis-style-gallery__caption) .molvis-style-gallery__preview {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.md-typeset .molvis-style-gallery__card:not(:has(.molvis-style-gallery__caption)) .molvis-style-gallery__preview {
+  border-bottom-left-radius: var(--molcrafts-radius-lg);
+  border-bottom-right-radius: var(--molcrafts-radius-lg);
 }
 
 .md-typeset molvis-style-gallery[data-state="loading"] .molvis-style-gallery__preview {

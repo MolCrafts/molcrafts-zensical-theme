@@ -25,7 +25,8 @@ jobs:
           twine check dist/*
       - name: Build example sites against the wheel
         run: |
-          python -m pip install dist/*.whl molcrafts-molplot
+          # Fence formatters ship in the theme — no molplot Python package.
+          python -m pip install dist/*.whl
           python -m pytest
           zensical build -f examples/zensical.toml
       - name: Verify theme defaults
