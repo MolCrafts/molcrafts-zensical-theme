@@ -10,23 +10,29 @@ page. It supports inline molecular text as well as remote structure files.
 
 ## Live example
 
-<figure class="molcrafts-web-component-card">
-  <figcaption>
-    <span class="molcrafts-web-component-card__package">MolVis</span>
-    <strong>Inline water molecule</strong>
-    <small>Drag to rotate, scroll to zoom, and use the View control to change representation.</small>
-  </figcaption>
-  <div class="molcrafts-web-component-preview">
+[Figure 1](#fig-water) embeds an inline water molecule. Drag to rotate, scroll
+to zoom, and use the View control to change representation.
+
+<figure id="fig-water" class="molcrafts-figure">
+  <div class="molcrafts-figure__body">
+    <!--
+      XYZ must start on the same line as <template> (or the first non-empty
+      line must be the atom count). A leading blank line breaks molrs ≤0.8.2
+      ("XYZ len error: invalid atom count:") because len() treated blanks as
+      a new frame header. Same for trailing indented blank lines.
+    -->
     <molvis-viewer format="xyz" representation="ball-and-stick" controls="view">
-      <template data-molvis-source>
-3
+      <template data-molvis-source>3
 name=water Connct="[0,1,0,2]"
 O  0.0000  0.0000  0.0000
 H  0.9572  0.0000  0.0000
-H -0.2390  0.9266  0.0000
-      </template>
+H -0.2390  0.9266  0.0000</template>
     </molvis-viewer>
   </div>
+  <figcaption>
+    <span class="molcrafts-figure__label">Figure 1.</span>
+    Water molecule (ball-and-stick) loaded from an inline XYZ template.
+  </figcaption>
 </figure>
 
 ## Enable the component
@@ -61,15 +67,18 @@ Put multiline structure text in a hidden `template` and specify its format:
 
 ```html
 <molvis-viewer format="xyz" representation="ball-and-stick">
-  <template data-molvis-source>
-3
+  <template data-molvis-source>3
 name=water Connct="[0,1,0,2]"
 O  0.0000  0.0000  0.0000
 H  0.9572  0.0000  0.0000
-H -0.2390  0.9266  0.0000
-  </template>
+H -0.2390  0.9266  0.0000</template>
 </molvis-viewer>
 ```
+
+Do not put a blank line between `<template …>` and the atom-count line, and
+do not indent the closing `</template>` on its own line after the last atom —
+published molrs `XYZReader::len()` (≤0.8.2) treats those blanks as a second
+frame header and throws `XYZ len error: invalid atom count:`.
 
 ## Remote structure
 

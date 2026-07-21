@@ -1313,13 +1313,25 @@
 .md-typeset molvis-viewer {
   position: relative;
   width: 100%;
-  height: clamp(20rem, 52vw, 26rem);
-  min-height: 20rem;
+  /* Default when the fence omits height. The component applies an explicit
+     height="…" as an inline style; do not pin a large min-height over it. */
+  height: clamp(16rem, 40vw, 22rem);
   isolation: isolate;
 }
 
+.md-typeset molvis-viewer[height] {
+  /* Author height wins via the component's inline style. */
+  min-height: 0;
+}
+
 /* Formatter-backed MolVis representation gallery. Each visible canvas is a
-   Babylon Engine View; the component owns one hidden WebGL engine canvas. */
+   Babylon Engine View; the component owns one hidden WebGL engine canvas.
+
+   Cards are <figure> elements. Material/Zensical styles figures as
+   `width: fit-content; margin: 1em auto; text-align: center` and captions as
+   `max-width: 24rem; margin: 1em auto; font-style: italic` — both must be
+   overridden or every card shrinks to its canvas bitmap and the grid collapses
+   into uneven tiles. */
 .md-typeset molvis-style-gallery {
   display: block;
   width: 100%;
@@ -1330,9 +1342,15 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
+  align-items: stretch;
 }
 
+.md-typeset figure.molvis-style-gallery__card,
 .md-typeset .molvis-style-gallery__card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: none;
   min-width: 0;
   margin: 0;
   overflow: hidden;
@@ -1340,16 +1358,23 @@
   border-radius: var(--molcrafts-radius-lg);
   background: var(--molcrafts-paper-elevated);
   box-shadow: var(--molcrafts-shadow-sm);
+  text-align: left;
 }
 
 .md-typeset .molvis-style-gallery__preview {
   position: relative;
+  flex: 0 0 auto;
+  width: 100%;
   aspect-ratio: 4 / 3;
   overflow: hidden;
   background: #33334d;
 }
 
+/* Absolute fill so the HTML canvas bitmap size never drives card layout
+   (canvas defaults to 300×150 and Babylon resizes the drawing buffer). */
 .md-typeset .molvis-style-gallery__canvas {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
@@ -1360,28 +1385,38 @@
   user-select: none;
 }
 
+.md-typeset figcaption.molvis-style-gallery__caption,
 .md-typeset .molvis-style-gallery__caption {
   display: flex;
+  flex: 0 0 auto;
   gap: 0.5rem;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  min-height: 0; /* allow height to shrink to content */
-  padding: 0.48rem 0.72rem; /* smaller "chin" */
-  /* border-top is applied only when the card actually has a caption
-     to avoid showing a separator when the caption element is missing/empty */
+  width: 100%;
+  max-width: none;
+  min-height: 0;
+  margin: 0;
+  padding: 0.55rem 0.75rem;
+  font-style: normal;
+  text-align: left;
 }
 
 .md-typeset .molvis-style-gallery__caption strong {
   color: var(--md-default-fg-color);
-  font-size: 0.76rem;
+  font-size: 0.8rem;
+  font-weight: 650;
+  font-style: normal;
   line-height: 1.35;
 }
 
 .md-typeset .molvis-style-gallery__caption code {
-  padding: 0.08rem 0.3rem;
+  padding: 0.1rem 0.35rem;
+  border-radius: var(--molcrafts-radius-sm);
+  background: var(--molcrafts-product-accent-soft);
   color: var(--molcrafts-product-accent);
-  font-size: 0.6rem;
+  font-size: 0.68rem;
+  font-style: normal;
   white-space: nowrap;
 }
 
@@ -1422,10 +1457,57 @@
   font-size: 0.76rem;
 }
 
-.md-typeset molplot-chart {
-  overflow-x: auto;
+/* Docs host for <molplot-chart>.
+
+   Default aspect is 4:3 (fence default). Standalone fences cap width so a full
+   content column does not billboard; inside .molcrafts-figure the chart fills
+   the card face (see figure rules below).
+
+   Type size is owned by @molcrafts/molplot fontScale (layout metrics must match
+   painted glyphs — pure CSS font-size blows past Vega's reserved label slots
+   and clips titles). Do not !important-override SVG text here. */
+.md-typeset molplot-chart,
+.md-typeset [data-molplot-chart] {
+  --molplot-width: min(100%, 36rem);
+  --molplot-aspect: 4 / 3;
+  display: block;
+  position: relative;
+  box-sizing: border-box;
+  width: min(100%, 36rem);
+  max-width: 36rem;
+  margin-inline: auto;
+  aspect-ratio: var(--molplot-aspect, 4 / 3);
+  overflow: hidden;
   background: #fff;
   color: #14271d;
+}
+
+/* Surface fills the host; SVG keeps its layout size from Vega (no stretch). */
+.md-typeset molplot-chart .vega-embed,
+.md-typeset [data-molplot-chart] .vega-embed,
+.md-typeset molplot-chart .molplot-chart__surface,
+.md-typeset [data-molplot-chart] .molplot-chart__surface {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.md-typeset molplot-chart .vega-embed > svg,
+.md-typeset [data-molplot-chart] .vega-embed > svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.md-typeset .molplot {
+  width: 100%;
+  max-width: 36rem;
+  margin-inline: auto;
 }
 
 .md-typeset :is(molvis-viewer, molplot-chart)[data-state="loading"] {
@@ -1442,84 +1524,200 @@
   }
 }
 
-.md-typeset .molcrafts-web-component-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-  margin: 1.4rem 0 2rem;
-}
-
-.md-typeset .molcrafts-web-component-card {
+/* Framed figure card for MolVis / MolPlot embeds.
+ *
+ * One card wraps canvas + caption (border / radius / shadow). Inside: canvas
+ * flush on top, paper-style "Figure N." caption as the chin — no product tag.
+ *
+ *   <figure id="fig-water" class="molcrafts-figure">
+ *     <div class="molcrafts-figure__body">…viewer/chart…</div>
+ *     <figcaption>
+ *       <span class="molcrafts-figure__label">Figure 1.</span>
+ *       Caption text.
+ *     </figcaption>
+ *   </figure>
+ *
+ *   See [Figure 1](#fig-water).
+ *
+ * Legacy class names (molcrafts-web-component-*) map to the same look.
+ */
+.md-typeset figure.molcrafts-figure,
+.md-typeset figure.molcrafts-web-component-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  max-width: 100%;
   min-width: 0;
-  margin: 0;
+  margin: 1.75rem 0 2.1rem;
+  padding: 0;
   overflow: hidden;
   border: 1px solid var(--molcrafts-rule-strong);
   border-radius: var(--molcrafts-radius-lg);
   background: var(--molcrafts-paper);
   box-shadow: var(--molcrafts-shadow);
+  text-align: center;
 }
 
-.md-typeset .molcrafts-web-component-card figcaption {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0.2rem 0.75rem;
-  align-items: baseline;
-  padding: 0.9rem 1rem 0.85rem;
-  border-bottom: 1px solid var(--molcrafts-rule);
-}
-
-.md-typeset .molcrafts-web-component-card figcaption strong {
-  color: var(--md-default-fg-color);
-  font-size: 0.86rem;
-  line-height: 1.35;
-}
-
-.md-typeset .molcrafts-web-component-card figcaption small {
-  grid-column: 1 / -1;
-  color: var(--md-default-fg-color--light);
-  font-size: 0.7rem;
-  line-height: 1.5;
-}
-
-.md-typeset .molcrafts-web-component-card__package {
-  grid-column: 2;
-  grid-row: 1;
-  padding: 0.12rem 0.38rem;
-  border-radius: var(--molcrafts-radius-sm);
-  background: var(--molcrafts-product-accent-soft);
-  color: var(--molcrafts-product-accent);
-  font-family: var(--md-code-font), ui-monospace, monospace;
-  font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.md-typeset .molcrafts-web-component-preview {
+/* Body first, caption second — even when the HTML lists figcaption first. */
+.md-typeset figure.molcrafts-figure > .molcrafts-figure__body,
+.md-typeset figure.molcrafts-figure > .molcrafts-web-component-preview,
+.md-typeset figure.molcrafts-web-component-card > .molcrafts-figure__body,
+.md-typeset figure.molcrafts-web-component-card > .molcrafts-web-component-preview {
+  order: 1;
+  width: 100%;
   min-width: 0;
-  padding: 0.35rem;
-  background:
-    linear-gradient(135deg, var(--molcrafts-product-accent-soft), transparent 42%),
-    color-mix(in srgb, var(--md-default-bg-color) 88%, var(--molcrafts-paper));
+  margin: 0;
+  padding: 0;
+  background: transparent;
 }
 
+/*
+ * Embed fills the card face: drop the standalone embed chrome so we do not
+ * get a card-in-card (outer figure frame + inner viewer border).
+ */
+.md-typeset figure.molcrafts-figure :is(molvis-viewer, molplot-chart),
+.md-typeset figure.molcrafts-web-component-card :is(molvis-viewer, molplot-chart),
+.md-typeset .molcrafts-figure__body :is(molvis-viewer, molplot-chart),
 .md-typeset .molcrafts-web-component-preview :is(molvis-viewer, molplot-chart) {
+  display: block;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.md-typeset figure.molcrafts-figure molvis-viewer,
+.md-typeset figure.molcrafts-web-component-card molvis-viewer,
+.md-typeset .molcrafts-figure__body molvis-viewer,
+.md-typeset .molcrafts-web-component-preview molvis-viewer {
+  background: transparent;
+}
+
+.md-typeset figure.molcrafts-figure molplot-chart,
+.md-typeset figure.molcrafts-web-component-card molplot-chart,
+.md-typeset .molcrafts-figure__body molplot-chart,
+.md-typeset .molcrafts-web-component-preview molplot-chart {
+  background: #fff;
+}
+
+/* Caption chin: same size as body copy (.md-typeset ≈ 0.8rem), paper figure type. */
+.md-typeset figure.molcrafts-figure > figcaption,
+.md-typeset figure.molcrafts-web-component-card > figcaption {
+  order: 2;
+  display: block;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0.65rem 1rem 0.78rem;
+  border: none;
+  border-top: 1px solid var(--molcrafts-rule);
+  background: var(--molcrafts-paper);
+  color: var(--md-default-fg-color--light);
+  font-size: 0.8rem; /* match .md-typeset body */
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.55;
+  text-align: center;
+}
+
+.md-typeset figure.molcrafts-figure > figcaption strong,
+.md-typeset figure.molcrafts-web-component-card > figcaption strong {
+  font-size: inherit;
+  font-weight: 650;
+  color: var(--md-default-fg-color);
+}
+
+.md-typeset figure.molcrafts-figure > figcaption small,
+.md-typeset figure.molcrafts-web-component-card > figcaption small {
+  display: inline;
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+/* "Figure N." — bold, slightly darker than the rest of the caption. */
+.md-typeset .molcrafts-figure__label {
+  margin-right: 0.3em;
+  color: var(--md-default-fg-color);
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+/* Drop the old product chip entirely. */
+.md-typeset .molcrafts-web-component-card__package,
+.md-typeset .molcrafts-figure__package {
+  display: none !important;
+}
+
+.md-typeset .molcrafts-figure__body molvis-viewer,
+.md-typeset .molcrafts-web-component-preview molvis-viewer {
+  width: 100%;
+  height: clamp(18rem, 38vw, 22rem);
+}
+
+/*
+ * Chart body: generous inset so axis titles / legends are not flush to the
+ * card edge. Chart host is full width of the card (no 36rem cap).
+ */
+.md-typeset .molcrafts-figure__body--chart,
+.md-typeset .molcrafts-web-component-preview--chart {
+  display: block;
+  width: 100%;
+  min-height: auto;
+  /* Air between card chrome and the white plot surface. */
+  padding: 1rem 1rem 0.75rem;
+  background: var(--molcrafts-paper);
+  box-sizing: border-box;
+}
+
+.md-typeset .molcrafts-figure__body--chart .molplot,
+.md-typeset .molcrafts-web-component-preview--chart .molplot,
+.md-typeset figure.molcrafts-figure .molplot,
+.md-typeset figure.molcrafts-web-component-card .molplot {
+  width: 100%;
+  max-width: none;
   margin: 0;
 }
 
-.md-typeset .molcrafts-web-component-preview molvis-viewer {
-  height: clamp(20rem, 35vw, 23rem);
+/*
+ * Multi-legend docs charts need width more than height (legends sit on the
+ * right). 16/10 gives the plot room without the 4/3 tall empty chin.
+ */
+.md-typeset .molcrafts-figure__body--chart molplot-chart,
+.md-typeset .molcrafts-web-component-preview--chart molplot-chart,
+.md-typeset figure.molcrafts-figure molplot-chart,
+.md-typeset figure.molcrafts-web-component-card molplot-chart {
+  --molplot-width: 100%;
+  --molplot-aspect: 16 / 10;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  aspect-ratio: 16 / 10;
+  padding: 0.5rem !important;
+  box-sizing: border-box;
+  background: #fff;
+  border-radius: var(--molcrafts-radius-sm);
 }
 
-.md-typeset .molcrafts-web-component-preview--chart {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: auto;
+.md-typeset .molcrafts-figure__body--chart molplot-chart > .molplot-chart__surface,
+.md-typeset figure.molcrafts-figure molplot-chart > .molplot-chart__surface,
+.md-typeset figure.molcrafts-web-component-card molplot-chart > .molplot-chart__surface {
+  inset: 0.5rem !important;
 }
 
-.md-typeset .molcrafts-web-component-preview--chart molplot-chart {
-  flex: 0 1 auto;
+/* Optional multi-figure row (side-by-side panels). */
+.md-typeset .molcrafts-figure-grid,
+.md-typeset .molcrafts-web-component-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 1.5rem;
+  margin: 1.4rem 0 2rem;
+  align-items: start;
 }
 
 .md-search__form,
@@ -1632,14 +1830,17 @@
     gap: 0.15rem;
   }
 
+  .md-typeset .molcrafts-figure-grid,
   .md-typeset .molcrafts-web-component-grid {
     grid-template-columns: minmax(0, 1fr);
   }
 
+  .md-typeset .molcrafts-figure__body molvis-viewer,
   .md-typeset .molcrafts-web-component-preview molvis-viewer {
-    height: clamp(20rem, 60vw, 24rem);
+    height: clamp(18rem, 58vw, 22rem);
   }
 
+  .md-typeset .molcrafts-figure__body--chart,
   .md-typeset .molcrafts-web-component-preview--chart {
     min-height: auto;
   }
@@ -1716,17 +1917,15 @@
   }
 
   .md-typeset molvis-viewer,
+  .md-typeset .molcrafts-figure__body molvis-viewer,
   .md-typeset .molcrafts-web-component-preview molvis-viewer {
-    height: 19rem;
-    min-height: 19rem;
+    height: 18rem;
+    min-height: 18rem;
   }
 
-  .md-typeset .molcrafts-web-component-card figcaption {
-    padding: 0.78rem 0.82rem 0.72rem;
-  }
-
-  .md-typeset .molcrafts-web-component-preview {
-    padding: 0.25rem;
+  .md-typeset figure.molcrafts-figure > figcaption,
+  .md-typeset figure.molcrafts-web-component-card > figcaption {
+    font-size: 0.8rem;
   }
 }
 
@@ -1740,6 +1939,22 @@
 @media screen and (max-width: 44em) {
   .md-typeset .molvis-style-gallery__grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .md-typeset molplot-chart,
+  .md-typeset [data-molplot-chart],
+  .md-typeset .molplot {
+    max-width: 100%;
+    width: 100%;
+    --molplot-width: 100%;
+  }
+}
+
+@media screen and (min-width: 90em) {
+  /* Wide content columns: still prefer a readable 2×N gallery, not a sparse
+     single row of tiny cards. */
+  .md-typeset .molvis-style-gallery__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 

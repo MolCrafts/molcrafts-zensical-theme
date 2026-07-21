@@ -19,6 +19,9 @@ dist/
 # Zensical build outputs
 site/
 examples/*/site/
+# Locally staged npm Web Component bundles (formatter copies these when present)
+examples/docs/assets/molplot/
+examples/docs/assets/molvis-core/
 
 # Local environments and editor state
 .venv/

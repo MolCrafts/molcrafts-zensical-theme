@@ -15,7 +15,7 @@ docs so builds stay reproducible:
 [dependency-groups]
 docs = [
   "zensical>=0.0.45",
-  "molcrafts-zensical-theme>=0.2.2",
+  "molcrafts-zensical-theme>=0.2.3",
 ]
 ```
 
@@ -92,7 +92,9 @@ custom_fences = [
 
 **MolVis:** `format="xyz"` etc.; gallery accepts `src`, `representations`,
 `rotation-speed`. **MolPlot:** fence body is a Vega-Lite spec (YAML or JSON);
-header options `preset` / `theme` / `width` / `aspect`.
+header options `preset` / `theme` / `width` / `aspect` (default **`4:3`**).
+In docs the theme caps chart width (~36rem) and `@molcrafts/molplot` scales
+type with container width so paper-preset fonts stay readable on screen.
 
 Local staging (optional): when
 `node_modules/@molcrafts/molvis-core` or `node_modules/@molcrafts/molplot` is
@@ -102,6 +104,47 @@ Overrides: `MOLVIS_ELEMENTS_DIR`, `MOLPLOT_ELEMENTS_DIR`,
 
 The paper-charting Python package (`molcrafts-molplot`) does **not** ship a
 Markdown fence — docs sites must use this theme.
+
+### Figure cards (MolVis / MolPlot embeds)
+
+One framed card holds the canvas and a journal-style caption underneath.
+Put the viewer/chart first, a `Figure N.` label in the chin, and an `id` for
+cross-references (no product chip):
+
+```html
+<figure id="fig-water" class="molcrafts-figure">
+  <div class="molcrafts-figure__body">
+    <molvis-viewer format="xyz" …>…</molvis-viewer>
+  </div>
+  <figcaption>
+    <span class="molcrafts-figure__label">Figure 1.</span>
+    Water molecule (ball-and-stick).
+  </figcaption>
+</figure>
+```
+
+In prose, link with Markdown: `[Figure 1](#fig-water)`. Legacy class
+`.molcrafts-web-component-card` maps to the same card look.
+
+## Math (arithmatex + MathJax)
+
+The theme enables `navigation.instant`, so MathJax must re-typeset after every
+client-side page swap. The theme injects the MathJax config (arithmatex
+`processHtmlClass`) and a `document$` re-typeset hook automatically. Sites
+only need the library itself:
+
+```toml
+extra_javascript = [
+  "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+]
+
+[project.markdown_extensions.pymdownx]
+arithmatex = { generic = true }
+```
+
+Load the MathJax CDN **after** other `extra_javascript` entries (or at least
+after any script that might set `window.MathJax`). No separate config file is
+required unless you override `main.html`.
 
 
 ## C++ API reference

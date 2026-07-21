@@ -286,6 +286,22 @@ def _validate_gallery(source: str, attrs: Mapping[str, str]) -> None:
         )
 
 
+def _normalize_molvis_source(source: str) -> str:
+    """Strip BOM and outer blank lines so XYZ ``len()`` never sees a blank header.
+
+    molrs ≤0.8.2 treats a leading/trailing blank line as a new frame's atom
+    count and throws ``XYZ len error: invalid atom count:``. Fence bodies and
+    pretty-printed HTML templates often pick those up from indentation.
+    """
+    text = source.lstrip("\ufeff")
+    lines = text.splitlines()
+    while lines and not lines[0].strip():
+        lines.pop(0)
+    while lines and not lines[-1].strip():
+        lines.pop()
+    return "\n".join(lines)
+
+
 def molvis_fence(
     source: str,
     language: str,
@@ -300,7 +316,7 @@ def molvis_fence(
     attrs = _attrs(kwargs)
     _validate_viewer(attrs)
     attributes = _rendered_attributes(attrs, css_class, kwargs)
-    content = escape(source, quote=False)
+    content = escape(_normalize_molvis_source(source), quote=False)
     return (
         f"<molvis-viewer {attributes}>"
         f"<template data-molvis-source>{content}</template>"
@@ -323,10 +339,11 @@ def molvis_gallery_fence(
     _validate_gallery(source, attrs)
     attributes = _rendered_attributes(attrs, css_class, kwargs)
     content = ""
-    if source.strip():
+    normalized = _normalize_molvis_source(source)
+    if normalized:
         content = (
             "<template data-molvis-source>"
-            f"{escape(source, quote=False)}"
+            f"{escape(normalized, quote=False)}"
             "</template>"
         )
     return (
@@ -347,6 +364,61 @@ def _load_molplot_spec(source: str) -> Any:
     return yaml.safe_load(source)
 
 
+# Screen / docs type scale. Paper preset is ~9–12 px; docs aim ~1.6–1.8× so
+# labels read clearly without crushing the plot (3 legends need room).
+# Injected into every fence so older CDN runtimes still leave paper size.
+_MOLPLOT_DOCS_TYPE: dict[str, Any] = {
+    "padding": {"left": 12, "right": 12, "top": 10, "bottom": 12},
+    "axis": {
+        "labelFontSize": 14,
+        "titleFontSize": 15,
+        "titlePadding": 10,
+        "labelPadding": 4,
+        "labelLimit": 180,
+        "titleLimit": 220,
+        "tickSize": 5,
+        "labelOverlap": True,
+        "labelFlush": True,
+    },
+    "legend": {
+        "labelFontSize": 13,
+        "titleFontSize": 13,
+        "titleLimit": 160,
+        "labelLimit": 120,
+        "padding": 6,
+        "offset": 8,
+        "rowPadding": 2,
+        "columnPadding": 6,
+        "symbolSize": 64,
+    },
+    "title": {"fontSize": 16},
+}
+
+
+def _deep_merge_dict(base: dict[str, Any], over: dict[str, Any]) -> dict[str, Any]:
+    out = dict(base)
+    for key, value in over.items():
+        prev = out.get(key)
+        if isinstance(value, dict) and isinstance(prev, dict):
+            out[key] = _deep_merge_dict(prev, value)
+        else:
+            out[key] = value
+    return out
+
+
+def _apply_docs_type_scale(spec: Any) -> Any:
+    """Merge readable screen type sizes into a Vega-Lite spec's ``config``."""
+    if not isinstance(spec, dict):
+        return spec
+    existing = spec.get("config")
+    if isinstance(existing, dict):
+        # Author config wins over docs defaults on conflicting keys.
+        spec["config"] = _deep_merge_dict(_MOLPLOT_DOCS_TYPE, existing)
+    else:
+        spec["config"] = dict(_MOLPLOT_DOCS_TYPE)
+    return spec
+
+
 def render_molplot_element(
     source: str,
     *,
@@ -355,12 +427,23 @@ def render_molplot_element(
     width: str | None = None,
     aspect: str | None = None,
 ) -> str:
-    """Build the ``<molplot-chart>`` HTML for a Vega-Lite ``source`` spec."""
+    """Build the ``<molplot-chart>`` HTML for a Vega-Lite ``source`` spec.
+
+    Docs default to ``aspect="4:3"`` so paper-like proportions are used unless
+    the fence header overrides them. Every fence also gets a docs type scale
+    so axis labels stay large even when the runtime is still on paper sizes.
+    """
     try:
         spec = _load_molplot_spec(source)
     except Exception as exc:  # noqa: BLE001 - report parse errors inline
         message = escape(f"molplot: invalid Vega-Lite spec — {exc}")
         return f'<div class="molplot-error">{message}</div>'
+
+    spec = _apply_docs_type_scale(spec)
+
+    # Docs default: 16:10 — room for side legends without crushing the plot.
+    # Authors may override via fence header (e.g. aspect="4:3").
+    resolved_aspect = (aspect or "16:10").strip() or "16:10"
 
     attrs = ""
     if preset:
@@ -369,8 +452,7 @@ def render_molplot_element(
         attrs += f' theme="{escape(theme, quote=True)}"'
     if width:
         attrs += f' width="{escape(width, quote=True)}"'
-    if aspect:
-        attrs += f' aspect="{escape(aspect, quote=True)}"'
+    attrs += f' aspect="{escape(resolved_aspect, quote=True)}"'
 
     payload = json.dumps(spec)
     return (

@@ -28,6 +28,27 @@ def test_molvis_fence_escapes_inline_source() -> None:
     assert "H &lt;1 0 0" in html
 
 
+def test_molvis_fence_strips_leading_trailing_blank_lines() -> None:
+    """Pretty-printed fence bodies must not leave blank XYZ frame headers."""
+    html = molvis_fence(
+        "\n\n2\nH2\nH 0 0 0\nH 0 0 1\n\n",
+        "molvis",
+        "molvis",
+        {},
+        None,
+        attrs={"format": "xyz"},
+    )
+    start = html.index("<template data-molvis-source>") + len(
+        "<template data-molvis-source>"
+    )
+    end = html.index("</template>")
+    body = html[start:end]
+    assert body.startswith("2\n")
+    assert body.endswith("H 0 0 1")
+    assert not body.startswith("\n")
+    assert not body.endswith("\n")
+
+
 def test_gallery_fence_supports_remote_source() -> None:
     html = molvis_gallery_fence(
         "",
@@ -106,8 +127,26 @@ def test_molplot_fence_embeds_vega_lite_json() -> None:
     assert "<molplot-chart" in html
     assert 'preset="molplot"' in html
     assert 'theme="auto"' in html
+    assert 'aspect="16:10"' in html
     assert '"x": 1' in html
     assert "application/json" in html
+    # Docs type scale: ~1.5× paper so labels read without crushing multi-legend plots.
+    assert '"labelFontSize": 14' in html
+    assert '"titleFontSize": 15' in html
+
+
+def test_molplot_fence_respects_explicit_aspect() -> None:
+    html = molplot_fence(
+        "mark: point\ndata:\n  values:\n    - {x: 1, y: 2}\n"
+        "encoding:\n  x: {field: x, type: quantitative}\n"
+        "  y: {field: y, type: quantitative}\n",
+        "molplot",
+        "molplot",
+        {"preset": "molplot", "aspect": "4:3"},
+        None,
+    )
+    assert 'aspect="4:3"' in html
+    assert 'aspect="16:10"' not in html
 
 
 def test_molplot_validator_rejects_unknown_options() -> None:

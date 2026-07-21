@@ -11,10 +11,13 @@ never need to write HTML or JavaScript.
 
 ## Conformer energy landscape
 
-This example combines continuous position scales, an energy colour scale,
-population-sized points, cluster shapes, and rich hover tooltips. Drag inside
-the chart to pan, use the mouse wheel over an axis to zoom that axis, use
-`shift+wheel` to zoom both axes, and `double-click` to reset.
+[Figure 1](#fig-conformer-landscape) combines continuous position scales, an
+energy colour scale, population-sized points, cluster shapes, and rich hover
+tooltips. Drag inside the chart to pan, use the mouse wheel over an axis to zoom
+that axis, use `shift+wheel` to zoom both axes, and `double-click` to reset.
+
+<figure id="fig-conformer-landscape" class="molcrafts-figure">
+<div class="molcrafts-figure__body molcrafts-figure__body--chart" markdown>
 
 ```molplot preset="molplot" theme="auto"
 mark:
@@ -72,6 +75,14 @@ encoding:
     - {field: population, type: quantitative, title: Population, format: ".0f"}
 ```
 
+</div>
+<figcaption>
+  <span class="molcrafts-figure__label">Figure 1.</span>
+  Conformer energy landscape: points coloured by relative energy, sized by
+  population, and shaped by conformational state.
+</figcaption>
+</figure>
+
 ## Authoring syntax
 
 The source is just a fenced YAML block:
@@ -93,6 +104,8 @@ encoding:
 |---|---|---|
 | `preset` | `molplot`, `molplot-paper` | `molplot` |
 | `theme` | `auto`, `light`, `dark` | `auto` |
+| `aspect` | `16:10`, `4:3`, `16:9`, `W:H` | `16:10` |
+| `width` | CSS length | host default (~36rem max) |
 | `type` | Chart type hint forwarded to MolPlot | (unset) |
 
 The formatter accepts YAML or JSON. MolPlot supplies the preset, layout, and

@@ -172,4 +172,77 @@
       }
     </style>
   {% endif %}
+  {#
+    MathJax config must be in <head> BEFORE the library script in
+    extra_javascript. Sites that load tex-mml-chtml.js (or similar) pick this
+    up automatically. Sites without MathJax pay only a tiny config object.
+    processHtmlClass matches pymdownx.arithmatex generic=true output.
+  #}
+  <script>
+    window.MathJax = {
+      tex: {
+        /* arithmatex (generic=true) already rewrites $…$ / $$…$$ to these. */
+        inlineMath: [["\\(", "\\)"]],
+        displayMath: [["\\[", "\\]"]],
+        processEscapes: true,
+        processEnvironments: true
+      },
+      options: {
+        ignoreHtmlClass: ".*|",
+        processHtmlClass: "arithmatex"
+      }
+    };
+  </script>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  {#
+    Instant navigation (navigation.instant) swaps page content without a full
+    reload, so MathJax's first typeset never sees formulas on later pages.
+    Re-typeset on every document$ emission — and once on DOMContentLoaded as a
+    fallback when document$ is missing or the library is still starting.
+  #}
+  <script>
+    (function () {
+      var pending = false;
+
+      function typeset() {
+        var mj = window.MathJax;
+        if (!mj) return;
+        // Library still downloading: queue one retry after startup.
+        if (typeof mj.typesetPromise !== "function") {
+          if (pending) return;
+          pending = true;
+          var n = 0;
+          var timer = setInterval(function () {
+            n += 1;
+            if (window.MathJax && typeof window.MathJax.typesetPromise === "function") {
+              clearInterval(timer);
+              pending = false;
+              typeset();
+            } else if (n > 40) {
+              clearInterval(timer);
+              pending = false;
+            }
+          }, 50);
+          return;
+        }
+        try {
+          if (mj.startup && mj.startup.output && mj.startup.output.clearCache) {
+            mj.startup.output.clearCache();
+          }
+          if (typeof mj.typesetClear === "function") mj.typesetClear();
+          if (typeof mj.texReset === "function") mj.texReset();
+          mj.typesetPromise();
+        } catch (e) { /* library not ready yet */ }
+      }
+
+      if (typeof document$ !== "undefined" && document$.subscribe) {
+        document$.subscribe(typeset);
+      } else {
+        document.addEventListener("DOMContentLoaded", typeset);
+      }
+    })();
+  </script>
 {% endblock %}
