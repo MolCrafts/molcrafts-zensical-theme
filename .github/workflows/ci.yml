@@ -36,8 +36,14 @@ jobs:
           grep -q 'data-md-color-scheme="slate"' examples/site/index.html
           grep -q -- '--md-text-font:"Inter"' examples/site/index.html
           grep -q 'color-scheme: dark' examples/site/assets/stylesheets/molcrafts.css
-          grep -q '<molplot-chart preset="molplot" theme="auto">' examples/site/molplot/index.html
+          # Fence always emits default aspect="16:10" when unset.
+          grep -qE '<molplot-chart preset="molplot" theme="auto"( aspect="16:10")?>' examples/site/molplot/index.html
+          grep -q 'aspect="16:10"' examples/site/molplot/index.html
           grep -q '"id": "conf-15"' examples/site/molplot/index.html
+          grep -q '"labelFontSize": 14' examples/site/molplot/index.html
+          grep -q 'class="molcrafts-figure"' examples/site/molplot/index.html
+          grep -q 'Figure 1.' examples/site/molplot/index.html
+          grep -q 'window.MathJax' examples/site/index.html
 
           grep -q 'class="doc doc-object cpp-object cpp-class"' examples/site/cpp/index.html
           grep -q 'Bundled mkdocstrings C++ handler' examples/site/assets/stylesheets/molcrafts.css
