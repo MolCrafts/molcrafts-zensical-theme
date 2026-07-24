@@ -1,8 +1,5 @@
-# Pre-commit hooks for molcrafts-zensical-theme.
-#
-# Run all local checks through pre-commit. Distribution and example-site builds
-# are verified independently by .github/workflows/ci.yml.
-default_install_hook_types: [pre-commit]
+# Managed by prek: `prek install`
+default_install_hook_types: [pre-commit, pre-push]
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -10,8 +7,18 @@ repos:
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
-      - id: check-yaml          # .github/workflows/*.yml, mkdocs_theme.yml
-      - id: check-toml          # pyproject.toml, examples/*/zensical.toml
+      - id: check-yaml
+      - id: check-toml
       - id: check-merge-conflict
       - id: check-case-conflict
       - id: check-added-large-files
+
+  - repo: local
+    hooks:
+      - id: tox-py
+        name: "CI test (uv run --extra dev tox -e py)"
+        entry: uv run --extra dev tox -e py
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]

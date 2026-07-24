@@ -39,6 +39,11 @@ Issues = "https://github.com/MolCrafts/molcrafts-zensical-theme/issues"
 [project.entry-points."mkdocs.themes"]
 molcrafts = "molcrafts_zensical_theme"
 
+[project.optional-dependencies]
+dev = [
+  "tox>=4.23",
+]
+
 [tool.setuptools]
 package-dir = {"" = "src"}
 
@@ -60,4 +65,17 @@ molcrafts_zensical_theme = [
   "py.typed",
   "templates/**/*.jinja",
   "templates/**/*.css",
+]
+
+[tool.tox]
+requires = ["tox>=4.23"]
+env_list = ["py"]
+
+[tool.tox.env.py]
+description = "install wheel + pytest"
+package = "wheel"
+base_python = ["python3.12"]
+deps = ["pytest"]
+commands = [
+  ["{envpython}", "-m", "pytest", "-q"],
 ]

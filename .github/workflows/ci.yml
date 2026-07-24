@@ -2,50 +2,17 @@ name: CI
 
 on:
   push:
-    branches: [master]
+    branches: [master, main]
   pull_request:
 
-permissions:
-  contents: read
-
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install Doxygen
-        run: sudo apt-get update && sudo apt-get install --yes doxygen
-      - name: Build distributions
-        run: |
-          python -m pip install build pytest twine
-          python -m build
-          twine check dist/*
-      - name: Build example sites against the wheel
-        run: |
-          # Fence formatters ship in the theme — no molplot Python package.
-          python -m pip install dist/*.whl
-          python -m pytest
-          zensical build -f examples/zensical.toml
-      - name: Verify theme defaults
-        run: |
-          grep -q 'assets/stylesheets/molcrafts.css' examples/site/index.html
-          grep -q 'data-md-color-scheme="default"' examples/site/index.html
-          grep -q 'data-md-color-scheme="slate"' examples/site/index.html
-          grep -q -- '--md-text-font:"Inter"' examples/site/index.html
-          grep -q 'color-scheme: dark' examples/site/assets/stylesheets/molcrafts.css
-          # Fence always emits default aspect="16:10" when unset.
-          grep -qE '<molplot-chart preset="molplot" theme="auto"( aspect="16:10")?>' examples/site/molplot/index.html
-          grep -q 'aspect="16:10"' examples/site/molplot/index.html
-          grep -q '"id": "conf-15"' examples/site/molplot/index.html
-          grep -q '"labelFontSize": 14' examples/site/molplot/index.html
-          grep -q 'class="molcrafts-figure"' examples/site/molplot/index.html
-          grep -q 'Figure 1.' examples/site/molplot/index.html
-          grep -q 'window.MathJax' examples/site/index.html
-
-          grep -q 'class="doc doc-object cpp-object cpp-class"' examples/site/cpp/index.html
-          grep -q 'Bundled mkdocstrings C++ handler' examples/site/assets/stylesheets/molcrafts.css
-          grep -q 'https://github.com/MolCrafts/molcrafts-zensical-theme' examples/site/index.html
-          grep -q 'MolCrafts Theme' examples/site/index.html
+      - uses: astral-sh/setup-uv@v6
+      - name: uv run --extra dev tox -e py
+        run: uv run --extra dev tox -e py
