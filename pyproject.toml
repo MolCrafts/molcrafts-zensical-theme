@@ -36,8 +36,12 @@ Homepage = "https://github.com/MolCrafts/molcrafts-zensical-theme"
 Repository = "https://github.com/MolCrafts/molcrafts-zensical-theme"
 Issues = "https://github.com/MolCrafts/molcrafts-zensical-theme/issues"
 
+# The theme directory is `molcrafts_zensical_theme/templates`, not the package
+# root: Zensical copies every non-template file from the theme directory into the
+# built site, so package code must stay outside it (same layout as
+# `material.templates`).
 [project.entry-points."mkdocs.themes"]
-molcrafts = "molcrafts_zensical_theme"
+molcrafts = "molcrafts_zensical_theme.templates"
 
 [project.optional-dependencies]
 dev = [
@@ -53,7 +57,7 @@ include = ["mkdocstrings_handlers.cpp*", "molcrafts_zensical_theme*"]
 namespaces = true
 
 [tool.setuptools.package-data]
-molcrafts_zensical_theme = [
+"molcrafts_zensical_theme.templates" = [
   "mkdocs_theme.yml",
   "main.html",
   "partials/*.html",
