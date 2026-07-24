@@ -293,3 +293,23 @@ Zensical 0.0.45 still discovers packaged themes through the historical
 `mkdocs.themes` entry point and reads theme-package defaults from
 `mkdocs_theme.yml`; this package uses those hooks only for Zensical theme
 discovery, not for `mkdocs.yml` configuration.
+
+### Package layout
+
+The `mkdocs.themes` entry point resolves to `molcrafts_zensical_theme.templates`,
+and Zensical takes the theme directory to be that module's directory — then
+copies every non-template file it finds there into the built site. So the theme
+directory holds theme files only; package code (`formatters`) lives one level up
+in `molcrafts_zensical_theme`, the same split as `material.templates` upstream.
+`tests/test_theme_package.py` guards it.
+
+```
+src/molcrafts_zensical_theme/
+├── __init__.py
+├── formatters.py          # importable as molcrafts_zensical_theme.formatters
+└── templates/             # ← theme directory
+    ├── mkdocs_theme.yml
+    ├── main.html
+    ├── partials/
+    └── assets/
+```
