@@ -2,7 +2,7 @@
 site_name = "MolCrafts Theme"
 site_description = "Example site for the MolCrafts Zensical theme."
 site_author = "MolCrafts"
-site_url = "https://molcrafts.github.io/theme-example/"
+site_url = "https://docs.molcrafts.org/theme-example/"
 docs_dir = "docs"
 site_dir = "site"
 copyright = "Copyright &copy; 2026 MolCrafts"

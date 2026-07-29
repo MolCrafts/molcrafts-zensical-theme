@@ -1,3 +1,14 @@
+/*
+ * MolCrafts brand contract — shared with molcrafts-index (marketing site).
+ *
+ *   forest #18432b | forest-light #2a6744 | forest-dark #0e2b1b
+ *   cream  #fbf6e4 | sand #f2da9d | sand-strong #c8841d
+ *   slate  #101811 (dark paper)
+ *
+ * Docs surface = print-manual cream/forest.
+ * Marketing site = digital UI on the same anchors (HSL tokens in index).
+ * Product accents stay per-package in zensical.toml [project.extra.molcrafts].
+ */
 :root {
   --molcrafts-forest: #18432b;
   --molcrafts-forest-light: #2a6744;
@@ -8,7 +19,7 @@
   --molcrafts-sand-strong: #c8841d;
   --molcrafts-ink: #14271d;
   --molcrafts-muted: #657268;
-  /* Print-manual radius: tight corners, never blob-y SaaS. */
+  /* Print-manual radius: tight corners, never blob-y SaaS. Matches index --radius. */
   --molcrafts-radius-sm: 0.28rem;
   --molcrafts-radius: 0.4rem;
   --molcrafts-radius-lg: 0.55rem;
@@ -36,9 +47,10 @@
  * only the common palette below; the default accent (brand forest/sand) applies
  * to any product that does not set its own.
  *
- * Colours the map previously assigned, for reference when wiring each product's
- * config: molvis #7c3aed, molnex/molcfg #0f766e, molrec #c2410c,
- * molexp/molmcp #4f46e5, mollog #0ea5e9, molq/molqrc #db2777.
+ * Colours for reference when wiring each product's config:
+ *   molpy #0284c7, molvis #7c3aed, molnex/molcfg #0f766e, molrec #c2410c,
+ *   molexp/molmcp #4f46e5, mollog #0ea5e9, molq/molqrc #db2777,
+ *   molrs #ea580c, molpack #f97316, atomiverse #65a30d.
  */
 
 /*

@@ -33,7 +33,7 @@ Add the theme to a Zensical project:
 ```toml
 [project]
 site_name = "MolCrafts Project"
-site_url = "https://example.molcrafts.org/"
+site_url = "https://docs.molcrafts.org/example/"
 
 [project.theme]
 name = "molcrafts"
