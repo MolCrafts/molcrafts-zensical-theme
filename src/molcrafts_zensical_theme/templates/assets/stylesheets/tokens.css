@@ -1,0 +1,62 @@
+/*
+ * MolCrafts shared brand tokens
+ * =============================
+ * KEEP IN SYNC (manual copy — no build step, no package coupling):
+ *
+ *   molcrafts-zensical-theme/
+ *     src/molcrafts_zensical_theme/templates/assets/stylesheets/tokens.css
+ *   molcrafts-index/
+ *     src/styles/brand-tokens.css
+ *
+ * Rules:
+ *   - Identical content in both files.
+ *   - Zensical theme has zero npm/runtime deps for tokens.
+ *   - Hex is source of truth; *-hsl channels exist for index (shadcn hsl(var())).
+ *   - Product accents stay out of this file (zensical.toml / productAccents.ts).
+ */
+
+:root {
+  /* —— Anchors (hex) —— */
+  --molcrafts-forest: #18432b;
+  --molcrafts-forest-light: #2a6744;
+  --molcrafts-forest-dark: #0e2b1b;
+  --molcrafts-cream: #fbf6e4;
+  --molcrafts-cream-soft: #fffaf0;
+  --molcrafts-sand: #f2da9d;
+  --molcrafts-sand-strong: #c8841d;
+  --molcrafts-ink: #14271d;
+  --molcrafts-muted: #657268;
+  --molcrafts-slate: #101811;
+  --molcrafts-forest-mid: #2f7d50;
+  --molcrafts-forest-bright: #55a572;
+  --molcrafts-forest-soft: #8ecfa0;
+  --molcrafts-cyan-spark: #1fc0f1;
+  --molcrafts-cyan-spark-soft: #8ce4ff;
+
+  /* —— HSL channels (space-separated, no hsl()) for index —— */
+  --molcrafts-forest-hsl: 148 47% 18%;
+  --molcrafts-forest-light-hsl: 148 42% 28%;
+  --molcrafts-forest-dark-hsl: 148 50% 11%;
+  --molcrafts-cream-hsl: 45 55% 94%;
+  --molcrafts-cream-soft-hsl: 45 55% 97%;
+  --molcrafts-sand-hsl: 42 70% 78%;
+  --molcrafts-sand-strong-hsl: 36 75% 45%;
+  --molcrafts-ink-hsl: 148 30% 12%;
+  --molcrafts-muted-hsl: 130 8% 42%;
+  --molcrafts-slate-hsl: 130 20% 8%;
+  --molcrafts-forest-mid-hsl: 148 45% 34%;
+  --molcrafts-paper-dark-hsl: 130 16% 11%;
+  --molcrafts-fg-dark-hsl: 100 20% 92%;
+  --molcrafts-muted-dark-hsl: 120 8% 62%;
+  --molcrafts-border-dark-hsl: 130 12% 18%;
+
+  /* —— Geometry —— */
+  --molcrafts-radius-sm: 0.28rem;
+  --molcrafts-radius: 0.4rem;
+  --molcrafts-radius-lg: 0.55rem;
+
+  /* —— Shadows (light paper) —— */
+  --molcrafts-shadow-sm: 0 0.08rem 0.28rem rgba(24, 67, 43, 0.05);
+  --molcrafts-shadow: 0 0.35rem 0.95rem rgba(24, 67, 43, 0.08);
+  --molcrafts-shadow-lg: 0 0.65rem 1.55rem rgba(24, 67, 43, 0.11);
+}

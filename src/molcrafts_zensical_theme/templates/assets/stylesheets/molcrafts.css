@@ -1,31 +1,11 @@
 /*
- * MolCrafts brand contract — shared with molcrafts-index (marketing site).
- *
- *   forest #18432b | forest-light #2a6744 | forest-dark #0e2b1b
- *   cream  #fbf6e4 | sand #f2da9d | sand-strong #c8841d
- *   slate  #101811 (dark paper)
- *
- * Docs surface = print-manual cream/forest.
- * Marketing site = digital UI on the same anchors (HSL tokens in index).
- * Product accents stay per-package in zensical.toml [project.extra.molcrafts].
+ * Theme surface styles. Brand anchors live in tokens.css (import below).
+ * Keep tokens.css identical to molcrafts-index/src/styles/brand-tokens.css.
  */
+@import url("tokens.css");
+
 :root {
-  --molcrafts-forest: #18432b;
-  --molcrafts-forest-light: #2a6744;
-  --molcrafts-forest-dark: #0e2b1b;
-  --molcrafts-cream: #fbf6e4;
-  --molcrafts-cream-soft: #fffaf0;
-  --molcrafts-sand: #f2da9d;
-  --molcrafts-sand-strong: #c8841d;
-  --molcrafts-ink: #14271d;
-  --molcrafts-muted: #657268;
-  /* Print-manual radius: tight corners, never blob-y SaaS. Matches index --radius. */
-  --molcrafts-radius-sm: 0.28rem;
-  --molcrafts-radius: 0.4rem;
-  --molcrafts-radius-lg: 0.55rem;
-  --molcrafts-shadow-sm: 0 0.08rem 0.28rem rgba(24, 67, 43, 0.05);
-  --molcrafts-shadow: 0 0.35rem 0.95rem rgba(24, 67, 43, 0.08);
-  --molcrafts-shadow-lg: 0 0.65rem 1.55rem rgba(24, 67, 43, 0.11);
+  /* Theme-only derived vars (not shared brand anchors). */
   --molcrafts-rule: color-mix(in srgb, var(--md-primary-fg-color) 14%, transparent);
   --molcrafts-rule-strong: color-mix(in srgb, var(--md-primary-fg-color) 22%, transparent);
   --molcrafts-paper: color-mix(in srgb, var(--md-default-bg-color) 88%, #fff);
@@ -131,17 +111,17 @@
   --md-default-fg-color--light: rgba(236, 242, 232, 0.68);
   --md-default-fg-color--lighter: rgba(236, 242, 232, 0.46);
   --md-default-fg-color--lightest: rgba(236, 242, 232, 0.14);
-  --md-default-bg-color: #101811;
+  --md-default-bg-color: var(--molcrafts-slate);
   --md-default-bg-color--light: rgba(16, 24, 17, 0.76);
   --md-default-bg-color--lighter: rgba(16, 24, 17, 0.44);
   --md-default-bg-color--lightest: rgba(16, 24, 17, 0.18);
   --md-primary-fg-color: #2f7d50;
   --md-primary-fg-color--light: #55a572;
   --md-primary-fg-color--dark: #173d26;
-  --md-primary-bg-color: #fbf6e4;
-  --md-accent-fg-color: #f2da9d;
+  --md-primary-bg-color: var(--molcrafts-cream);
+  --md-accent-fg-color: var(--molcrafts-sand);
   --md-accent-fg-color--transparent: rgba(242, 218, 157, 0.16);
-  --md-accent-bg-color: #101811;
+  --md-accent-bg-color: var(--molcrafts-slate);
   --md-code-fg-color: #d8e2d8;
   --md-code-bg-color: #14251a;
   --md-code-bg-color--light: rgba(20, 37, 26, 0.9);
@@ -158,7 +138,7 @@
   --md-code-hl-punctuation-color: #9ead9f;
   --md-code-hl-comment-color: #7b8b7c;
   --md-code-hl-generic-color: #9ead9f;
-  --md-code-hl-variable-color: #f2da9d;
+  --md-code-hl-variable-color: var(--molcrafts-sand);
   --md-typeset-a-color: #8ecfa0;
   --md-typeset-color: var(--md-default-fg-color);
   --md-typeset-mark-color: rgba(242, 218, 157, 0.22);

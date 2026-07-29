@@ -1,48 +1,58 @@
-# MolCrafts brand contract
+# MolCrafts brand tokens
 
-Shared between **molcrafts-zensical-theme** (docs) and **molcrafts-index** (marketing).
+**No React. No npm. Manual sync only.**
 
-## Anchors
+## Source files (must be identical)
 
-| Token | Hex | Role |
-|-------|-----|------|
-| forest | `#18432b` | Brand primary (headers, links base) |
-| forest-light | `#2a6744` | Interactive / hover |
-| forest-dark | `#0e2b1b` | Deep chrome |
-| cream | `#fbf6e4` | Docs paper (light) |
-| sand | `#f2da9d` | Secondary accent |
-| sand-strong | `#c8841d` | Warm emphasis |
-| slate | `#101811` | Docs dark paper |
+| Repo | Path |
+|------|------|
+| zensical-theme | `src/molcrafts_zensical_theme/templates/assets/stylesheets/tokens.css` |
+| index | `src/styles/brand-tokens.css` |
 
-## Surfaces
+When you change one, **copy the whole file** to the other. Zensical does not depend on index (and never will).
 
-| Surface | Light | Dark |
-|---------|-------|------|
-| Docs (theme) | cream paper, forest chrome | slate paper, sand accents |
-| Marketing (index) | cream-tinted UI, forest buttons | slate-aligned zinc, forest primary |
+## What lives in `tokens.css`
 
-Cyan (`#1fc0f1` / `#03a3d7`) is a **display spark** only (hero gradients, glows) — not primary buttons.
+- Hex anchors (`--molcrafts-forest`, cream, sand, slate, …)
+- HSL channels for the marketing site (`--molcrafts-*-hsl`)
+- Radius + shared shadows
 
-## Product accents
-
-Declared per product in `zensical.toml`:
+Product accents are **not** here — each docs site sets them in `zensical.toml`:
 
 ```toml
 [project.extra.molcrafts]
 product = "molpy"
 accent = "#0284c7"
-accent_soft = "rgba(2, 132, 199, 0.14)"
 ```
 
-Index product pages use `src/lib/productAccents.ts` with the same hue families.
+## How each side consumes tokens
 
-## Radius
+| Side | How |
+|------|-----|
+| Theme | `@import url("tokens.css")` from `molcrafts.css` → shipped in the wheel |
+| Index | `@import "./brand-tokens.css"` then map to shadcn HSL UI vars in `tailwind.css` |
 
-`0.4rem` base — print-manual corners on both sides (not blob SaaS).
+## Check drift
 
-## Deploy
+From the theme repo (stdlib pytest only):
 
-| Package | How it ships |
-|---------|----------------|
-| molcrafts-index | Cloudflare Pages project `index` → `molcrafts.org` (branch `master` on `MolCrafts/index`) |
-| molcrafts-zensical-theme | PyPI + GitHub tag `v*`; product docs sites on Cloudflare Pages pull the wheel |
+```bash
+uv run --extra dev tox -e py
+# includes tests/test_tokens_contract.py
+# if ../molcrafts-index exists, also asserts byte-identical tokens
+```
+
+## Anchors (quick ref)
+
+| Token | Hex |
+|-------|-----|
+| forest | `#18432b` |
+| forest-light | `#2a6744` |
+| forest-dark | `#0e2b1b` |
+| cream | `#fbf6e4` |
+| sand | `#f2da9d` |
+| sand-strong | `#c8841d` |
+| slate | `#101811` |
+| radius | `0.4rem` |
+
+Cyan (`--molcrafts-cyan-spark`) is display-only, not interactive primary.
