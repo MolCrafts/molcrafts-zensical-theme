@@ -1,18 +1,8 @@
 /*
- * MolCrafts shared brand tokens
- * =============================
- * KEEP IN SYNC (manual copy — no build step, no package coupling):
- *
- *   molcrafts-zensical-theme/
- *     src/molcrafts_zensical_theme/templates/assets/stylesheets/tokens.css
- *   molcrafts-index/
- *     src/styles/brand-tokens.css
- *
- * Rules:
- *   - Identical content in both files.
- *   - Zensical theme has zero npm/runtime deps for tokens.
- *   - Hex is source of truth; *-hsl channels exist for index (shadcn hsl(var())).
- *   - Product accents stay out of this file (zensical.toml / productAccents.ts).
+ * MolCrafts brand tokens — MUST be byte-identical in both repos:
+ *   molcrafts-zensical-theme/.../stylesheets/tokens.css
+ *   molcrafts-index/src/styles/brand-tokens.css
+ * Manual copy only. No npm/package coupling. Product accents live elsewhere.
  */
 
 :root {

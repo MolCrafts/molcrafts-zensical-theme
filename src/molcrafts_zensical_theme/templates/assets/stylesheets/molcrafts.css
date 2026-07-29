@@ -1,7 +1,4 @@
-/*
- * Theme surface styles. Brand anchors live in tokens.css (import below).
- * Keep tokens.css identical to molcrafts-index/src/styles/brand-tokens.css.
- */
+/* Surface styles. Brand anchors: tokens.css (sync with index brand-tokens.css). */
 @import url("tokens.css");
 
 :root {
