@@ -172,9 +172,78 @@ def test_molplot_fence_embeds_vega_lite_json() -> None:
     assert 'aspect="16:10"' in html
     assert '"x": 1' in html
     assert "application/json" in html
-    # Docs type scale: ~1.5× paper so labels read without crushing multi-legend plots.
-    assert '"labelFontSize": 14' in html
-    assert '"titleFontSize": 15' in html
+    # Docs config supplies font family; sizes come from the host chart.
+    assert "Times New Roman" in html
+
+
+def test_molplot_fence_resolves_dollar_file_data(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    docs = tmp_path / "docs"
+    data = docs / "data"
+    data.mkdir(parents=True)
+    (data / "pts.json").write_text(
+        '[{"x": 1, "y": 2}, {"x": 3, "y": 4}]\n', encoding="utf-8"
+    )
+    monkeypatch.chdir(tmp_path)
+
+    html = molplot_fence(
+        "mark: point\n"
+        "data: {$file: data/pts.json}\n"
+        "encoding:\n"
+        "  x: {field: x, type: quantitative}\n"
+        "  y: {field: y, type: quantitative}\n",
+        "molplot",
+        "molplot",
+        {"preset": "molplot"},
+        None,
+    )
+    assert "molplot-error" not in html
+    assert '"values"' in html
+    assert '"x": 1' in html
+    assert '"y": 4' in html
+    assert "$file" not in html
+
+
+def test_molplot_fence_dollar_file_as_url(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    docs = tmp_path / "docs"
+    data = docs / "data"
+    data.mkdir(parents=True)
+    (data / "pts.csv").write_text("x,y\n1,2\n", encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+
+    html = molplot_fence(
+        "mark: point\n"
+        "data: {$file: data/pts.csv, $as: url}\n"
+        "encoding:\n"
+        "  x: {field: x, type: quantitative}\n"
+        "  y: {field: y, type: quantitative}\n",
+        "molplot",
+        "molplot",
+        {},
+        None,
+    )
+    assert "molplot-error" not in html
+    assert '"url": "data/pts.csv"' in html
+    assert '"type": "csv"' in html
+
+
+def test_molplot_fence_missing_file_is_inline_error(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    (tmp_path / "docs").mkdir()
+    monkeypatch.chdir(tmp_path)
+    html = molplot_fence(
+        "data: {$file: missing.json}\nmark: point\n",
+        "molplot",
+        "molplot",
+        {},
+        None,
+    )
+    assert "molplot-error" in html
+    assert "not found" in html
 
 
 def test_molplot_fence_respects_explicit_aspect() -> None:
