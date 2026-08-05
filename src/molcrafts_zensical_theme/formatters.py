@@ -388,8 +388,14 @@ def _load_molplot_spec(source: str) -> Any:
 
 # Screen / docs type scale. Paper preset is ~9–12 px; docs aim ~1.6–1.8× so
 # labels read clearly without crushing the plot (3 legends need room).
+_SERIF_STACK = (
+    "Times New Roman, Times, STIX Two Text, STIXGeneral, "
+    "Latin Modern Roman, serif"
+)
+# Screen / docs type scale + paper-like Times/math serif for axis labels.
 _MOLPLOT_DOCS_TYPE: dict[str, Any] = {
     "padding": {"left": 12, "right": 12, "top": 10, "bottom": 12},
+    "font": _SERIF_STACK,
     "axis": {
         "labelFontSize": 14,
         "titleFontSize": 15,
@@ -400,6 +406,9 @@ _MOLPLOT_DOCS_TYPE: dict[str, Any] = {
         "tickSize": 5,
         "labelOverlap": True,
         "labelFlush": True,
+        "titleFontStyle": "italic",
+        "titleFont": _SERIF_STACK,
+        "labelFont": _SERIF_STACK,
     },
     "legend": {
         "labelFontSize": 13,
@@ -411,8 +420,11 @@ _MOLPLOT_DOCS_TYPE: dict[str, Any] = {
         "rowPadding": 2,
         "columnPadding": 6,
         "symbolSize": 64,
+        "labelFont": _SERIF_STACK,
+        "titleFont": _SERIF_STACK,
     },
-    "title": {"fontSize": 16},
+    "title": {"fontSize": 16, "font": _SERIF_STACK},
+    "text": {"font": _SERIF_STACK},
 }
 
 
