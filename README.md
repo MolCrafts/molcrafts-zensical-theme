@@ -108,23 +108,28 @@ custom_fences = [
 ]
 ```
 
-**MolVis:** `format="xyz"` etc.; gallery accepts `src`, `representations`,
+**MolVis:** `format="xyz"` etc.; gallery accepts `src`, `npts`,
 `rotation-speed`. **MolPlot:** fence body is a Vega-Lite spec (YAML or JSON);
 header options `preset` / `theme` / `width` / `aspect` (default **`4:3`**).
+Optional top-level `annotations:` (molplot extension: `scaleBar` / `arrow`) is
+passed through to the browser; `@molcrafts/molplot` expands it into ordinary
+Vega-Lite `rule`/`text` layers so marks pan/zoom with the chart.
 In docs the theme caps chart width (~36rem) and `@molcrafts/molplot` scales
 type with container width so paper-preset fonts stay readable on screen.
 
-Local staging (optional): when npm packages under `node_modules/@molcrafts/`
-are present, formatters copy each `dist/`:
+Local staging (optional): formatters copy each package `dist/` into
+`docs/assets/` when a source is found (env override → `node_modules` → monorepo):
 
-| Package | Entry | Staged as |
-|---------|-------|-----------|
-| `@molcrafts/molvis-stage` | `viewer.js` | `docs/assets/molvis-stage/` |
-| `@molcrafts/molvis-sketch` | `index.js` | `docs/assets/molvis-sketch/` |
-| `@molcrafts/molplot` | `elements.js` | `docs/assets/molplot/` |
+| Package | Entry | Staged as | Extra monorepo probe |
+|---------|-------|-----------|----------------------|
+| `@molcrafts/molvis-stage` | `viewer.js` | `docs/assets/molvis-stage/` | — |
+| `@molcrafts/molvis-sketch` | `index.js` | `docs/assets/molvis-sketch/` | — |
+| `@molcrafts/molplot` | `elements.js` | `docs/assets/molplot/` | `../molplot/core/dist` |
 
-Overrides: `MOLVIS_STAGE_DIR`, `MOLVIS_SKETCH_DIR`, `MOLPLOT_ELEMENTS_DIR`,
-`MOLCRAFTS_DOCS_ASSET_DIR`. Monorepo-relative `stage/dist` / `sketch/dist` are never used.
+Treat `docs/assets/molplot/` as **generated** (gitignore in the consumer).
+Staging skips `*.d.ts`, `*.map`, and `*.test.js`. Overrides:
+`MOLVIS_STAGE_DIR`, `MOLVIS_SKETCH_DIR`, `MOLPLOT_ELEMENTS_DIR`,
+`MOLCRAFTS_DOCS_ASSET_DIR`.
 
 The paper-charting Python package (`molcrafts-molplot`) does **not** ship a
 Markdown fence — docs sites must use this theme.

@@ -163,11 +163,26 @@ def _stage_npm_bundle(
     if source == target.resolve():
         return
     target.mkdir(parents=True, exist_ok=True)
+
+    def _ignore_non_runtime(_dir: str, names: list[str]) -> set[str]:
+        # Skip test/fixture outputs and typings; docs only need browser JS.
+        skip: set[str] = set()
+        for name in names:
+            lower = name.lower()
+            if lower.endswith(".test.js") or lower.endswith(".test.d.ts"):
+                skip.add(name)
+            elif lower.endswith(".d.ts"):
+                skip.add(name)
+            elif lower.endswith(".map"):
+                skip.add(name)
+        return skip
+
     shutil.copytree(
         source,
         target,
         dirs_exist_ok=True,
         copy_function=_copy_if_changed,
+        ignore=_ignore_non_runtime,
     )
 
 

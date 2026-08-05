@@ -286,9 +286,13 @@ def test_molplot_npm_package_bundle_is_staged(
     bundle = tmp_path / "node_modules" / "@molcrafts" / "molplot" / "dist"
     bundle.mkdir(parents=True)
     (bundle / "elements.js").write_text("export {};", encoding="utf-8")
+    (bundle / "raw_chart.interactive.test.js").write_text("// no", encoding="utf-8")
+    (bundle / "index.d.ts").write_text("export {};", encoding="utf-8")
     monkeypatch.chdir(tmp_path)
 
     _stage_local_molplot_bundle()
 
     staged = tmp_path / "docs" / "assets" / "molplot"
     assert (staged / "elements.js").read_text(encoding="utf-8") == "export {};"
+    assert not (staged / "raw_chart.interactive.test.js").exists()
+    assert not (staged / "index.d.ts").exists()
