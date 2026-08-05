@@ -133,9 +133,17 @@ def _stage_npm_bundle(
     """
     cwd = Path.cwd()
     configured = os.environ.get(env_var)
+    # Monorepo sibling layouts (e.g. molpy next to molplot/core/dist).
+    monorepo = []
+    if npm_package == "molplot":
+        monorepo = [
+            cwd / "molplot" / "core" / "dist",
+            cwd.parent / "molplot" / "core" / "dist",
+        ]
     candidates = [
         Path(configured).expanduser() if configured else None,
         cwd / "node_modules" / "@molcrafts" / npm_package / "dist",
+        *monorepo,
     ]
     source = next(
         (
