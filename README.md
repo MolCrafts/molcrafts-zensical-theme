@@ -50,9 +50,7 @@ product. `accent` sets the product accent (links, hovers, hero eyebrows);
 `accent_soft` is its translucent companion and, when omitted, is derived from
 `accent` via `color-mix`. Sites that set none of these fall back to the brand
 forest/sand accent. The theme ships no per-product color map — each product
-declares its own accent in its `zensical.toml`; the colors the old map used to
-assign are kept for reference in a comment at the top of
-`assets/stylesheets/molcrafts.css`.
+declares its own accent in `zensical.toml`.
 
 The theme defaults to Zensical's `modern` variant, MolCrafts brand colors from
 `moko.svg`, Inter text, JetBrains Mono code, light/dark palettes, navigation
@@ -64,6 +62,23 @@ For a normal documentation site, setting `name = "molcrafts"` is the complete
 visual setup: typography, both color modes, component colors, and navigation
 behavior are owned by the theme. Product accent settings and the home-page
 components below are optional customization, not required theme tokens.
+
+### Product `extra.css` — iron law
+
+**Product docs must not re-skin the theme.** Palette, hero, manual sections,
+workflow list, feature matrix, doc-map, tile-grid, link-list, figures, and
+light/dark schemes live only in this package.
+
+| Allowed in product `extra.css` | Forbidden |
+|---|---|
+| Markup **unique to that product** (e.g. MolPy pipeline strip, product GLB viewer) | Restyling `.molcrafts-*` components |
+| Tiny product wordmark / hero wash under `html[data-molcrafts-product="…"]` | Re-declaring `[data-md-color-scheme]` palettes |
+| One-off figure sizing for a product page | Copying theme CSS into the product repo |
+
+Accent colours belong in `zensical.toml` (`[project.extra.molcrafts]`), not in
+product CSS. Prefer promoting a second product's shared layout into a theme
+modifier (`--cards`, `--flip`, …) over duplicating rules in two `extra.css`
+files. Molpack's ~15-line `extra.css` is the size model.
 
 ## Web Component fences (MolVis + MolPlot) — one model
 
@@ -77,7 +92,10 @@ on this theme (+ zensical):
 
 ```toml
 extra_javascript = [
-  { path = "https://cdn.jsdelivr.net/npm/@molcrafts/molvis-core@latest/dist/elements.js", type = "module" },
+  # 3D viewer Web Components
+  { path = "https://cdn.jsdelivr.net/npm/@molcrafts/molvis-stage@latest/dist/viewer.js", type = "module" },
+  # 2D sketch engine (when docs embed sketch demos)
+  { path = "https://cdn.jsdelivr.net/npm/@molcrafts/molvis-sketch@latest/dist/index.js", type = "module" },
   { path = "https://cdn.jsdelivr.net/npm/@molcrafts/molplot@latest/dist/elements.js", type = "module" },
 ]
 
@@ -96,11 +114,17 @@ header options `preset` / `theme` / `width` / `aspect` (default **`4:3`**).
 In docs the theme caps chart width (~36rem) and `@molcrafts/molplot` scales
 type with container width so paper-preset fonts stay readable on screen.
 
-Local staging (optional): when
-`node_modules/@molcrafts/molvis-core` or `node_modules/@molcrafts/molplot` is
-present, the formatters copy `dist/` into `docs/assets/{molvis-core,molplot}/`.
-Overrides: `MOLVIS_ELEMENTS_DIR`, `MOLPLOT_ELEMENTS_DIR`,
-`MOLCRAFTS_DOCS_ASSET_DIR`. Monorepo-relative `core/dist` paths are never used.
+Local staging (optional): when npm packages under `node_modules/@molcrafts/`
+are present, formatters copy each `dist/`:
+
+| Package | Entry | Staged as |
+|---------|-------|-----------|
+| `@molcrafts/molvis-stage` | `viewer.js` | `docs/assets/molvis-stage/` |
+| `@molcrafts/molvis-sketch` | `index.js` | `docs/assets/molvis-sketch/` |
+| `@molcrafts/molplot` | `elements.js` | `docs/assets/molplot/` |
+
+Overrides: `MOLVIS_STAGE_DIR`, `MOLVIS_SKETCH_DIR`, `MOLPLOT_ELEMENTS_DIR`,
+`MOLCRAFTS_DOCS_ASSET_DIR`. Monorepo-relative `stage/dist` / `sketch/dist` are never used.
 
 The paper-charting Python package (`molcrafts-molplot`) does **not** ship a
 Markdown fence — docs sites must use this theme.
@@ -123,8 +147,7 @@ cross-references (no product chip):
 </figure>
 ```
 
-In prose, link with Markdown: `[Figure 1](#fig-water)`. Legacy class
-`.molcrafts-web-component-card` maps to the same card look.
+In prose, link with Markdown: `[Figure 1](#fig-water)`.
 
 ## Math (arithmatex + MathJax)
 

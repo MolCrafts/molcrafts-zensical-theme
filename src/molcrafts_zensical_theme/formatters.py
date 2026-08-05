@@ -1,23 +1,26 @@
 """Doc-site fence formatters for MolVis and MolPlot Web Components.
 
-Both packages follow the **same contract**:
+Packages follow the **same contract**:
 
 1. **Build time (Python):** a superfences formatter in *this theme package*
    turns a Markdown fence into a Web Component tag. Consuming sites only need
    ``molcrafts-zensical-theme`` (+ zensical) — not the molvis / molplot
    Python libraries.
-2. **Run time (browser):** the corresponding npm ``elements.js`` bundle
-   upgrades the custom element. Sites load it once via ``extra_javascript``
-   (CDN or a staged local copy).
+2. **Run time (browser):** the corresponding npm CDN / staged bundle upgrades
+   the custom element. Sites load it once via ``extra_javascript``.
 
-Optional local staging (monorepo / ``npm link``) uses the same resolution
-order for both:
+MolVis is **two** npm packages after the monorepo split:
 
-1. ``$ENV_ELEMENTS_DIR`` override
-2. ``node_modules/@molcrafts/<package>/dist``
+- ``@molcrafts/molvis-stage`` — 3D (CDN entry ``dist/viewer.js``)
+- ``@molcrafts/molvis-sketch`` — 2D (CDN entry ``dist/index.js``)
+
+Optional local staging (monorepo / ``npm link``) uses:
+
+1. ``$ENV_*_DIR`` override
+2. ``node_modules/@molcrafts/<package>/dist`` (must contain the entry file)
 3. otherwise leave the CDN path alone
 
-Never stage monorepo-relative ``core/dist`` paths.
+Never stage monorepo-relative engine paths (``stage/dist``, ``sketch/dist``).
 """
 
 from __future__ import annotations
@@ -110,15 +113,17 @@ def _copy_if_changed(source: str, target: str) -> str:
     return shutil.copy2(source_path, target_path)
 
 
-def _stage_npm_elements_bundle(
+def _stage_npm_bundle(
     *,
     env_var: str,
     npm_package: str,
     asset_subdir: str,
+    entry_file: str,
 ) -> None:
     """Stage ``@molcrafts/<npm_package>/dist`` under ``docs/assets/<asset_subdir>``.
 
-    Shared by MolVis and MolPlot so both web components resolve the same way.
+    ``entry_file`` is the marker that must exist in ``dist`` (e.g. ``viewer.js``,
+    ``index.js``, ``elements.js``) so incomplete installs are skipped.
     """
     cwd = Path.cwd()
     configured = os.environ.get(env_var)
@@ -130,8 +135,7 @@ def _stage_npm_elements_bundle(
         (
             candidate.resolve()
             for candidate in candidates
-            if candidate is not None
-            and (candidate / "elements.js").is_file()
+            if candidate is not None and (candidate / entry_file).is_file()
         ),
         None,
     )
@@ -153,21 +157,39 @@ def _stage_npm_elements_bundle(
     )
 
 
-def _stage_local_molvis_bundle() -> None:
-    """Stage ``@molcrafts/molvis-core`` into ``docs/assets/molvis-core``."""
-    _stage_npm_elements_bundle(
-        env_var="MOLVIS_ELEMENTS_DIR",
-        npm_package="molvis-core",
-        asset_subdir="molvis-core",
+def _stage_local_molvis_stage_bundle() -> None:
+    """Stage ``@molcrafts/molvis-stage`` into ``docs/assets/molvis-stage``."""
+    _stage_npm_bundle(
+        env_var="MOLVIS_STAGE_DIR",
+        npm_package="molvis-stage",
+        asset_subdir="molvis-stage",
+        entry_file="viewer.js",
     )
+
+
+def _stage_local_molvis_sketch_bundle() -> None:
+    """Stage ``@molcrafts/molvis-sketch`` into ``docs/assets/molvis-sketch``."""
+    _stage_npm_bundle(
+        env_var="MOLVIS_SKETCH_DIR",
+        npm_package="molvis-sketch",
+        asset_subdir="molvis-sketch",
+        entry_file="index.js",
+    )
+
+
+def _stage_local_molvis_bundle() -> None:
+    """Stage both MolVis product packages (3D stage + 2D sketch)."""
+    _stage_local_molvis_stage_bundle()
+    _stage_local_molvis_sketch_bundle()
 
 
 def _stage_local_molplot_bundle() -> None:
     """Stage ``@molcrafts/molplot`` into ``docs/assets/molplot``."""
-    _stage_npm_elements_bundle(
+    _stage_npm_bundle(
         env_var="MOLPLOT_ELEMENTS_DIR",
         npm_package="molplot",
         asset_subdir="molplot",
+        entry_file="elements.js",
     )
 
 
@@ -366,7 +388,6 @@ def _load_molplot_spec(source: str) -> Any:
 
 # Screen / docs type scale. Paper preset is ~9–12 px; docs aim ~1.6–1.8× so
 # labels read clearly without crushing the plot (3 legends need room).
-# Injected into every fence so older CDN runtimes still leave paper size.
 _MOLPLOT_DOCS_TYPE: dict[str, Any] = {
     "padding": {"left": 12, "right": 12, "top": 10, "bottom": 12},
     "axis": {
@@ -429,9 +450,8 @@ def render_molplot_element(
 ) -> str:
     """Build the ``<molplot-chart>`` HTML for a Vega-Lite ``source`` spec.
 
-    Docs default to ``aspect="4:3"`` so paper-like proportions are used unless
-    the fence header overrides them. Every fence also gets a docs type scale
-    so axis labels stay large even when the runtime is still on paper sizes.
+    Docs default to ``aspect="16:10"`` unless the fence header overrides.
+    Every fence also gets a docs type scale so axis labels stay readable.
     """
     try:
         spec = _load_molplot_spec(source)
@@ -511,4 +531,8 @@ __all__ = [
     "molplot_fence",
     "molplot_validator",
     "render_molplot_element",
+    "_stage_local_molvis_bundle",
+    "_stage_local_molvis_stage_bundle",
+    "_stage_local_molvis_sketch_bundle",
+    "_stage_local_molplot_bundle",
 ]

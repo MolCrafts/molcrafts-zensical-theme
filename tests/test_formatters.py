@@ -7,6 +7,8 @@ import pytest
 from molcrafts_zensical_theme.formatters import (
     _stage_local_molplot_bundle,
     _stage_local_molvis_bundle,
+    _stage_local_molvis_sketch_bundle,
+    _stage_local_molvis_stage_bundle,
     molplot_fence,
     molplot_validator,
     molvis_fence,
@@ -74,44 +76,84 @@ def test_gallery_fence_rejects_unknown_representation() -> None:
         )
 
 
-def test_npm_package_bundle_is_staged_as_a_documentation_asset(
+def test_molvis_stage_bundle_is_staged(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Stage only from the npm package path (or MOLVIS_ELEMENTS_DIR)."""
+    """Stage only from npm package path (or MOLVIS_STAGE_DIR)."""
     bundle = (
-        tmp_path
-        / "node_modules"
-        / "@molcrafts"
-        / "molvis-core"
-        / "dist"
+        tmp_path / "node_modules" / "@molcrafts" / "molvis-stage" / "dist"
     )
     bundle.mkdir(parents=True)
-    (bundle / "elements.js").write_text("export {};", encoding="utf-8")
+    (bundle / "viewer.js").write_text("export {};", encoding="utf-8")
     (bundle / "runtime.js").write_text("export {};", encoding="utf-8")
     monkeypatch.chdir(tmp_path)
 
-    _stage_local_molvis_bundle()
+    _stage_local_molvis_stage_bundle()
 
-    staged = tmp_path / "docs" / "assets" / "molvis-core"
-    assert (staged / "elements.js").read_text(encoding="utf-8") == "export {};"
+    staged = tmp_path / "docs" / "assets" / "molvis-stage"
+    assert (staged / "viewer.js").read_text(encoding="utf-8") == "export {};"
     assert (staged / "runtime.js").is_file()
 
 
-def test_core_dist_relative_path_is_not_used(
+def test_molvis_sketch_bundle_is_staged(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Monorepo-relative core/dist must not stage — npm package only."""
-    legacy = tmp_path / "core" / "dist"
-    legacy.mkdir(parents=True)
-    (legacy / "elements.js").write_text("export {};", encoding="utf-8")
+    bundle = (
+        tmp_path / "node_modules" / "@molcrafts" / "molvis-sketch" / "dist"
+    )
+    bundle.mkdir(parents=True)
+    (bundle / "index.js").write_text("export {};", encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+
+    _stage_local_molvis_sketch_bundle()
+
+    staged = tmp_path / "docs" / "assets" / "molvis-sketch"
+    assert (staged / "index.js").read_text(encoding="utf-8") == "export {};"
+
+
+def test_molvis_bundle_stages_stage_and_sketch(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    stage = tmp_path / "node_modules" / "@molcrafts" / "molvis-stage" / "dist"
+    sketch = tmp_path / "node_modules" / "@molcrafts" / "molvis-sketch" / "dist"
+    stage.mkdir(parents=True)
+    sketch.mkdir(parents=True)
+    (stage / "viewer.js").write_text("stage", encoding="utf-8")
+    (sketch / "index.js").write_text("sketch", encoding="utf-8")
     monkeypatch.chdir(tmp_path)
 
     _stage_local_molvis_bundle()
 
-    staged = tmp_path / "docs" / "assets" / "molvis-core"
-    assert not staged.exists()
+    assert (
+        tmp_path / "docs" / "assets" / "molvis-stage" / "viewer.js"
+    ).read_text(encoding="utf-8") == "stage"
+    assert (
+        tmp_path / "docs" / "assets" / "molvis-sketch" / "index.js"
+    ).read_text(encoding="utf-8") == "sketch"
+
+
+def test_legacy_core_dist_and_old_package_name_are_not_used(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Monorepo-relative core/dist and old molvis-core package must not stage."""
+    legacy_core = tmp_path / "core" / "dist"
+    legacy_core.mkdir(parents=True)
+    (legacy_core / "viewer.js").write_text("export {};", encoding="utf-8")
+
+    old_pkg = tmp_path / "node_modules" / "@molcrafts" / "molvis-core" / "dist"
+    old_pkg.mkdir(parents=True)
+    (old_pkg / "elements.js").write_text("export {};", encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+
+    _stage_local_molvis_bundle()
+
+    assert not (tmp_path / "docs" / "assets" / "molvis-core").exists()
+    assert not (tmp_path / "docs" / "assets" / "molvis-stage").exists()
+    assert not (tmp_path / "docs" / "assets" / "molvis-sketch").exists()
 
 
 def test_molplot_fence_embeds_vega_lite_json() -> None:

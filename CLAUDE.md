@@ -39,6 +39,12 @@ uv run --extra dev tox -e py   # includes token contract + optional index identi
 2. Consumers set `[project.theme] name = "molcrafts"` only; defaults own features/palette.
 3. Version in `pyproject.toml`; release with `v*` tag → PyPI workflow.
 4. MolVis/MolPlot fences: theme owns Markdown→HTML; runtime WC loads from CDN (see README).
+5. **Iron law — product docs do not own visual system CSS.** Hero, manual-home,
+   sections, workflow-list, feature-matrix, doc-map, tile-grid, link-list,
+   palette, and figures are theme-only. Product `extra.css` is only for that
+   product's unique markup (or a one-line size tweak). Shared layout needs a
+   second consumer → promote a theme modifier; do not paste CSS into products.
+   Documented in README § "Product extra.css — iron law".
 
 ## Release
 

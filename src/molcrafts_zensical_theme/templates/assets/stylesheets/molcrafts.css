@@ -1,7 +1,7 @@
 /* Surface styles. Brand anchors: tokens.css (sync with index brand-tokens.css). */
 @import url("tokens.css");
 
-:root {
+:root{
   /* Theme-only derived vars (not shared brand anchors). */
   --molcrafts-rule: color-mix(in srgb, var(--md-primary-fg-color) 14%, transparent);
   --molcrafts-rule-strong: color-mix(in srgb, var(--md-primary-fg-color) 22%, transparent);
@@ -24,18 +24,14 @@
  * only the common palette below; the default accent (brand forest/sand) applies
  * to any product that does not set its own.
  *
- * Colours for reference when wiring each product's config:
+ * Product accent examples (set in each product's zensical.toml):
  *   molpy #0284c7, molvis #7c3aed, molnex/molcfg #0f766e, molrec #c2410c,
  *   molexp/molmcp #4f46e5, mollog #0ea5e9, molq/molqrc #db2777,
  *   molrs #ea580c, molpack #f97316, atomiverse #65a30d.
  */
 
-/*
- * Use Zensical's standard scheme names so all of its light/dark component
- * semantics apply automatically. The legacy names remain supported for pages
- * with a palette choice cached before this theme switched to default/slate.
- */
-:is([data-md-color-scheme="default"], [data-md-color-scheme="molcrafts"]) {
+/* Light / dark: Zensical scheme names only (default | slate). */
+[data-md-color-scheme="default"]{
   --molcrafts-product-accent: var(--molcrafts-forest);
   --molcrafts-product-accent-soft: rgba(24, 67, 43, 0.12);
   --molcrafts-paper: #fffdf6;
@@ -93,7 +89,7 @@
   color-scheme: light;
 }
 
-:is([data-md-color-scheme="slate"], [data-md-color-scheme="molcrafts-slate"]) {
+[data-md-color-scheme="slate"]{
   --md-hue: 148;
   --molcrafts-product-accent: var(--molcrafts-sand);
   --molcrafts-product-accent-soft: rgba(242, 218, 157, 0.14);
@@ -161,17 +157,17 @@
   color-scheme: dark;
 }
 
-:is([data-md-color-scheme="slate"], [data-md-color-scheme="molcrafts-slate"]) .md-header__title,
-:is([data-md-color-scheme="slate"], [data-md-color-scheme="molcrafts-slate"]) :is(h1, h2, h3, h4, h5, h6) {
+[data-md-color-scheme="slate"] .md-header__title,
+[data-md-color-scheme="slate"] :is(h1, h2, h3, h4, h5, h6){
   color: #f4f8f2;
 }
 
-:is([data-md-color-scheme="default"], [data-md-color-scheme="molcrafts"]) img:is([src$="#gh-dark-mode-only"], [src$="#only-dark"]),
-:is([data-md-color-scheme="slate"], [data-md-color-scheme="molcrafts-slate"]) img:is([src$="#gh-light-mode-only"], [src$="#only-light"]) {
+[data-md-color-scheme="default"] img:is([src$="#gh-dark-mode-only"], [src$="#only-dark"]),
+[data-md-color-scheme="slate"] img:is([src$="#gh-light-mode-only"], [src$="#only-light"]){
   display: none;
 }
 
-.md-header {
+.md-header{
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 55%),
     linear-gradient(90deg, var(--molcrafts-forest-dark), var(--molcrafts-forest) 62%, var(--molcrafts-forest-light));
@@ -180,13 +176,13 @@
   border-bottom: 1px solid rgba(14, 43, 27, 0.35);
 }
 
-.md-header__button.md-logo {
+.md-header__button.md-logo{
   margin: 0.2rem 0.25rem 0.2rem 0;
   padding: 0.18rem;
 }
 
 .md-header__button.md-logo img,
-.md-nav__button.md-logo img {
+.md-nav__button.md-logo img{
   height: 1.55rem;
   padding: 0.1rem;
   background: var(--molcrafts-cream);
@@ -196,43 +192,43 @@
 
 .md-header__topic,
 .md-tabs__link,
-.md-nav__title {
+.md-nav__title{
   font-weight: 700;
   letter-spacing: 0.01em;
 }
 
-.md-tabs {
+.md-tabs{
   background: color-mix(in srgb, var(--md-default-bg-color) 94%, var(--md-primary-fg-color));
   border-bottom: 1px solid var(--molcrafts-rule-strong);
   box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 35%, transparent);
 }
 
-:is([data-md-color-scheme="slate"], [data-md-color-scheme="molcrafts-slate"]) .md-tabs {
+[data-md-color-scheme="slate"] .md-tabs{
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
-.md-tabs__link {
+.md-tabs__link{
   opacity: 0.72;
   letter-spacing: 0.02em;
 }
 
 .md-tabs__link--active,
-.md-tabs__link:is(:focus, :hover) {
+.md-tabs__link:is(:focus, :hover){
   color: var(--molcrafts-product-accent);
   opacity: 1;
 }
 
-.md-tabs__link:focus-visible {
+.md-tabs__link:focus-visible{
   outline: none;
   box-shadow: var(--molcrafts-focus-ring);
   border-radius: var(--molcrafts-radius-sm);
 }
 
-.md-main__inner {
+.md-main__inner{
   margin-top: 1.15rem;
 }
 
-.md-grid {
+.md-grid{
   max-width: 1320px;
 }
 
@@ -244,12 +240,12 @@
 .md-typeset .molcrafts-manual-grid > a:focus-visible,
 .md-typeset .molcrafts-manual-list > a:focus-visible,
 .md-typeset .md-button:focus-visible,
-.md-nav__link:focus-visible {
+.md-nav__link:focus-visible{
   outline: none;
   box-shadow: var(--molcrafts-focus-ring);
 }
 
-.molcrafts-sr-only {
+.molcrafts-sr-only{
   position: absolute;
   width: 1px;
   height: 1px;
@@ -261,7 +257,7 @@
   border: 0;
 }
 
-.molcrafts-home-hero {
+.molcrafts-home-hero{
   position: relative;
   min-height: 25rem;
   display: flex;
@@ -280,7 +276,7 @@
   box-shadow: inset 0 -1px 0 color-mix(in srgb, #fff 40%, transparent);
 }
 
-:is([data-md-color-scheme="slate"], [data-md-color-scheme="molcrafts-slate"]) .molcrafts-home-hero {
+[data-md-color-scheme="slate"] .molcrafts-home-hero{
   background:
     linear-gradient(115deg, rgba(16, 24, 17, 0.98) 0%, rgba(16, 24, 17, 0.94) 48%, rgba(47, 125, 80, 0.16) 100%),
     linear-gradient(90deg, rgba(251, 246, 228, 0.055) 0 1px, transparent 1px 100%),
@@ -292,7 +288,7 @@
 }
 
 /* Fine diagonal rules + sparse paper grain; slow drift only when motion is ok. */
-.molcrafts-home-hero::before {
+.molcrafts-home-hero::before{
   content: "";
   position: absolute;
   inset: 0;
@@ -309,7 +305,7 @@
   animation: molcrafts-manual-drift 36s linear infinite;
 }
 
-:is([data-md-color-scheme="slate"], [data-md-color-scheme="molcrafts-slate"]) .molcrafts-home-hero::before {
+[data-md-color-scheme="slate"] .molcrafts-home-hero::before{
   background:
     linear-gradient(110deg, transparent 0 47.5%, rgba(242, 218, 157, 0.055) 47.5% 47.8%, transparent 47.8% 100%),
     linear-gradient(110deg, transparent 0 63%, rgba(242, 218, 157, 0.04) 63% 63.22%, transparent 63.22% 100%),
@@ -319,7 +315,7 @@
   background-size: auto, auto, auto, 3.2rem 3.2rem, 4.1rem 4.1rem;
 }
 
-.molcrafts-home-hero::after {
+.molcrafts-home-hero::after{
   content: "";
   position: absolute;
   inset: auto 0 0;
@@ -328,7 +324,7 @@
   background: linear-gradient(0deg, var(--md-default-bg-color), transparent);
 }
 
-@keyframes molcrafts-manual-drift {
+@keyframes molcrafts-manual-drift{
   from {
     background-position: 0 0, 0 0, 0 0;
   }
@@ -338,18 +334,18 @@
   }
 }
 
-.molcrafts-home-hero__inner {
+.molcrafts-home-hero__inner{
   position: relative;
   z-index: 1;
   width: 100%;
   padding: 4.8rem 1.6rem 4.15rem;
 }
 
-.molcrafts-home-hero__copy {
+.molcrafts-home-hero__copy{
   max-width: 42rem;
 }
 
-.molcrafts-home-hero__kicker {
+.molcrafts-home-hero__kicker{
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -362,7 +358,7 @@
   text-transform: uppercase;
 }
 
-.molcrafts-home-hero__kicker::before {
+.molcrafts-home-hero__kicker::before{
   content: "";
   width: 1.75rem;
   height: 1px;
@@ -382,11 +378,9 @@
  * The whole gradient is gated behind `@supports`; without relative-colour
  * support the title falls back to the solid accent below (never invisible).
  *
- * A product that wants a bespoke multi-hue gradient (e.g. molpy) can still
- * override `.molcrafts-home-hero h1` from its own extra_css, which loads after
- * this file and, when scoped by product, wins on specificity.
+ * Product extra_css may override `.molcrafts-home-hero h1` when scoped by product.
  */
-.molcrafts-home-hero h1 {
+.molcrafts-home-hero h1{
   margin: 0;
   color: var(--molcrafts-product-accent); /* fallback: solid accent title */
   font-size: 3.45rem;
@@ -395,7 +389,7 @@
   letter-spacing: -0.025em;
 }
 
-@supports (color: oklch(from red l c h)) {
+@supports (color: oklch(from red l c h)){
   .molcrafts-home-hero h1 {
     --molcrafts-title-grad-from: oklch(from var(--molcrafts-product-accent) clamp(0, calc(l - 0.16), 1) c h);
     --molcrafts-title-grad-mid: var(--molcrafts-product-accent);
@@ -413,14 +407,14 @@
 
   /* Dark scheme reuses the same injected product accent, so lift every stop's
      lightness to keep the title luminous against the slate background. */
-  :is([data-md-color-scheme="slate"], [data-md-color-scheme="molcrafts-slate"]) .molcrafts-home-hero h1 {
+  [data-md-color-scheme="slate"] .molcrafts-home-hero h1 {
     --molcrafts-title-grad-from: oklch(from var(--molcrafts-product-accent) clamp(0, calc(l + 0.06), 1) c h);
     --molcrafts-title-grad-mid: oklch(from var(--molcrafts-product-accent) clamp(0, calc(l + 0.20), 1) c h);
     --molcrafts-title-grad-to: oklch(from var(--molcrafts-product-accent) clamp(0, calc(l + 0.34), 0.96) c h);
   }
 }
 
-.molcrafts-home-hero__description {
+.molcrafts-home-hero__description{
   max-width: 34rem;
   margin: 1.35rem 0 0;
   color: var(--md-default-fg-color--light);
@@ -429,14 +423,14 @@
   letter-spacing: 0.005em;
 }
 
-.molcrafts-home-hero__actions {
+.molcrafts-home-hero__actions{
   display: flex;
   flex-wrap: wrap;
   gap: 0.6rem;
   margin-top: 1.8rem;
 }
 
-.molcrafts-home-hero__button {
+.molcrafts-home-hero__button{
   display: inline-flex;
   align-items: center;
   min-height: 2.4rem;
@@ -453,7 +447,7 @@
   transition: color 160ms ease, border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
-.molcrafts-home-hero__button::after {
+.molcrafts-home-hero__button::after{
   content: "";
   width: 0.38rem;
   height: 0.38rem;
@@ -464,21 +458,21 @@
   opacity: 0.85;
 }
 
-.molcrafts-home-hero__button--primary {
+.molcrafts-home-hero__button--primary{
   color: var(--md-primary-bg-color);
   border-color: var(--md-primary-fg-color);
   background: var(--md-primary-fg-color);
   box-shadow: var(--molcrafts-shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
-.molcrafts-home-hero__button:is(:focus, :hover) {
+.molcrafts-home-hero__button:is(:focus, :hover){
   color: var(--molcrafts-product-accent);
   border-color: var(--molcrafts-product-accent);
   box-shadow: var(--molcrafts-shadow);
   transform: translateY(-1px);
 }
 
-.molcrafts-home-hero__button--primary:is(:focus, :hover) {
+.molcrafts-home-hero__button--primary:is(:focus, :hover){
   color: var(--md-accent-bg-color);
   background: var(--molcrafts-product-accent);
   border-color: var(--molcrafts-product-accent);
@@ -487,14 +481,14 @@
 
 /* Optional right-hand hero aside: install command (one-click copy) + badges,
    driven by hero.install / hero.badges front matter. */
-.molcrafts-home-hero__inner {
+.molcrafts-home-hero__inner{
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 2.5rem;
 }
 
-.molcrafts-home-hero__aside {
+.molcrafts-home-hero__aside{
   display: grid;
   gap: 0.7rem;
   /* The kicker is .875rem tall with a 1.15rem bottom margin. Offset the
@@ -506,7 +500,7 @@
   margin-left: auto;
 }
 
-.molcrafts-home-hero__install {
+.molcrafts-home-hero__install{
   position: relative;
   padding: 0.95rem 1.05rem 1.05rem;
   border: 1px solid color-mix(in srgb, var(--molcrafts-product-accent) 26%, transparent);
@@ -515,7 +509,7 @@
   box-shadow: var(--molcrafts-shadow);
 }
 
-.molcrafts-home-hero__install::before {
+.molcrafts-home-hero__install::before{
   content: "";
   position: absolute;
   top: 0;
@@ -526,7 +520,7 @@
   background: linear-gradient(90deg, var(--molcrafts-product-accent), color-mix(in srgb, var(--molcrafts-product-accent) 20%, transparent));
 }
 
-.molcrafts-home-hero__install-label {
+.molcrafts-home-hero__install-label{
   display: block;
   margin-bottom: 0.5rem;
   color: var(--molcrafts-product-accent);
@@ -537,7 +531,7 @@
   text-transform: uppercase;
 }
 
-.molcrafts-home-hero__install-tabs {
+.molcrafts-home-hero__install-tabs{
   display: inline-flex;
   gap: 0.15rem;
   max-width: 100%;
@@ -549,7 +543,7 @@
   overflow-x: auto;
 }
 
-.molcrafts-home-hero__install-tab {
+.molcrafts-home-hero__install-tab{
   appearance: none;
   display: inline-flex;
   align-items: center;
@@ -569,26 +563,26 @@
   transition: color 160ms ease, background-color 160ms ease;
 }
 
-.molcrafts-home-hero__install-tab:is(:focus, :hover) {
+.molcrafts-home-hero__install-tab:is(:focus, :hover){
   color: var(--molcrafts-product-accent);
 }
 
-.molcrafts-home-hero__install-tab--active {
+.molcrafts-home-hero__install-tab--active{
   color: var(--molcrafts-product-accent);
   background: var(--molcrafts-product-accent-soft);
 }
 
-.molcrafts-home-hero__install-panel[hidden] {
+.molcrafts-home-hero__install-panel[hidden]{
   display: none;
 }
 
-.molcrafts-home-hero__install-row {
+.molcrafts-home-hero__install-row{
   display: flex;
   align-items: center;
   gap: 0.55rem;
 }
 
-.molcrafts-home-hero__install-row code {
+.molcrafts-home-hero__install-row code{
   flex: 1;
   min-width: 0;
   padding: 0.55rem 0.68rem;
@@ -603,7 +597,7 @@
   overflow-x: auto;
 }
 
-.molcrafts-home-hero__install-copy {
+.molcrafts-home-hero__install-copy{
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -616,46 +610,46 @@
   transition: color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
-.molcrafts-home-hero__install-copy:is(:focus, :hover) {
+.molcrafts-home-hero__install-copy:is(:focus, :hover){
   color: var(--molcrafts-product-accent);
   border-color: var(--molcrafts-product-accent);
   box-shadow: var(--molcrafts-shadow-sm);
   transform: translateY(-1px);
 }
 
-.molcrafts-home-hero__install-copy svg {
+.molcrafts-home-hero__install-copy svg{
   width: 0.95rem;
   height: 0.95rem;
 }
 
-.molcrafts-home-hero__install-copy svg:last-child {
+.molcrafts-home-hero__install-copy svg:last-child{
   display: none;
 }
 
-.molcrafts-home-hero__install-copy--done svg:first-child {
+.molcrafts-home-hero__install-copy--done svg:first-child{
   display: none;
 }
 
-.molcrafts-home-hero__install-copy--done svg:last-child {
+.molcrafts-home-hero__install-copy--done svg:last-child{
   display: block;
   color: var(--molcrafts-product-accent);
 }
 
-.molcrafts-home-hero__badges {
+.molcrafts-home-hero__badges{
   display: flex;
   flex-wrap: wrap;
   gap: 0.42rem;
   padding-top: 0.1rem;
 }
 
-.molcrafts-home-hero__badges img {
+.molcrafts-home-hero__badges img{
   display: block;
   height: 1.15rem;
   border-radius: var(--molcrafts-radius-sm);
   opacity: 0.94;
 }
 
-@media screen and (max-width: 68em) {
+@media screen and (max-width: 68em){
   .molcrafts-home-hero__inner {
     flex-direction: column;
     align-items: flex-start;
@@ -671,7 +665,7 @@
 
 /* Hero entrance: the copy rises in with a slight stagger on page load. The
    ambient ::before drift is independent; both honour prefers-reduced-motion. */
-@media (prefers-reduced-motion: no-preference) {
+@media (prefers-reduced-motion: no-preference){
   .molcrafts-home-hero__kicker,
   .molcrafts-home-hero h1,
   .molcrafts-home-hero__description,
@@ -697,13 +691,13 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce){
   .molcrafts-home-hero::before {
     animation: none;
   }
 }
 
-@keyframes molcrafts-hero-rise {
+@keyframes molcrafts-hero-rise{
   from {
     opacity: 0;
     transform: translateY(0.65rem);
@@ -717,49 +711,49 @@
 
 .md-typeset h1,
 .md-typeset h2,
-.md-typeset h3 {
+.md-typeset h3{
   color: var(--md-default-fg-color);
   letter-spacing: -0.015em;
 }
 
-.md-typeset h1 {
+.md-typeset h1{
   font-weight: 800;
 }
 
-.md-typeset h2 {
+.md-typeset h2{
   border-bottom: 1px solid var(--molcrafts-rule);
   padding-bottom: 0.28rem;
 }
 
-.md-typeset a {
+.md-typeset a{
   text-underline-offset: 0.18em;
   text-decoration-thickness: from-font;
 }
 
-.md-typeset a:is(:focus, :hover) {
+.md-typeset a:is(:focus, :hover){
   color: var(--molcrafts-product-accent);
 }
 
-.md-typeset .md-button {
+.md-typeset .md-button{
   border-radius: var(--molcrafts-radius);
   font-weight: 700;
   letter-spacing: 0.015em;
   box-shadow: var(--molcrafts-shadow-sm);
 }
 
-.md-typeset .md-button--primary {
+.md-typeset .md-button--primary{
   background: var(--md-primary-fg-color);
   border-color: var(--md-primary-fg-color);
   color: var(--md-primary-bg-color);
 }
 
-.md-typeset .md-button:is(:focus, :hover) {
+.md-typeset .md-button:is(:focus, :hover){
   border-color: var(--molcrafts-product-accent);
   color: var(--molcrafts-product-accent);
   box-shadow: var(--molcrafts-shadow);
 }
 
-.md-typeset .md-button--primary:is(:focus, :hover) {
+.md-typeset .md-button--primary:is(:focus, :hover){
   background: var(--molcrafts-product-accent);
   color: var(--md-accent-bg-color);
   box-shadow: 0 0 0 3px var(--molcrafts-product-accent-soft), var(--molcrafts-shadow);
@@ -767,17 +761,17 @@
 
 .md-typeset code,
 .md-typeset pre,
-.md-typeset kbd {
+.md-typeset kbd{
   border-radius: var(--molcrafts-radius-sm);
 }
 
-.md-typeset pre > code {
+.md-typeset pre > code{
   border: 1px solid var(--molcrafts-rule);
   box-shadow: var(--molcrafts-shadow-sm);
 }
 
 .md-typeset .admonition,
-.md-typeset details {
+.md-typeset details{
   border: 1px solid var(--molcrafts-rule);
   border-left: 0.15rem solid var(--molcrafts-product-accent);
   border-radius: var(--molcrafts-radius);
@@ -786,22 +780,22 @@
 }
 
 .md-typeset .admonition-title,
-.md-typeset summary {
+.md-typeset summary{
   background: transparent;
 }
 
-.md-typeset .admonition-title {
+.md-typeset .admonition-title{
   border-bottom: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 10%, transparent);
 }
 
-.md-typeset table:not([class]) {
+.md-typeset table:not([class]){
   border: 1px solid var(--molcrafts-rule);
   border-radius: var(--molcrafts-radius);
   box-shadow: var(--molcrafts-shadow-sm);
   overflow: hidden;
 }
 
-.md-typeset table:not([class]) th {
+.md-typeset table:not([class]) th{
   background: color-mix(in srgb, var(--molcrafts-product-accent-soft) 68%, var(--molcrafts-paper));
   color: var(--md-default-fg-color);
   font-weight: 750;
@@ -809,22 +803,22 @@
 }
 
 .md-typeset table:not([class]) td,
-.md-typeset table:not([class]) th {
+.md-typeset table:not([class]) th{
   border-color: color-mix(in srgb, var(--md-primary-fg-color) 11%, transparent);
 }
 
-.md-typeset .tabbed-labels {
+.md-typeset .tabbed-labels{
   border-bottom: 1px solid var(--molcrafts-rule-strong);
 }
 
-.md-typeset .tabbed-labels > label {
+.md-typeset .tabbed-labels > label{
   color: var(--md-default-fg-color--light);
   font-weight: 700;
   letter-spacing: 0.02em;
   transition: color 160ms ease;
 }
 
-.md-typeset .tabbed-labels > label:is(:focus, :hover) {
+.md-typeset .tabbed-labels > label:is(:focus, :hover){
   color: var(--molcrafts-product-accent);
 }
 
@@ -833,12 +827,12 @@
 .md-typeset .tabbed-set:has(> input:nth-child(3):checked) .tabbed-labels > label:nth-child(3),
 .md-typeset .tabbed-set:has(> input:nth-child(4):checked) .tabbed-labels > label:nth-child(4),
 .md-typeset .tabbed-set:has(> input:nth-child(5):checked) .tabbed-labels > label:nth-child(5),
-.md-typeset .tabbed-set:has(> input:nth-child(6):checked) .tabbed-labels > label:nth-child(6) {
+.md-typeset .tabbed-set:has(> input:nth-child(6):checked) .tabbed-labels > label:nth-child(6){
   color: var(--molcrafts-product-accent);
 }
 
 .md-typeset .grid.cards > ul > li,
-.md-typeset .grid > .card {
+.md-typeset .grid > .card{
   border-color: var(--molcrafts-rule);
   border-radius: var(--molcrafts-radius);
   background: var(--molcrafts-paper);
@@ -846,18 +840,18 @@
 }
 
 .md-typeset .grid.cards > ul > li:is(:focus-within, :hover),
-.md-typeset .grid > .card:is(:focus-within, :hover) {
+.md-typeset .grid > .card:is(:focus-within, :hover){
   border-color: color-mix(in srgb, var(--molcrafts-product-accent) 40%, transparent);
   box-shadow: var(--molcrafts-shadow);
 }
 
-.md-typeset .molcrafts-manual-home {
+.md-typeset .molcrafts-manual-home{
   max-width: 1080px;
   margin: 0 auto;
   padding: 2.1rem 1.35rem 0.5rem;
 }
 
-.md-typeset .molcrafts-manual-section {
+.md-typeset .molcrafts-manual-section{
   position: relative;
   display: grid;
   grid-template-columns: minmax(13rem, 0.42fr) minmax(0, 1fr);
@@ -868,7 +862,7 @@
   border-top: 1px solid var(--molcrafts-rule);
 }
 
-.md-typeset .molcrafts-manual-section:not(:first-child)::before {
+.md-typeset .molcrafts-manual-section:not(:first-child)::before{
   content: "";
   position: absolute;
   top: 1.95rem;
@@ -880,12 +874,12 @@
   opacity: 0.88;
 }
 
-.md-typeset .molcrafts-manual-section:first-child {
+.md-typeset .molcrafts-manual-section:first-child{
   padding-top: 0.15rem;
   border-top: 0;
 }
 
-.md-typeset .molcrafts-manual-section__header {
+.md-typeset .molcrafts-manual-section__header{
   position: sticky;
   top: 4rem;
 }
@@ -896,22 +890,22 @@
    bottom of the code, orphaned in the narrow left column with a gap above it.
    Span the code block down column 2 so the header and the closing paragraph
    stack in column 1, the paragraph sitting directly beneath the header. */
-.md-typeset .molcrafts-manual-section--compact {
+.md-typeset .molcrafts-manual-section--compact{
   align-content: start;
 }
 
-.md-typeset .molcrafts-manual-section--compact > .highlight {
+.md-typeset .molcrafts-manual-section--compact > .highlight{
   grid-column: 2;
   grid-row: 1 / span 2;
 }
 
 /* Header stays in normal flow (not sticky) so a short intro never lets the
    pinned header slide over its own body. */
-.md-typeset .molcrafts-manual-section--compact .molcrafts-manual-section__header {
+.md-typeset .molcrafts-manual-section--compact .molcrafts-manual-section__header{
   position: static;
 }
 
-.md-typeset .molcrafts-manual-eyebrow {
+.md-typeset .molcrafts-manual-eyebrow{
   display: block;
   margin-bottom: 0.5rem;
   color: var(--molcrafts-product-accent);
@@ -922,7 +916,7 @@
   text-transform: uppercase;
 }
 
-.md-typeset .molcrafts-manual-section__header h2 {
+.md-typeset .molcrafts-manual-section__header h2{
   margin: 0;
   padding: 0;
   border: 0;
@@ -931,21 +925,21 @@
   letter-spacing: -0.018em;
 }
 
-.md-typeset .molcrafts-manual-section__header p {
+.md-typeset .molcrafts-manual-section__header p{
   margin: 0.68rem 0 0;
   color: var(--md-default-fg-color--light);
   font-size: 0.84rem;
   line-height: 1.65;
 }
 
-.md-typeset .molcrafts-manual-index {
+.md-typeset .molcrafts-manual-index{
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   border-top: 1px solid var(--molcrafts-rule-strong);
   border-bottom: 1px solid var(--molcrafts-rule-strong);
 }
 
-.md-typeset .molcrafts-manual-index a {
+.md-typeset .molcrafts-manual-index a{
   position: relative;
   display: grid;
   grid-template-columns: 2.9rem minmax(9rem, 0.42fr) minmax(0, 1fr);
@@ -958,7 +952,7 @@
   transition: color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
 }
 
-.md-typeset .molcrafts-manual-index a::before {
+.md-typeset .molcrafts-manual-index a::before{
   content: "";
   position: absolute;
   left: 0;
@@ -970,20 +964,20 @@
   transition: width 160ms ease;
 }
 
-.md-typeset .molcrafts-manual-index a:first-child {
+.md-typeset .molcrafts-manual-index a:first-child{
   border-top: 0;
 }
 
-.md-typeset .molcrafts-manual-index a:is(:focus, :hover) {
+.md-typeset .molcrafts-manual-index a:is(:focus, :hover){
   color: var(--molcrafts-product-accent);
   background: var(--molcrafts-product-accent-soft);
 }
 
-.md-typeset .molcrafts-manual-index a:is(:focus, :hover)::before {
+.md-typeset .molcrafts-manual-index a:is(:focus, :hover)::before{
   width: 2px;
 }
 
-.md-typeset .molcrafts-manual-index span {
+.md-typeset .molcrafts-manual-index span{
   color: var(--md-default-fg-color--lighter);
   font-family: var(--md-code-font), ui-monospace, monospace;
   font-size: 0.68rem;
@@ -993,24 +987,24 @@
   line-height: 1.35;
 }
 
-.md-typeset .molcrafts-manual-index strong {
+.md-typeset .molcrafts-manual-index strong{
   color: inherit;
   font-size: 0.8rem;
   line-height: 1.35;
 }
 
-.md-typeset .molcrafts-manual-index em {
+.md-typeset .molcrafts-manual-index em{
   color: var(--md-default-fg-color--light);
   font-size: 0.74rem;
   font-style: normal;
   line-height: 1.55;
 }
 
-.md-typeset .molcrafts-workflow-list {
+.md-typeset .molcrafts-workflow-list{
   border-top: 1px solid var(--molcrafts-rule-strong);
 }
 
-.md-typeset .molcrafts-workflow-list > article {
+.md-typeset .molcrafts-workflow-list > article{
   display: grid;
   grid-template-columns: 7.4rem minmax(0, 1fr);
   gap: 0.4rem 1.1rem;
@@ -1019,7 +1013,7 @@
   border-bottom: 1px solid var(--molcrafts-rule);
 }
 
-.md-typeset .molcrafts-workflow-list__meta {
+.md-typeset .molcrafts-workflow-list__meta{
   grid-row: 1 / span 3;
   color: var(--md-default-fg-color--lighter);
   font-family: var(--md-code-font), ui-monospace, monospace;
@@ -1031,14 +1025,14 @@
   text-transform: uppercase;
 }
 
-.md-typeset .molcrafts-workflow-list h3 {
+.md-typeset .molcrafts-workflow-list h3{
   margin: 0;
   font-size: 0.9rem;
   line-height: 1.28;
   letter-spacing: -0.01em;
 }
 
-.md-typeset .molcrafts-workflow-list p {
+.md-typeset .molcrafts-workflow-list p{
   margin: 0;
   color: var(--md-default-fg-color--light);
   font-size: 0.76rem;
@@ -1046,11 +1040,11 @@
 }
 
 .md-typeset .molcrafts-workflow-list .highlight,
-.md-typeset .molcrafts-workflow-list pre {
+.md-typeset .molcrafts-workflow-list pre{
   margin: 0.42rem 0 0;
 }
 
-.md-typeset .molcrafts-workflow-list pre > code {
+.md-typeset .molcrafts-workflow-list pre > code{
   padding: 0.7rem 0.75rem;
   border-left: 0.14rem solid color-mix(in srgb, var(--molcrafts-product-accent) 55%, transparent);
   font-size: 0.7rem;
@@ -1059,14 +1053,14 @@
   overflow-wrap: anywhere;
 }
 
-.md-typeset .molcrafts-feature-matrix {
+.md-typeset .molcrafts-feature-matrix{
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   margin: 0;
   border-top: 1px solid var(--molcrafts-rule-strong);
 }
 
-.md-typeset .molcrafts-feature-matrix > div {
+.md-typeset .molcrafts-feature-matrix > div{
   display: grid;
   grid-template-columns: minmax(9.5rem, 0.34fr) minmax(0, 1fr);
   gap: 1.25rem;
@@ -1074,7 +1068,7 @@
   border-bottom: 1px solid var(--molcrafts-rule);
 }
 
-.md-typeset .molcrafts-feature-matrix dt {
+.md-typeset .molcrafts-feature-matrix dt{
   color: var(--md-default-fg-color);
   font-size: 0.78rem;
   font-weight: 850;
@@ -1082,33 +1076,33 @@
   letter-spacing: -0.005em;
 }
 
-.md-typeset .molcrafts-feature-matrix dd {
+.md-typeset .molcrafts-feature-matrix dd{
   margin: 0;
   color: var(--md-default-fg-color--light);
   font-size: 0.74rem;
   line-height: 1.55;
 }
 
-.md-typeset .molcrafts-doc-map {
+.md-typeset .molcrafts-doc-map{
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0 2.1rem;
   border-top: 1px solid var(--molcrafts-rule-strong);
 }
 
-.md-typeset .molcrafts-doc-map section {
+.md-typeset .molcrafts-doc-map section{
   padding: 0.9rem 0;
   border-bottom: 1px solid var(--molcrafts-rule);
 }
 
-.md-typeset .molcrafts-doc-map h3 {
+.md-typeset .molcrafts-doc-map h3{
   margin: 0;
   font-size: 0.82rem;
   line-height: 1.35;
   letter-spacing: -0.01em;
 }
 
-.md-typeset .molcrafts-doc-map p {
+.md-typeset .molcrafts-doc-map p{
   margin: 0.42rem 0 0;
   color: var(--md-default-fg-color--light);
   font-size: 0.74rem;
@@ -1121,34 +1115,314 @@
  * A manual page composes two orthogonal choices:                           *
  *   1. a SECTION FRAME    — how the titled block splits label vs. content: *
  *        (base)                two columns: sticky label | content         *
- *        --compact            two columns: static label | content, where   *
- *                             a trailing paragraph stacks under the label  *
- *        --stack             single column: eyebrow + title, then content  *
- *                             full width (host wide content / 3-col grids) *
+ *        --compact            two columns: static label | content          *
+ *        --stack             single column, full-width content             *
+ *        --flip              content first, header on the right            *
+ *        --body-col          pin non-header children to the content column *
  *   2. a CONTENT TEMPLATE — how the items inside are arranged:             *
- *        molcrafts-manual-grid --cols-2 / --cols-3   responsive card grid  *
- *        molcrafts-manual-list                        vertical row list    *
- *        molcrafts-manual-index                       numbered entry list  *
- * Sub-manuals pick a frame and drop a content template into it, instead of *
- * relying on grid auto-placement.                                          *
+ *        molcrafts-manual-grid --cols-2 / --cols-3                         *
+ *        molcrafts-manual-list / molcrafts-manual-index                    *
+ *        molcrafts-feature-matrix [--cards]                                *
+ *        molcrafts-doc-map [--cards]                                       *
+ *        molcrafts-tile-grid / molcrafts-link-list                         *
+ *                                                                          *
+ * Product docs set accent in zensical.toml. Product extra.css is only for  *
+ * product-unique markup — not re-skinning these components.                *
  * ------------------------------------------------------------------------ */
 
 /* Stack frame — single column so wide content (tables, diagrams, a 3-column
    card grid) is not cramped into the narrow content column of a split. */
-.md-typeset .molcrafts-manual-section--stack {
+.md-typeset .molcrafts-manual-section--stack{
   grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
 }
 
-.md-typeset .molcrafts-manual-section--stack .molcrafts-manual-section__header {
+.md-typeset .molcrafts-manual-section--stack .molcrafts-manual-section__header{
   position: static;
   max-width: 44rem;
+}
+
+/* Flip frame — wide content first, narrow header second. */
+.md-typeset .molcrafts-manual-section--flip{
+  grid-template-columns: minmax(0, 1fr) minmax(13rem, 0.42fr);
+}
+
+.md-typeset .molcrafts-manual-section--flip > .molcrafts-manual-section__header{
+  order: 2;
+}
+
+/* Multiple body siblings: keep them in the content column. */
+.md-typeset .molcrafts-manual-section--body-col > :not(.molcrafts-manual-section__header){
+  grid-column: 2;
+}
+
+.md-typeset .molcrafts-manual-section--flip.molcrafts-manual-section--body-col > :not(.molcrafts-manual-section__header){
+  grid-column: 1;
+}
+
+@media screen and (max-width: 60em){
+  .md-typeset .molcrafts-manual-section--flip{
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .md-typeset .molcrafts-manual-section--flip > .molcrafts-manual-section__header{
+    order: 0;
+  }
+
+  .md-typeset .molcrafts-manual-section--body-col > :not(.molcrafts-manual-section__header),
+  .md-typeset .molcrafts-manual-section--flip.molcrafts-manual-section--body-col > :not(.molcrafts-manual-section__header){
+    grid-column: 1;
+  }
+}
+
+/* Feature-matrix cards — icon + title + blurb tiles (same dt/dd markup). */
+.md-typeset .molcrafts-feature-matrix--cards{
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  border-top: 0;
+}
+
+.md-typeset .molcrafts-feature-matrix--cards > div{
+  position: relative;
+  display: block;
+  grid-template-columns: none;
+  gap: 0;
+  padding: 1rem;
+  border: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 14%, transparent);
+  border-radius: var(--molcrafts-radius);
+  background: color-mix(in srgb, var(--md-default-bg-color) 82%, transparent);
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease, background-color 180ms ease;
+}
+
+.md-typeset .molcrafts-feature-matrix--cards > div:is(:focus-within, :hover){
+  border-color: color-mix(in srgb, var(--molcrafts-product-accent) 42%, transparent);
+  box-shadow: 0 0.6rem 1.6rem color-mix(in srgb, var(--molcrafts-product-accent) 20%, transparent);
+  background: color-mix(in srgb, var(--md-default-bg-color) 92%, var(--molcrafts-product-accent-soft));
+  transform: translateY(-2px);
+}
+
+.md-typeset .molcrafts-feature-matrix__icon{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  margin-bottom: 0.65rem;
+  border: 1px solid color-mix(in srgb, var(--molcrafts-product-accent) 30%, transparent);
+  border-radius: 0.5rem;
+  color: var(--molcrafts-product-accent);
+  background: var(--molcrafts-product-accent-soft);
+}
+
+.md-typeset .molcrafts-feature-matrix__icon svg{
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.md-typeset .molcrafts-feature-matrix--cards dt{
+  font-size: 0.82rem;
+}
+
+.md-typeset .molcrafts-feature-matrix--cards dd{
+  margin-top: 0.4rem;
+}
+
+.md-typeset .molcrafts-feature-matrix--cards dt a{
+  color: inherit;
+  text-decoration: none;
+}
+
+.md-typeset .molcrafts-feature-matrix--cards dt a::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+@media screen and (max-width: 76.2344em){
+  .md-typeset .molcrafts-feature-matrix--cards{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media screen and (max-width: 36em){
+  .md-typeset .molcrafts-feature-matrix--cards{
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Doc-map soft cards. */
+.md-typeset .molcrafts-doc-map--cards{
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+  border-top: 0;
+}
+
+.md-typeset .molcrafts-doc-map--cards section{
+  position: relative;
+  padding: 0.85rem 0.9rem;
+  border-bottom: 0;
+  border-radius: var(--molcrafts-radius);
+  background: color-mix(in srgb, var(--md-default-fg-color) 4%, transparent);
+  transition: background-color 160ms ease;
+}
+
+.md-typeset .molcrafts-doc-map--cards section:is(:focus-within, :hover){
+  background: color-mix(in srgb, var(--molcrafts-product-accent-soft) 58%, transparent);
+}
+
+.md-typeset .molcrafts-doc-map--cards h3 a{
+  color: inherit;
+  text-decoration: none;
+}
+
+.md-typeset .molcrafts-doc-map--cards h3 a::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+@media screen and (max-width: 76.2344em){
+  .md-typeset .molcrafts-doc-map--cards{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media screen and (max-width: 36em){
+  .md-typeset .molcrafts-doc-map--cards{
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Soft tile grid (dt + dd tiles). */
+.md-typeset .molcrafts-tile-grid{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.md-typeset .molcrafts-tile-grid--cols-2{
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.md-typeset .molcrafts-tile-grid > div{
+  position: relative;
+  min-width: 0;
+  padding: 0.85rem 0.9rem;
+  border-radius: var(--molcrafts-radius);
+  background: color-mix(in srgb, var(--md-default-fg-color) 4%, transparent);
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+
+.md-typeset .molcrafts-tile-grid > div:is(:focus-within, :hover){
+  background: var(--molcrafts-product-accent-soft);
+  transform: translateY(-1px);
+}
+
+.md-typeset .molcrafts-tile-grid dt{
+  margin: 0;
+  color: var(--md-default-fg-color);
+  font-size: 0.76rem;
+  font-weight: 850;
+  line-height: 1.32;
+}
+
+.md-typeset .molcrafts-tile-grid dt a{
+  color: inherit;
+  text-decoration: none;
+}
+
+.md-typeset .molcrafts-tile-grid dt a::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.md-typeset .molcrafts-tile-grid dd{
+  margin: 0.38rem 0 0;
+  color: var(--md-default-fg-color--light);
+  font-size: 0.66rem;
+  line-height: 1.5;
+}
+
+/* Name | description rows. */
+.md-typeset .molcrafts-link-list{
+  display: block;
+  margin: 0;
+}
+
+.md-typeset .molcrafts-link-list > div{
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(7.5rem, 0.26fr) minmax(0, 1fr);
+  gap: 0.2rem 1.25rem;
+  align-items: baseline;
+  padding: 0.7rem 0.55rem;
+  border-top: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 12%, transparent);
+  transition: background-color 160ms ease, padding-left 160ms ease;
+}
+
+.md-typeset .molcrafts-link-list > div:first-child{
+  border-top: 0;
+}
+
+.md-typeset .molcrafts-link-list > div:is(:focus-within, :hover){
+  padding-left: 0.95rem;
+  background: color-mix(in srgb, var(--molcrafts-product-accent-soft) 55%, transparent);
+}
+
+.md-typeset .molcrafts-link-list dt{
+  margin: 0;
+  color: var(--md-default-fg-color);
+  font-size: 0.76rem;
+  font-weight: 850;
+  line-height: 1.32;
+}
+
+.md-typeset .molcrafts-link-list dt a{
+  color: inherit;
+  text-decoration: none;
+}
+
+.md-typeset .molcrafts-link-list dt a::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.md-typeset .molcrafts-link-list dd{
+  margin: 0;
+  color: var(--md-default-fg-color--light);
+  font-size: 0.66rem;
+  line-height: 1.5;
+}
+
+@media screen and (max-width: 60em){
+  .md-typeset .molcrafts-tile-grid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media screen and (max-width: 36em){
+  .md-typeset .molcrafts-tile-grid,
+  .md-typeset .molcrafts-tile-grid--cols-2{
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .md-typeset .molcrafts-link-list > div{
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.15rem;
+  }
 }
 
 /* Card-grid template — a responsive grid of cards. Pick the column count with
    --cols-2 / --cols-3; both collapse on narrower viewports. Each child is a
    card (an <a> for a link, or a <div>) holding <strong> + <em>/<p>. */
-.md-typeset .molcrafts-manual-grid {
+.md-typeset .molcrafts-manual-grid{
   display: grid;
   gap: 1rem;
   margin: 0;
@@ -1156,15 +1430,15 @@
   list-style: none;
 }
 
-.md-typeset .molcrafts-manual-grid--cols-2 {
+.md-typeset .molcrafts-manual-grid--cols-2{
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.md-typeset .molcrafts-manual-grid--cols-3 {
+.md-typeset .molcrafts-manual-grid--cols-3{
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.md-typeset .molcrafts-manual-grid > * {
+.md-typeset .molcrafts-manual-grid > *{
   position: relative;
   display: block;
   min-width: 0;
@@ -1177,11 +1451,11 @@
   text-decoration: none;
 }
 
-.md-typeset .molcrafts-manual-grid > a {
+.md-typeset .molcrafts-manual-grid > a{
   transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
-.md-typeset .molcrafts-manual-grid > a::before {
+.md-typeset .molcrafts-manual-grid > a::before{
   content: "";
   position: absolute;
   left: 0;
@@ -1193,7 +1467,7 @@
   transition: width 160ms ease;
 }
 
-.md-typeset .molcrafts-manual-grid > a:is(:focus, :hover) {
+.md-typeset .molcrafts-manual-grid > a:is(:focus, :hover){
   border-color: color-mix(in srgb, var(--molcrafts-product-accent) 40%, transparent);
   background: color-mix(in srgb, var(--molcrafts-product-accent-soft) 70%, var(--molcrafts-paper));
   color: var(--molcrafts-product-accent);
@@ -1201,11 +1475,11 @@
   transform: translateY(-1px);
 }
 
-.md-typeset .molcrafts-manual-grid > a:is(:focus, :hover)::before {
+.md-typeset .molcrafts-manual-grid > a:is(:focus, :hover)::before{
   width: 2px;
 }
 
-.md-typeset .molcrafts-manual-grid strong {
+.md-typeset .molcrafts-manual-grid strong{
   display: block;
   color: inherit;
   font-size: 0.84rem;
@@ -1214,7 +1488,7 @@
 }
 
 .md-typeset .molcrafts-manual-grid em,
-.md-typeset .molcrafts-manual-grid p {
+.md-typeset .molcrafts-manual-grid p{
   display: block;
   margin: 0.35rem 0 0;
   color: var(--md-default-fg-color--light);
@@ -1225,7 +1499,7 @@
 
 /* List template — a vertical list of rows, each a label + description. Lighter
    than manual-index (no leading number). Children are <a> or <div>. */
-.md-typeset .molcrafts-manual-list {
+.md-typeset .molcrafts-manual-list{
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   margin: 0;
@@ -1234,7 +1508,7 @@
   border-top: 1px solid var(--molcrafts-rule-strong);
 }
 
-.md-typeset .molcrafts-manual-list > * {
+.md-typeset .molcrafts-manual-list > *{
   position: relative;
   display: grid;
   grid-template-columns: minmax(8rem, 0.34fr) minmax(0, 1fr);
@@ -1246,11 +1520,11 @@
   text-decoration: none;
 }
 
-.md-typeset .molcrafts-manual-list > a {
+.md-typeset .molcrafts-manual-list > a{
   transition: color 160ms ease, background-color 160ms ease;
 }
 
-.md-typeset .molcrafts-manual-list > a::before {
+.md-typeset .molcrafts-manual-list > a::before{
   content: "";
   position: absolute;
   left: 0;
@@ -1262,23 +1536,23 @@
   transition: width 160ms ease;
 }
 
-.md-typeset .molcrafts-manual-list > a:is(:focus, :hover) {
+.md-typeset .molcrafts-manual-list > a:is(:focus, :hover){
   color: var(--molcrafts-product-accent);
   background: var(--molcrafts-product-accent-soft);
 }
 
-.md-typeset .molcrafts-manual-list > a:is(:focus, :hover)::before {
+.md-typeset .molcrafts-manual-list > a:is(:focus, :hover)::before{
   width: 2px;
 }
 
-.md-typeset .molcrafts-manual-list strong {
+.md-typeset .molcrafts-manual-list strong{
   color: inherit;
   font-family: var(--md-code-font), ui-monospace, monospace;
   font-size: 0.78rem;
   line-height: 1.4;
 }
 
-.md-typeset .molcrafts-manual-list em {
+.md-typeset .molcrafts-manual-list em{
   color: var(--md-default-fg-color--light);
   font-size: 0.74rem;
   font-style: normal;
@@ -1287,7 +1561,7 @@
 
 /* Browser-native MolCrafts embeds. The element rules are useful in any docs
    page; the card/grid rules provide an optional catalog-style presentation. */
-.md-typeset :is(molvis-viewer, molplot-chart) {
+.md-typeset :is(molvis-viewer, molplot-chart){
   display: block;
   box-sizing: border-box;
   max-width: 100%;
@@ -1299,7 +1573,7 @@
   box-shadow: var(--molcrafts-shadow-sm);
 }
 
-.md-typeset molvis-viewer {
+.md-typeset molvis-viewer{
   position: relative;
   width: 100%;
   /* Default when the fence omits height. The component applies an explicit
@@ -1308,7 +1582,7 @@
   isolation: isolate;
 }
 
-.md-typeset molvis-viewer[height] {
+.md-typeset molvis-viewer[height]{
   /* Author height wins via the component's inline style. */
   min-height: 0;
 }
@@ -1321,13 +1595,13 @@
    `max-width: 24rem; margin: 1em auto; font-style: italic` — both must be
    overridden or every card shrinks to its canvas bitmap and the grid collapses
    into uneven tiles. */
-.md-typeset molvis-style-gallery {
+.md-typeset molvis-style-gallery{
   display: block;
   width: 100%;
   margin: 1.5rem 0 2rem;
 }
 
-.md-typeset .molvis-style-gallery__grid {
+.md-typeset .molvis-style-gallery__grid{
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
@@ -1335,7 +1609,7 @@
 }
 
 .md-typeset figure.molvis-style-gallery__card,
-.md-typeset .molvis-style-gallery__card {
+.md-typeset .molvis-style-gallery__card{
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -1350,7 +1624,7 @@
   text-align: left;
 }
 
-.md-typeset .molvis-style-gallery__preview {
+.md-typeset .molvis-style-gallery__preview{
   position: relative;
   flex: 0 0 auto;
   width: 100%;
@@ -1361,7 +1635,7 @@
 
 /* Absolute fill so the HTML canvas bitmap size never drives card layout
    (canvas defaults to 300×150 and Babylon resizes the drawing buffer). */
-.md-typeset .molvis-style-gallery__canvas {
+.md-typeset .molvis-style-gallery__canvas{
   position: absolute;
   inset: 0;
   display: block;
@@ -1375,7 +1649,7 @@
 }
 
 .md-typeset figcaption.molvis-style-gallery__caption,
-.md-typeset .molvis-style-gallery__caption {
+.md-typeset .molvis-style-gallery__caption{
   display: flex;
   flex: 0 0 auto;
   gap: 0.5rem;
@@ -1391,7 +1665,7 @@
   text-align: left;
 }
 
-.md-typeset .molvis-style-gallery__caption strong {
+.md-typeset .molvis-style-gallery__caption strong{
   color: var(--md-default-fg-color);
   font-size: 0.8rem;
   font-weight: 650;
@@ -1399,7 +1673,7 @@
   line-height: 1.35;
 }
 
-.md-typeset .molvis-style-gallery__caption code {
+.md-typeset .molvis-style-gallery__caption code{
   padding: 0.1rem 0.35rem;
   border-radius: var(--molcrafts-radius-sm);
   background: var(--molcrafts-product-accent-soft);
@@ -1412,24 +1686,24 @@
 /* Only show the caption separator when a caption exists. Use :has()
    so cards without captions keep the card's rounded bottom corners and
    don't display an inner dividing line. */
-.md-typeset .molvis-style-gallery__card:has(.molvis-style-gallery__caption) .molvis-style-gallery__caption {
+.md-typeset .molvis-style-gallery__card:has(.molvis-style-gallery__caption) .molvis-style-gallery__caption{
   border-top: 1px solid var(--molcrafts-rule);
 }
 
 /* When a card has a caption, remove the preview's bottom radius so the
    caption edge aligns flush. When there's no caption, restore radius so
    there's no visible seam (no "chin"). */
-.md-typeset .molvis-style-gallery__card:has(.molvis-style-gallery__caption) .molvis-style-gallery__preview {
+.md-typeset .molvis-style-gallery__card:has(.molvis-style-gallery__caption) .molvis-style-gallery__preview{
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
 
-.md-typeset .molvis-style-gallery__card:not(:has(.molvis-style-gallery__caption)) .molvis-style-gallery__preview {
+.md-typeset .molvis-style-gallery__card:not(:has(.molvis-style-gallery__caption)) .molvis-style-gallery__preview{
   border-bottom-left-radius: var(--molcrafts-radius-lg);
   border-bottom-right-radius: var(--molcrafts-radius-lg);
 }
 
-.md-typeset molvis-style-gallery[data-state="loading"] .molvis-style-gallery__preview {
+.md-typeset molvis-style-gallery[data-state="loading"] .molvis-style-gallery__preview{
   background:
     linear-gradient(100deg, transparent 20%, var(--molcrafts-product-accent-soft) 45%, transparent 70%),
     var(--molcrafts-paper-elevated);
@@ -1437,7 +1711,7 @@
   animation: molcrafts-component-loading 1.8s ease-in-out infinite;
 }
 
-.md-typeset .molvis-style-gallery__error {
+.md-typeset .molvis-style-gallery__error{
   padding: 1rem;
   border: 1px solid color-mix(in srgb, #b42318 45%, transparent);
   border-radius: var(--molcrafts-radius);
@@ -1456,7 +1730,7 @@
    painted glyphs — pure CSS font-size blows past Vega's reserved label slots
    and clips titles). Do not !important-override SVG text here. */
 .md-typeset molplot-chart,
-.md-typeset [data-molplot-chart] {
+.md-typeset [data-molplot-chart]{
   --molplot-width: min(100%, 36rem);
   --molplot-aspect: 4 / 3;
   display: block;
@@ -1475,7 +1749,7 @@
 .md-typeset molplot-chart .vega-embed,
 .md-typeset [data-molplot-chart] .vega-embed,
 .md-typeset molplot-chart .molplot-chart__surface,
-.md-typeset [data-molplot-chart] .molplot-chart__surface {
+.md-typeset [data-molplot-chart] .molplot-chart__surface{
   position: absolute;
   inset: 0;
   box-sizing: border-box;
@@ -1487,19 +1761,19 @@
 }
 
 .md-typeset molplot-chart .vega-embed > svg,
-.md-typeset [data-molplot-chart] .vega-embed > svg {
+.md-typeset [data-molplot-chart] .vega-embed > svg{
   display: block;
   max-width: 100%;
   height: auto;
 }
 
-.md-typeset .molplot {
+.md-typeset .molplot{
   width: 100%;
   max-width: 36rem;
   margin-inline: auto;
 }
 
-.md-typeset :is(molvis-viewer, molplot-chart)[data-state="loading"] {
+.md-typeset :is(molvis-viewer, molplot-chart)[data-state="loading"]{
   background:
     linear-gradient(100deg, transparent 20%, var(--molcrafts-product-accent-soft) 45%, transparent 70%),
     var(--molcrafts-paper-elevated);
@@ -1507,7 +1781,7 @@
   animation: molcrafts-component-loading 1.8s ease-in-out infinite;
 }
 
-@keyframes molcrafts-component-loading {
+@keyframes molcrafts-component-loading{
   to {
     background-position: -220% 0;
   }
@@ -1527,11 +1801,8 @@
  *   </figure>
  *
  *   See [Figure 1](#fig-water).
- *
- * Legacy class names (molcrafts-web-component-*) map to the same look.
  */
-.md-typeset figure.molcrafts-figure,
-.md-typeset figure.molcrafts-web-component-card {
+.md-typeset figure.molcrafts-figure{
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -1549,10 +1820,7 @@
 }
 
 /* Body first, caption second — even when the HTML lists figcaption first. */
-.md-typeset figure.molcrafts-figure > .molcrafts-figure__body,
-.md-typeset figure.molcrafts-figure > .molcrafts-web-component-preview,
-.md-typeset figure.molcrafts-web-component-card > .molcrafts-figure__body,
-.md-typeset figure.molcrafts-web-component-card > .molcrafts-web-component-preview {
+.md-typeset figure.molcrafts-figure > .molcrafts-figure__body{
   order: 1;
   width: 100%;
   min-width: 0;
@@ -1566,9 +1834,7 @@
  * get a card-in-card (outer figure frame + inner viewer border).
  */
 .md-typeset figure.molcrafts-figure :is(molvis-viewer, molplot-chart),
-.md-typeset figure.molcrafts-web-component-card :is(molvis-viewer, molplot-chart),
-.md-typeset .molcrafts-figure__body :is(molvis-viewer, molplot-chart),
-.md-typeset .molcrafts-web-component-preview :is(molvis-viewer, molplot-chart) {
+.md-typeset .molcrafts-figure__body :is(molvis-viewer, molplot-chart){
   display: block;
   width: 100%;
   margin: 0;
@@ -1579,22 +1845,17 @@
 }
 
 .md-typeset figure.molcrafts-figure molvis-viewer,
-.md-typeset figure.molcrafts-web-component-card molvis-viewer,
-.md-typeset .molcrafts-figure__body molvis-viewer,
-.md-typeset .molcrafts-web-component-preview molvis-viewer {
+.md-typeset .molcrafts-figure__body molvis-viewer{
   background: transparent;
 }
 
 .md-typeset figure.molcrafts-figure molplot-chart,
-.md-typeset figure.molcrafts-web-component-card molplot-chart,
-.md-typeset .molcrafts-figure__body molplot-chart,
-.md-typeset .molcrafts-web-component-preview molplot-chart {
+.md-typeset .molcrafts-figure__body molplot-chart{
   background: #fff;
 }
 
 /* Caption chin: same size as body copy (.md-typeset ≈ 0.8rem), paper figure type. */
-.md-typeset figure.molcrafts-figure > figcaption,
-.md-typeset figure.molcrafts-web-component-card > figcaption {
+.md-typeset figure.molcrafts-figure > figcaption{
   order: 2;
   display: block;
   width: 100%;
@@ -1612,15 +1873,13 @@
   text-align: center;
 }
 
-.md-typeset figure.molcrafts-figure > figcaption strong,
-.md-typeset figure.molcrafts-web-component-card > figcaption strong {
+.md-typeset figure.molcrafts-figure > figcaption strong{
   font-size: inherit;
   font-weight: 650;
   color: var(--md-default-fg-color);
 }
 
-.md-typeset figure.molcrafts-figure > figcaption small,
-.md-typeset figure.molcrafts-web-component-card > figcaption small {
+.md-typeset figure.molcrafts-figure > figcaption small{
   display: inline;
   color: inherit;
   font-size: inherit;
@@ -1628,7 +1887,7 @@
 }
 
 /* "Figure N." — bold, slightly darker than the rest of the caption. */
-.md-typeset .molcrafts-figure__label {
+.md-typeset .molcrafts-figure__label{
   margin-right: 0.3em;
   color: var(--md-default-fg-color);
   font-weight: 700;
@@ -1637,14 +1896,8 @@
   white-space: nowrap;
 }
 
-/* Drop the old product chip entirely. */
-.md-typeset .molcrafts-web-component-card__package,
-.md-typeset .molcrafts-figure__package {
-  display: none !important;
-}
 
-.md-typeset .molcrafts-figure__body molvis-viewer,
-.md-typeset .molcrafts-web-component-preview molvis-viewer {
+.md-typeset .molcrafts-figure__body molvis-viewer{
   width: 100%;
   height: clamp(18rem, 38vw, 22rem);
 }
@@ -1653,8 +1906,7 @@
  * Chart body: generous inset so axis titles / legends are not flush to the
  * card edge. Chart host is full width of the card (no 36rem cap).
  */
-.md-typeset .molcrafts-figure__body--chart,
-.md-typeset .molcrafts-web-component-preview--chart {
+.md-typeset .molcrafts-figure__body--chart{
   display: block;
   width: 100%;
   min-height: auto;
@@ -1665,9 +1917,7 @@
 }
 
 .md-typeset .molcrafts-figure__body--chart .molplot,
-.md-typeset .molcrafts-web-component-preview--chart .molplot,
-.md-typeset figure.molcrafts-figure .molplot,
-.md-typeset figure.molcrafts-web-component-card .molplot {
+.md-typeset figure.molcrafts-figure .molplot{
   width: 100%;
   max-width: none;
   margin: 0;
@@ -1678,9 +1928,7 @@
  * right). 16/10 gives the plot room without the 4/3 tall empty chin.
  */
 .md-typeset .molcrafts-figure__body--chart molplot-chart,
-.md-typeset .molcrafts-web-component-preview--chart molplot-chart,
-.md-typeset figure.molcrafts-figure molplot-chart,
-.md-typeset figure.molcrafts-web-component-card molplot-chart {
+.md-typeset figure.molcrafts-figure molplot-chart{
   --molplot-width: 100%;
   --molplot-aspect: 16 / 10;
   width: 100%;
@@ -1694,14 +1942,12 @@
 }
 
 .md-typeset .molcrafts-figure__body--chart molplot-chart > .molplot-chart__surface,
-.md-typeset figure.molcrafts-figure molplot-chart > .molplot-chart__surface,
-.md-typeset figure.molcrafts-web-component-card molplot-chart > .molplot-chart__surface {
+.md-typeset figure.molcrafts-figure molplot-chart > .molplot-chart__surface{
   inset: 0.5rem !important;
 }
 
 /* Optional multi-figure row (side-by-side panels). */
-.md-typeset .molcrafts-figure-grid,
-.md-typeset .molcrafts-web-component-grid {
+.md-typeset .molcrafts-figure-grid{
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.25rem 1.5rem;
@@ -1712,33 +1958,33 @@
 .md-search__form,
 .md-search__input,
 .md-search__output,
-.md-search-result__meta {
+.md-search-result__meta{
   border-radius: var(--molcrafts-radius);
 }
 
 .md-nav__link:is(:focus, :hover),
-.md-nav__link--active {
+.md-nav__link--active{
   color: var(--molcrafts-product-accent);
 }
 
-.md-nav--secondary .md-nav__title {
+.md-nav--secondary .md-nav__title{
   color: var(--md-default-fg-color);
   letter-spacing: 0.02em;
 }
 
-.md-footer {
+.md-footer{
   margin-top: 2.4rem;
   border-top: 1px solid rgba(14, 43, 27, 0.25);
 }
 
-@media screen and (max-width: 76.2344em) {
+@media screen and (max-width: 76.2344em){
   .md-nav--primary .md-nav__title[for="__drawer"] {
     background: var(--md-primary-fg-color);
     color: var(--md-primary-bg-color);
   }
 }
 
-@media screen and (max-width: 60em) {
+@media screen and (max-width: 60em){
   .molcrafts-home-hero {
     min-height: auto;
     background:
@@ -1748,7 +1994,7 @@
     background-size: auto, 3.6rem 3.6rem, 3.6rem 3.6rem;
   }
 
-  :is([data-md-color-scheme="slate"], [data-md-color-scheme="molcrafts-slate"]) .molcrafts-home-hero {
+  [data-md-color-scheme="slate"] .molcrafts-home-hero {
     background:
       linear-gradient(135deg, rgba(16, 24, 17, 0.98) 0%, rgba(16, 24, 17, 0.92) 56%, rgba(47, 125, 80, 0.14) 100%),
       linear-gradient(90deg, rgba(251, 246, 228, 0.05) 0 1px, transparent 1px 100%),
@@ -1819,23 +2065,20 @@
     gap: 0.15rem;
   }
 
-  .md-typeset .molcrafts-figure-grid,
-  .md-typeset .molcrafts-web-component-grid {
+  .md-typeset .molcrafts-figure-grid {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .md-typeset .molcrafts-figure__body molvis-viewer,
-  .md-typeset .molcrafts-web-component-preview molvis-viewer {
+  .md-typeset .molcrafts-figure__body molvis-viewer {
     height: clamp(18rem, 58vw, 22rem);
   }
 
-  .md-typeset .molcrafts-figure__body--chart,
-  .md-typeset .molcrafts-web-component-preview--chart {
+  .md-typeset .molcrafts-figure__body--chart {
     min-height: auto;
   }
 }
 
-@media screen and (max-width: 36em) {
+@media screen and (max-width: 36em){
   .molcrafts-home-hero {
     min-height: auto;
   }
@@ -1906,26 +2149,24 @@
   }
 
   .md-typeset molvis-viewer,
-  .md-typeset .molcrafts-figure__body molvis-viewer,
-  .md-typeset .molcrafts-web-component-preview molvis-viewer {
+  .md-typeset .molcrafts-figure__body molvis-viewer {
     height: 18rem;
     min-height: 18rem;
   }
 
-  .md-typeset figure.molcrafts-figure > figcaption,
-  .md-typeset figure.molcrafts-web-component-card > figcaption {
+  .md-typeset figure.molcrafts-figure > figcaption {
     font-size: 0.8rem;
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce){
   .md-typeset :is(molvis-viewer, molplot-chart)[data-state="loading"],
   .md-typeset molvis-style-gallery[data-state="loading"] .molvis-style-gallery__preview {
     animation: none;
   }
 }
 
-@media screen and (max-width: 44em) {
+@media screen and (max-width: 44em){
   .md-typeset .molvis-style-gallery__grid {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -1939,7 +2180,7 @@
   }
 }
 
-@media screen and (min-width: 90em) {
+@media screen and (min-width: 90em){
   /* Wide content columns: still prefer a readable 2×N gallery, not a sparse
      single row of tiny cards. */
   .md-typeset .molvis-style-gallery__grid {
@@ -1950,11 +2191,11 @@
 /* Bundled mkdocstrings C++ handler. Zensical 0.0.45 renders handler
    templates but does not emit their companion stylesheet, so the theme owns
    the visible integration as part of its normal CSS bundle. */
-.md-typeset .cpp-object {
+.md-typeset .cpp-object{
   margin: 1.25rem 0;
 }
 
-.md-typeset .cpp-kind {
+.md-typeset .cpp-kind{
   display: inline-flex;
   align-items: center;
   min-height: 1.35rem;
@@ -1971,43 +2212,43 @@
   text-transform: uppercase;
 }
 
-.md-typeset .cpp-signature pre {
+.md-typeset .cpp-signature pre{
   margin: 0.5rem 0 0.85rem;
   border: 0.05rem solid var(--molcrafts-rule);
   border-radius: var(--molcrafts-radius-sm);
   box-shadow: var(--molcrafts-shadow-sm);
 }
 
-.md-typeset .cpp-signature code {
+.md-typeset .cpp-signature code{
   white-space: pre-wrap;
 }
 
-.md-typeset :is(.cpp-params, .cpp-enum-values) {
+.md-typeset :is(.cpp-params, .cpp-enum-values){
   overflow-x: auto;
 }
 
-.md-typeset :is(.cpp-params, .cpp-enum-values) table {
+.md-typeset :is(.cpp-params, .cpp-enum-values) table{
   display: table;
   width: 100%;
 }
 
-.md-typeset :is(.cpp-params, .cpp-enum-values) :is(th, td):first-child {
+.md-typeset :is(.cpp-params, .cpp-enum-values) :is(th, td):first-child{
   width: 1%;
   white-space: nowrap;
 }
 
-.md-typeset .cpp-location {
+.md-typeset .cpp-location{
   color: var(--md-default-fg-color--light);
   font-size: 0.78rem;
 }
 
-.md-typeset .cpp-children {
+.md-typeset .cpp-children{
   margin-top: 1rem;
   padding-left: 1rem;
   border-left: 0.1rem solid var(--molcrafts-rule-strong);
 }
 
-@media screen and (max-width: 36em) {
+@media screen and (max-width: 36em){
   .md-typeset .cpp-children {
     padding-left: 0.65rem;
   }

@@ -7,7 +7,8 @@ docs_dir = "docs"
 site_dir = "site"
 copyright = "Copyright &copy; 2026 MolCrafts"
 extra_javascript = [
-  { path = "https://cdn.jsdelivr.net/npm/@molcrafts/molvis-core@latest/dist/elements.js", type = "module" },
+  { path = "https://cdn.jsdelivr.net/npm/@molcrafts/molvis-stage@latest/dist/viewer.js", type = "module" },
+  { path = "https://cdn.jsdelivr.net/npm/@molcrafts/molvis-sketch@latest/dist/index.js", type = "module" },
   { path = "https://cdn.jsdelivr.net/npm/@molcrafts/molplot@latest/dist/elements.js", type = "module" },
   # Theme injects MathJax config + document$ re-typeset; only the library is needed here.
   "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",

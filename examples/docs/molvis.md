@@ -41,7 +41,10 @@ Load the ESM bundle once in `zensical.toml`:
 
 ```toml
 extra_javascript = [
-  { path = "https://cdn.jsdelivr.net/npm/@molcrafts/molvis-core@latest/dist/elements.js", type = "module" },
+  # 3D viewer (this page)
+  { path = "https://cdn.jsdelivr.net/npm/@molcrafts/molvis-stage@latest/dist/viewer.js", type = "module" },
+  # 2D sketch engine when you embed sketch demos
+  # { path = "https://cdn.jsdelivr.net/npm/@molcrafts/molvis-sketch@latest/dist/index.js", type = "module" },
 ]
 ```
 
