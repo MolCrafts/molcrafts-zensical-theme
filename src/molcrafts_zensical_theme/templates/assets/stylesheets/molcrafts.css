@@ -1792,15 +1792,19 @@
  * One card wraps canvas + caption (border / radius / shadow). Inside: canvas
  * flush on top, paper-style "Figure N." caption as the chin — no product tag.
  *
- *   <figure id="fig-water" class="molcrafts-figure">
+ * Prefer markdown-in-HTML on <figure> so the caption is Markdown (arithmatex
+ * for $…$ math). Nested <figcaption> is NOT re-parsed by md_in_html; put the
+ * caption as a trailing Markdown paragraph instead:
+ *
+ *   <figure id="fig-water" class="molcrafts-figure" markdown>
  *     <div class="molcrafts-figure__body">…viewer/chart…</div>
- *     <figcaption>
- *       <span class="molcrafts-figure__label">Figure 1.</span>
- *       Caption text.
- *     </figcaption>
+ *
+ *     **Figure 1.** Caption with $\varepsilon'(\omega)$ math.
  *   </figure>
  *
  *   See [Figure 1](#fig-water).
+ *
+ * Legacy <figcaption> still styles correctly when present without math.
  */
 .md-typeset figure.molcrafts-figure{
   display: flex;
@@ -1854,8 +1858,10 @@
   background: #fff;
 }
 
-/* Caption chin: same size as body copy (.md-typeset ≈ 0.8rem), paper figure type. */
-.md-typeset figure.molcrafts-figure > figcaption{
+/* Caption chin: same size as body copy (.md-typeset ≈ 0.8rem), paper figure type.
+ * Markdown-in-figure emits <p>; legacy markup may still use <figcaption>. */
+.md-typeset figure.molcrafts-figure > figcaption,
+.md-typeset figure.molcrafts-figure > p{
   order: 2;
   display: block;
   width: 100%;
@@ -1873,13 +1879,15 @@
   text-align: center;
 }
 
-.md-typeset figure.molcrafts-figure > figcaption strong{
+.md-typeset figure.molcrafts-figure > figcaption strong,
+.md-typeset figure.molcrafts-figure > p strong{
   font-size: inherit;
   font-weight: 650;
   color: var(--md-default-fg-color);
 }
 
-.md-typeset figure.molcrafts-figure > figcaption small{
+.md-typeset figure.molcrafts-figure > figcaption small,
+.md-typeset figure.molcrafts-figure > p small{
   display: inline;
   color: inherit;
   font-size: inherit;
