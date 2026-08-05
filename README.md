@@ -136,18 +136,23 @@ Put the viewer/chart first, a `Figure N.` label in the chin, and an `id` for
 cross-references (no product chip):
 
 ```html
-<figure id="fig-water" class="molcrafts-figure">
+<figure id="fig-water" class="molcrafts-figure" markdown>
   <div class="molcrafts-figure__body">
     <molvis-viewer format="xyz" …>…</molvis-viewer>
   </div>
-  <figcaption>
-    <span class="molcrafts-figure__label">Figure 1.</span>
-    Water molecule (ball-and-stick).
-  </figcaption>
+
+  **Figure 1.** Water molecule (ball-and-stick). Math works here:
+  $\varepsilon'(\omega)$.
 </figure>
 ```
 
 In prose, link with Markdown: `[Figure 1](#fig-water)`.
+
+**Why `markdown` is on `<figure>`, not `<figcaption>`:** `md_in_html` does not
+re-parse nested `<figcaption>` content. Put the caption as a trailing Markdown
+paragraph inside a `markdown`-enabled `<figure>` so arithmatex turns `$…$` into
+`.arithmatex` spans MathJax can typeset.
+
 
 ## Math (arithmatex + MathJax)
 
