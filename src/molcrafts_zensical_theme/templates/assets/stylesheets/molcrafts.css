@@ -1203,20 +1203,27 @@
 
 .md-typeset .molcrafts-feature-matrix__icon{
   display: inline-flex;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: center;
   width: 2.1rem;
   height: 2.1rem;
-  margin-bottom: 0.65rem;
+  margin: 0 0 0.65rem;
   border: 1px solid color-mix(in srgb, var(--molcrafts-product-accent) 30%, transparent);
   border-radius: 0.5rem;
   color: var(--molcrafts-product-accent);
   background: var(--molcrafts-product-accent-soft);
+  /* Isolate the glyph so stroke SVGs never paint outside the badge. */
+  overflow: hidden;
+  line-height: 0;
 }
 
 .md-typeset .molcrafts-feature-matrix__icon svg{
+  display: block;
   width: 1.2rem;
   height: 1.2rem;
+  flex: 0 0 auto;
+  overflow: visible;
 }
 
 .md-typeset .molcrafts-feature-matrix--cards dt{
@@ -1722,13 +1729,8 @@
 
 /* Docs host for <molplot-chart>.
 
-   Default aspect is 4:3 (fence default). Standalone fences cap width so a full
-   content column does not billboard; inside .molcrafts-figure the chart fills
-   the card face (see figure rules below).
-
-   Type size is owned by @molcrafts/molplot fontScale (layout metrics must match
-   painted glyphs — pure CSS font-size blows past Vega's reserved label slots
-   and clips titles). Do not !important-override SVG text here. */
+   Standalone fences cap width; figure cards fill the card (see below).
+   Type size is owned by @molcrafts/molplot fontScale — do not override SVG text. */
 .md-typeset molplot-chart,
 .md-typeset [data-molplot-chart]{
   --molplot-width: min(100%, 36rem);
@@ -1740,12 +1742,15 @@
   max-width: 36rem;
   margin-inline: auto;
   aspect-ratio: var(--molplot-aspect, 4 / 3);
-  overflow: hidden;
+  /* visible: axis titles / legends must not clip against the host edge */
+  overflow: visible;
   background: #fff;
   color: #14271d;
 }
 
-/* Surface fills the host; SVG keeps its layout size from Vega (no stretch). */
+/* Surface fills the host; SVG must match the laid-out box (no height:auto).
+   height:auto previously let the intrinsic SVG reflow under the aspect-ratio
+   host and stacked axis titles / action icons on top of the plot. */
 .md-typeset molplot-chart .vega-embed,
 .md-typeset [data-molplot-chart] .vega-embed,
 .md-typeset molplot-chart .molplot-chart__surface,
@@ -1757,14 +1762,22 @@
   height: 100%;
   min-width: 0;
   min-height: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .md-typeset molplot-chart .vega-embed > svg,
 .md-typeset [data-molplot-chart] .vega-embed > svg{
   display: block;
-  max-width: 100%;
-  height: auto;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+}
+
+/* Vega action menu (⋯) sits in the plot corner — keep it from covering labels. */
+.md-typeset molplot-chart .vega-embed summary,
+.md-typeset [data-molplot-chart] .vega-embed summary{
+  right: 0.15rem;
+  top: 0.15rem;
 }
 
 .md-typeset .molplot{
@@ -2260,4 +2273,53 @@
   .md-typeset .cpp-children {
     padding-left: 0.65rem;
   }
+}
+
+/* ── Scrollbars ────────────────────────────────────────────────────────────
+ * Material/Zensical paints thumbs with --md-accent-fg-color (brand sand /
+ * orange). Product docs should use the product accent instead.
+ * ------------------------------------------------------------------------ */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--molcrafts-product-accent) 55%, transparent) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 0.45rem;
+  height: 0.45rem;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: color-mix(in srgb, var(--molcrafts-product-accent) 50%, transparent);
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--molcrafts-product-accent);
+}
+
+.md-sidebar__scrollwrap,
+.md-typeset pre > code,
+.md-tooltip2__inner {
+  scrollbar-color: color-mix(in srgb, var(--molcrafts-product-accent) 55%, transparent) transparent;
+}
+
+.md-sidebar__scrollwrap::-webkit-scrollbar-thumb,
+.md-sidebar__scrollwrap:focus-within::-webkit-scrollbar-thumb,
+.md-sidebar__scrollwrap:hover::-webkit-scrollbar-thumb,
+.md-typeset pre > code::-webkit-scrollbar-thumb,
+.md-tooltip2__inner::-webkit-scrollbar-thumb {
+  background-color: color-mix(in srgb, var(--molcrafts-product-accent) 50%, transparent);
+}
+
+.md-sidebar__scrollwrap::-webkit-scrollbar-thumb:hover,
+.md-sidebar__scrollwrap:focus-within::-webkit-scrollbar-thumb:hover,
+.md-sidebar__scrollwrap:hover::-webkit-scrollbar-thumb:hover,
+.md-typeset pre > code::-webkit-scrollbar-thumb:hover,
+.md-tooltip2__inner::-webkit-scrollbar-thumb:hover {
+  background-color: var(--molcrafts-product-accent);
 }

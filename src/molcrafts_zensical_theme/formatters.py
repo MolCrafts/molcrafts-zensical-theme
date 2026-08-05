@@ -90,8 +90,14 @@ GALLERY_ATTRIBUTES = {
 }
 
 # ── MolPlot vocabulary ─────────────────────────────────────────────────────
+# Fence body = Vega-Lite top-level spec (YAML/JSON).
+# Data refs (resolved at build time, relative to docs root):
+#   data: {$file: data/foo.json}          → {values: [...]}
+#   data: {$file: data/foo.csv, $as: url} → {url: "data/foo.csv"} (site path)
+#   data: {$url: https://…}               → {url: "https://…"}
+# Named datasets: datasets: {curve: {$file: data/curve.json}}
 
-MOLPLOT_OPTIONS = ("preset", "theme", "type", "width", "aspect")
+MOLPLOT_OPTIONS = ("preset", "theme", "type", "width", "aspect", "root")
 
 
 def _tokens(value: str) -> set[str]:
@@ -127,9 +133,17 @@ def _stage_npm_bundle(
     """
     cwd = Path.cwd()
     configured = os.environ.get(env_var)
+    # Monorepo sibling layouts (e.g. molpy next to molplot/core/dist).
+    monorepo = []
+    if npm_package == "molplot":
+        monorepo = [
+            cwd / "molplot" / "core" / "dist",
+            cwd.parent / "molplot" / "core" / "dist",
+        ]
     candidates = [
         Path(configured).expanduser() if configured else None,
         cwd / "node_modules" / "@molcrafts" / npm_package / "dist",
+        *monorepo,
     ]
     source = next(
         (
@@ -149,11 +163,26 @@ def _stage_npm_bundle(
     if source == target.resolve():
         return
     target.mkdir(parents=True, exist_ok=True)
+
+    def _ignore_non_runtime(_dir: str, names: list[str]) -> set[str]:
+        # Skip test/fixture outputs and typings; docs only need browser JS.
+        skip: set[str] = set()
+        for name in names:
+            lower = name.lower()
+            if lower.endswith(".test.js") or lower.endswith(".test.d.ts"):
+                skip.add(name)
+            elif lower.endswith(".d.ts"):
+                skip.add(name)
+            elif lower.endswith(".map"):
+                skip.add(name)
+        return skip
+
     shutil.copytree(
         source,
         target,
         dirs_exist_ok=True,
         copy_function=_copy_if_changed,
+        ignore=_ignore_non_runtime,
     )
 
 
@@ -374,45 +403,46 @@ def molvis_gallery_fence(
     )
 
 
-# ── MolPlot fence (same ownership model as MolVis) ─────────────────────────
+# ── MolPlot fence ──────────────────────────────────────────────────────────
+# Contract: fence body is a Vega-Lite top-level spec (YAML or JSON).
+# Formatter: parse → resolve $file/$url data refs → docs config defaults → embed.
 
 
 def _load_molplot_spec(source: str) -> Any:
-    """Parse a fenced body (YAML or JSON) into a Vega-Lite spec object."""
+    """Parse fence body (YAML preferred, JSON fallback) into a Python object."""
+    text = source.strip()
+    if not text:
+        raise ValueError("empty molplot fence body")
     try:
         import yaml
-    except ImportError:  # pragma: no cover - JSON-only fallback
-        return json.loads(source)
-    return yaml.safe_load(source)
+    except ImportError:  # pragma: no cover
+        return json.loads(text)
+    return yaml.safe_load(text)
 
 
-# Screen / docs type scale. Paper preset is ~9–12 px; docs aim ~1.6–1.8× so
-# labels read clearly without crushing the plot (3 legends need room).
-_MOLPLOT_DOCS_TYPE: dict[str, Any] = {
-    "padding": {"left": 12, "right": 12, "top": 10, "bottom": 12},
+_SERIF_STACK = (
+    "Times New Roman, Times, STIX Two Text, STIXGeneral, "
+    "Latin Modern Roman, serif"
+)
+# Docs defaults only (font family). Sizes come from molplot host fontScale.
+_MOLPLOT_DOCS_CONFIG: dict[str, Any] = {
+    "padding": {"left": 14, "right": 14, "top": 12, "bottom": 14},
+    "font": _SERIF_STACK,
     "axis": {
-        "labelFontSize": 14,
-        "titleFontSize": 15,
-        "titlePadding": 10,
-        "labelPadding": 4,
-        "labelLimit": 180,
-        "titleLimit": 220,
-        "tickSize": 5,
+        "titleFontStyle": "normal",
+        "labelFontStyle": "normal",
+        "titleFont": _SERIF_STACK,
+        "labelFont": _SERIF_STACK,
         "labelOverlap": True,
         "labelFlush": True,
+        "titlePadding": 12,
+        "labelPadding": 6,
+        "labelLimit": 280,
+        "titleLimit": 320,
     },
-    "legend": {
-        "labelFontSize": 13,
-        "titleFontSize": 13,
-        "titleLimit": 160,
-        "labelLimit": 120,
-        "padding": 6,
-        "offset": 8,
-        "rowPadding": 2,
-        "columnPadding": 6,
-        "symbolSize": 64,
-    },
-    "title": {"fontSize": 16},
+    "legend": {"labelFont": _SERIF_STACK, "titleFont": _SERIF_STACK},
+    "title": {"font": _SERIF_STACK, "fontStyle": "normal"},
+    "text": {"font": _SERIF_STACK, "fontStyle": "normal"},
 }
 
 
@@ -427,17 +457,141 @@ def _deep_merge_dict(base: dict[str, Any], over: dict[str, Any]) -> dict[str, An
     return out
 
 
-def _apply_docs_type_scale(spec: Any) -> Any:
-    """Merge readable screen type sizes into a Vega-Lite spec's ``config``."""
+def _apply_docs_config(spec: Any) -> Any:
+    """Merge docs font defaults under author ``config`` (author wins)."""
     if not isinstance(spec, dict):
         return spec
     existing = spec.get("config")
     if isinstance(existing, dict):
-        # Author config wins over docs defaults on conflicting keys.
-        spec["config"] = _deep_merge_dict(_MOLPLOT_DOCS_TYPE, existing)
+        spec["config"] = _deep_merge_dict(_MOLPLOT_DOCS_CONFIG, existing)
     else:
-        spec["config"] = dict(_MOLPLOT_DOCS_TYPE)
+        spec["config"] = dict(_MOLPLOT_DOCS_CONFIG)
     return spec
+
+
+def _docs_dir(md: Any = None, options: Mapping[str, Any] | None = None) -> Path:
+    """Resolve the documentation root for ``$file`` paths."""
+    if options and options.get("root"):
+        return Path(str(options["root"])).expanduser().resolve()
+    for key in ("DOCS_DIR", "MOLPLOT_DOCS_DIR"):
+        env = os.environ.get(key)
+        if env:
+            return Path(env).expanduser().resolve()
+    # zensical / mkdocs usually run with project cwd; docs/ is conventional.
+    cwd = Path.cwd()
+    if (cwd / "docs").is_dir():
+        return (cwd / "docs").resolve()
+    return cwd.resolve()
+
+
+def _load_data_file(path: Path) -> Any:
+    """Load JSON / YAML / CSV from *path*."""
+    suffix = path.suffix.lower()
+    text = path.read_text(encoding="utf-8")
+    if suffix == ".json":
+        return json.loads(text)
+    if suffix in {".yaml", ".yml"}:
+        import yaml
+
+        return yaml.safe_load(text)
+    if suffix == ".csv":
+        import csv
+        from io import StringIO
+
+        rows = list(csv.DictReader(StringIO(text)))
+        # Coerce plain numeric strings when possible.
+        for row in rows:
+            for k, v in list(row.items()):
+                if v is None or v == "":
+                    continue
+                try:
+                    row[k] = int(v)
+                except ValueError:
+                    try:
+                        row[k] = float(v)
+                    except ValueError:
+                        pass
+        return rows
+    raise ValueError(
+        f"unsupported molplot data file type '{suffix}' ({path.name}); "
+        "use .json, .yaml, .yml, or .csv"
+    )
+
+
+def _file_ref_to_vl_data(
+    path: Path,
+    *,
+    docs_dir: Path,
+    as_mode: str,
+    extra: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Turn a resolved path into a Vega-Lite ``data`` object."""
+    if as_mode == "url":
+        try:
+            rel = path.resolve().relative_to(docs_dir.resolve())
+        except ValueError as exc:
+            raise ValueError(
+                f"$file path escapes docs root: {path}"
+            ) from exc
+        # Site URL from docs root (zensical serves docs/ as site root content).
+        url = str(rel).replace("\\", "/")
+        out: dict[str, Any] = {"url": url}
+        if path.suffix.lower() == ".csv" and "format" not in extra:
+            out["format"] = {"type": "csv"}
+        out.update(extra)
+        return out
+
+    # Default: embed as values so the chart works offline / without path hacks.
+    raw = _load_data_file(path)
+    if isinstance(raw, list):
+        out = {"values": raw}
+    elif isinstance(raw, dict):
+        if any(k in raw for k in ("values", "url", "name", "sequence")):
+            out = dict(raw)
+        else:
+            out = {"values": [raw]}
+    else:
+        raise ValueError(f"cannot use data from {path.name}: expected list or object")
+    out.update(extra)
+    return out
+
+
+def _resolve_data_refs(node: Any, docs_dir: Path) -> Any:
+    """Walk the VL tree; expand ``{$file: …}`` / ``{$url: …}`` data refs."""
+    if isinstance(node, list):
+        return [_resolve_data_refs(item, docs_dir) for item in node]
+    if not isinstance(node, dict):
+        return node
+
+    if "$file" in node or "$url" in node:
+        extra = {
+            k: _resolve_data_refs(v, docs_dir)
+            for k, v in node.items()
+            if not str(k).startswith("$")
+        }
+        if "$url" in node:
+            out = {"url": str(node["$url"])}
+            out.update(extra)
+            return out
+        rel = str(node["$file"])
+        docs_root = docs_dir.resolve()
+        path = (docs_root / rel).resolve()
+        try:
+            path.relative_to(docs_root)
+        except ValueError as exc:
+            raise ValueError(
+                f"$file path escapes docs root ({docs_dir}): {rel}"
+            ) from exc
+        if not path.is_file():
+            raise ValueError(f"molplot $file not found: {rel} (docs={docs_dir})")
+        as_mode = str(node.get("$as", "values")).lower()
+        if as_mode not in {"values", "url"}:
+            raise ValueError(f"unknown $as mode: {as_mode} (use values|url)")
+        return _file_ref_to_vl_data(
+            path, docs_dir=docs_root, as_mode=as_mode, extra=extra
+        )
+
+    return {k: _resolve_data_refs(v, docs_dir) for k, v in node.items()}
 
 
 def render_molplot_element(
@@ -447,24 +601,21 @@ def render_molplot_element(
     theme: str | None = None,
     width: str | None = None,
     aspect: str | None = None,
+    docs_dir: Path | None = None,
 ) -> str:
-    """Build the ``<molplot-chart>`` HTML for a Vega-Lite ``source`` spec.
-
-    Docs default to ``aspect="16:10"`` unless the fence header overrides.
-    Every fence also gets a docs type scale so axis labels stay readable.
-    """
+    """YAML/JSON Vega-Lite → ``<molplot-chart>`` (parse, resolve data, embed)."""
     try:
         spec = _load_molplot_spec(source)
-    except Exception as exc:  # noqa: BLE001 - report parse errors inline
-        message = escape(f"molplot: invalid Vega-Lite spec — {exc}")
+        if not isinstance(spec, dict):
+            raise ValueError("fence body must be a mapping (Vega-Lite top-level)")
+        root = docs_dir if docs_dir is not None else _docs_dir()
+        spec = _resolve_data_refs(spec, root)
+        spec = _apply_docs_config(spec)
+    except Exception as exc:  # noqa: BLE001 - report parse/data errors inline
+        message = escape(f"molplot: {exc}")
         return f'<div class="molplot-error">{message}</div>'
 
-    spec = _apply_docs_type_scale(spec)
-
-    # Docs default: 16:10 — room for side legends without crushing the plot.
-    # Authors may override via fence header (e.g. aspect="4:3").
     resolved_aspect = (aspect or "16:10").strip() or "16:10"
-
     attrs = ""
     if preset:
         attrs += f' preset="{escape(preset, quote=True)}"'
@@ -474,7 +625,7 @@ def render_molplot_element(
         attrs += f' width="{escape(width, quote=True)}"'
     attrs += f' aspect="{escape(resolved_aspect, quote=True)}"'
 
-    payload = json.dumps(spec)
+    payload = json.dumps(spec, ensure_ascii=False)
     return (
         f'<div class="molplot">'
         f"<molplot-chart{attrs}>"
@@ -491,7 +642,7 @@ def molplot_validator(
     attrs: dict[str, Any],
     md: Any,
 ) -> bool:
-    """Accept only known molplot fence-header options."""
+    """Accept known molplot fence-header options."""
     del language, attrs, md
     for key, value in inputs.items():
         if key not in MOLPLOT_OPTIONS:
@@ -508,8 +659,8 @@ def molplot_fence(
     md: Any,
     **kwargs: Any,
 ) -> str:
-    """Emit a ``molplot-chart`` Web Component from a Vega-Lite fence body."""
-    del language, css_class, md, kwargs
+    """Parse fence YAML as Vega-Lite, resolve ``$file`` data, emit chart."""
+    del language, css_class, kwargs
     _stage_local_molplot_bundle()
     return render_molplot_element(
         source,
@@ -517,6 +668,7 @@ def molplot_fence(
         theme=options.get("theme"),
         width=options.get("width"),
         aspect=options.get("aspect"),
+        docs_dir=_docs_dir(md, options),
     )
 
 
