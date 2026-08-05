@@ -443,6 +443,25 @@ def _apply_docs_type_scale(spec: Any) -> Any:
     return spec
 
 
+def _expand_molplot_annotations(spec: Any) -> Any:
+    """Expand top-level ``annotations`` into full VL layers (bar+caps+label).
+
+    Mirrors matplotlib: one ``scaleBar`` / ``arrow`` entry owns the whole
+    artist. Expansion happens at fence-render time so docs do not depend on
+    a particular CDN bundle, and authors never hand-draw end-caps.
+    """
+    if not isinstance(spec, dict) or "annotations" not in spec:
+        return spec
+    try:
+        from molplot.annotations import take_annotations, with_annotations
+    except ImportError:  # pragma: no cover - browser RawChart may still expand
+        return spec
+    cleaned, anns = take_annotations(spec)
+    if not anns:
+        return cleaned
+    return with_annotations(cleaned, anns)
+
+
 def render_molplot_element(
     source: str,
     *,
@@ -454,7 +473,8 @@ def render_molplot_element(
     """Build the ``<molplot-chart>`` HTML for a Vega-Lite ``source`` spec.
 
     Docs default to ``aspect="16:10"`` unless the fence header overrides.
-    Every fence also gets a docs type scale so axis labels stay readable.
+    Top-level ``annotations`` are expanded to complete artists (``|-|`` /
+    arrows) before the payload is embedded.
     """
     try:
         spec = _load_molplot_spec(source)
@@ -462,6 +482,7 @@ def render_molplot_element(
         message = escape(f"molplot: invalid Vega-Lite spec — {exc}")
         return f'<div class="molplot-error">{message}</div>'
 
+    spec = _expand_molplot_annotations(spec)
     spec = _apply_docs_type_scale(spec)
 
     # Docs default: 16:10 — room for side legends without crushing the plot.
