@@ -27,7 +27,6 @@ from __future__ import annotations
 
 from html import escape
 import json
-import math
 import os
 from pathlib import Path
 import shutil
@@ -444,319 +443,6 @@ def _apply_docs_type_scale(spec: Any) -> Any:
     return spec
 
 
-# ── molplot annotations (vendored: theme must not require molplot installed) ──
-# One scaleBar = spine + ⊥ caps + label (matplotlib arrowstyle='|-|').
-
-
-_SERIF_ANN = "Times New Roman, Times, STIX Two Text, STIXGeneral, serif"
-
-
-def _ann_log_perp_cap(
-    x: float, y: float, x0: float, y0: float, x1: float, y1: float, s: float
-) -> dict[str, float]:
-    dx = math.log(x1 / x0)
-    dy = math.log(y1 / y0)
-    n = math.hypot(dx, dy) or 1.0
-    px, py = (-dy / n) * s, (dx / n) * s
-    return {
-        "x": math.exp(math.log(x) + px),
-        "y": math.exp(math.log(y) + py),
-        "x2": math.exp(math.log(x) - px),
-        "y2": math.exp(math.log(y) - py),
-    }
-
-
-def _ann_scale_bar_layers(a: dict[str, Any]) -> list[dict[str, Any]]:
-    """Expand one scaleBar dict → VL layers (spine + caps + label)."""
-    color = a.get("color") or "#18432b"
-    sw = float(a.get("strokeWidth") or 1.8)
-    orient = a.get("orientation") or "horizontal"
-    x2, y2 = a.get("x2"), a.get("y2")
-    along = orient == "along" or (
-        x2 is not None
-        and y2 is not None
-        and orient not in ("horizontal", "vertical")
-    )
-    x, y = float(a["x"]), float(a["y"])
-    layers: list[dict[str, Any]] = []
-
-    if along and x2 is not None and y2 is not None:
-        rx0, ry0, rx1, ry1 = x, y, float(x2), float(y2)
-        dx = math.log(rx1 / rx0)
-        dy = math.log(ry1 / ry0)
-        n = math.hypot(dx, dy) or 1.0
-        ux, uy = dx / n, dy / n
-        side = 1
-        if math.exp(0.5 * (math.log(ry0) + math.log(ry1)) - ux * 0.1) > math.exp(
-            0.5 * (math.log(ry0) + math.log(ry1)) + ux * 0.1
-        ):
-            side = -1
-        s_off = float(a["offsetLog"]) if a.get("offsetLog") is not None else 0.42
-        ox, oy = -uy * s_off * side, ux * s_off * side
-        bx0 = math.exp(math.log(rx0) + ox)
-        by0 = math.exp(math.log(ry0) + oy)
-        bx1 = math.exp(math.log(rx1) + ox)
-        by1 = math.exp(math.log(ry1) + oy)
-        s_cap = float(a["capLog"]) if a.get("capLog") is not None else 0.16
-        q = {"type": "quantitative"}
-        layers.append(
-            {
-                "data": {
-                    "values": [{"x": bx0, "y": by0, "x2": bx1, "y2": by1}]
-                },
-                "mark": {
-                    "type": "rule",
-                    "strokeWidth": sw,
-                    "color": color,
-                    "strokeCap": "butt",
-                },
-                "encoding": {
-                    "x": {"field": "x", **q},
-                    "y": {"field": "y", **q},
-                    "x2": {"field": "x2"},
-                    "y2": {"field": "y2"},
-                },
-            }
-        )
-        layers.append(
-            {
-                "data": {
-                    "values": [
-                        _ann_log_perp_cap(bx0, by0, bx0, by0, bx1, by1, s_cap),
-                        _ann_log_perp_cap(bx1, by1, bx0, by0, bx1, by1, s_cap),
-                    ]
-                },
-                "mark": {"type": "rule", "strokeWidth": sw, "color": color},
-                "encoding": {
-                    "x": {"field": "x", **q},
-                    "y": {"field": "y", **q},
-                    "x2": {"field": "x2"},
-                    "y2": {"field": "y2"},
-                },
-            }
-        )
-        if a.get("label"):
-            s_lab = s_off + 0.32
-            lx = math.exp(
-                0.5 * (math.log(rx0) + math.log(rx1)) + -uy * s_lab * side
-            )
-            ly = math.exp(
-                0.5 * (math.log(ry0) + math.log(ry1)) + ux * s_lab * side
-            )
-            layers.append(
-                {
-                    "data": {
-                        "values": [{"x": lx, "y": ly, "label": a["label"]}]
-                    },
-                    "mark": {
-                        "type": "text",
-                        "font": _SERIF_ANN,
-                        "fontStyle": "normal",
-                        "color": color,
-                        "align": "center",
-                        "baseline": "middle",
-                    },
-                    "encoding": {
-                        "x": {"field": "x", **q},
-                        "y": {"field": "y", **q},
-                        "text": {"field": "label", "type": "nominal"},
-                    },
-                }
-            )
-        return layers
-
-    # Axis-aligned fallback (horizontal size bar).
-    length = float(a["length"]) if a.get("length") is not None else 0.0
-    x0 = x
-    x1 = float(x2) if x2 is not None else x + length
-    tick = a.get("tick")
-    if tick is None:
-        tick = abs(length) * 0.08 if length else 0.05
-    tick_ratio = a.get("tickRatio")
-    if tick_ratio is not None:
-        y_lo, y_hi = y / float(tick_ratio), y * float(tick_ratio)
-    else:
-        y_lo, y_hi = y - float(tick), y + float(tick)
-    mid = (x0 + x1) / 2
-    q = {"type": "quantitative"}
-    layers.append(
-        {
-            "data": {"values": [{"x": x0, "x2": x1, "y": y}]},
-            "mark": {
-                "type": "rule",
-                "strokeWidth": sw,
-                "color": color,
-                "strokeCap": "butt",
-            },
-            "encoding": {
-                "x": {"field": "x", **q},
-                "x2": {"field": "x2"},
-                "y": {"field": "y", **q},
-            },
-        }
-    )
-    layers.append(
-        {
-            "data": {
-                "values": [
-                    {"x": x0, "y": y_lo, "y2": y_hi},
-                    {"x": x1, "y": y_lo, "y2": y_hi},
-                ]
-            },
-            "mark": {"type": "rule", "strokeWidth": sw, "color": color},
-            "encoding": {
-                "x": {"field": "x", **q},
-                "y": {"field": "y", **q},
-                "y2": {"field": "y2"},
-            },
-        }
-    )
-    if a.get("label"):
-        layers.append(
-            {
-                "data": {"values": [{"x": mid, "y": y, "label": a["label"]}]},
-                "mark": {
-                    "type": "text",
-                    "dy": -10,
-                    "font": _SERIF_ANN,
-                    "fontStyle": "normal",
-                    "color": color,
-                    "align": "center",
-                    "baseline": "bottom",
-                },
-                "encoding": {
-                    "x": {"field": "x", **q},
-                    "y": {"field": "y", **q},
-                    "text": {"field": "label", "type": "nominal"},
-                },
-            }
-        )
-    return layers
-
-
-def _ann_arrow_layers(a: dict[str, Any]) -> list[dict[str, Any]]:
-    color = a.get("color") or "#18432b"
-    sw = float(a.get("strokeWidth") or 1.6)
-    tip = float(a.get("tipSize") or 55)
-    x, y = float(a["x"]), float(a["y"])
-    x2, y2 = float(a["x2"]), float(a["y2"])
-    angle = math.degrees(math.atan2(y2 - y, x2 - x)) + 90
-    q = {"type": "quantitative"}
-    layers: list[dict[str, Any]] = [
-        {
-            "data": {"values": [{"x": x, "y": y, "x2": x2, "y2": y2}]},
-            "mark": {
-                "type": "rule",
-                "strokeWidth": sw,
-                "color": color,
-                "strokeCap": "round",
-            },
-            "encoding": {
-                "x": {"field": "x", **q},
-                "y": {"field": "y", **q},
-                "x2": {"field": "x2"},
-                "y2": {"field": "y2"},
-            },
-        },
-        {
-            "data": {"values": [{"x": x2, "y": y2, "angle": angle}]},
-            "mark": {
-                "type": "point",
-                "shape": "triangle",
-                "filled": True,
-                "size": tip,
-                "color": color,
-            },
-            "encoding": {
-                "x": {"field": "x", **q},
-                "y": {"field": "y", **q},
-                "angle": {"field": "angle", **q},
-            },
-        },
-    ]
-    if a.get("label"):
-        layers.append(
-            {
-                "data": {
-                    "values": [
-                        {
-                            "x": (x + x2) / 2,
-                            "y": (y + y2) / 2,
-                            "label": a["label"],
-                        }
-                    ]
-                },
-                "mark": {
-                    "type": "text",
-                    "dy": -8,
-                    "font": _SERIF_ANN,
-                    "fontStyle": "normal",
-                    "color": color,
-                    "align": "center",
-                    "baseline": "bottom",
-                },
-                "encoding": {
-                    "x": {"field": "x", **q},
-                    "y": {"field": "y", **q},
-                    "text": {"field": "label", "type": "nominal"},
-                },
-            }
-        )
-    return layers
-
-
-def _expand_molplot_annotations(spec: Any) -> Any:
-    """Expand top-level ``annotations`` into full VL layers (bar+caps+label).
-
-    Self-contained — does **not** import molplot (docs only need this theme).
-    One ``scaleBar`` entry owns spine + both end-caps + label.
-    """
-    if not isinstance(spec, dict):
-        return spec
-    raw = spec.get("annotations")
-    if not isinstance(raw, list) or not raw:
-        return {k: v for k, v in spec.items() if k != "annotations"}
-
-    extra: list[dict[str, Any]] = []
-    for a in raw:
-        if not isinstance(a, dict):
-            continue
-        kind = a.get("kind")
-        if kind == "scaleBar":
-            extra.extend(_ann_scale_bar_layers(a))
-        elif kind == "arrow":
-            extra.extend(_ann_arrow_layers(a))
-
-    cleaned = {k: v for k, v in spec.items() if k != "annotations"}
-    if not extra:
-        return cleaned
-
-    # Share log scales with the main plot so bars land on the same axes.
-    cleaned = {
-        **cleaned,
-        "resolve": {
-            **(cleaned.get("resolve") or {}),
-            "scale": {
-                **((cleaned.get("resolve") or {}).get("scale") or {}),
-                "x": "shared",
-                "y": "shared",
-            },
-        },
-    }
-
-    if isinstance(cleaned.get("layer"), list):
-        return {**cleaned, "layer": [*cleaned["layer"], *extra]}
-    if "mark" in cleaned or "encoding" in cleaned:
-        base = {
-            k: cleaned[k]
-            for k in ("data", "mark", "encoding", "transform", "params")
-            if k in cleaned
-        }
-        rest = {k: v for k, v in cleaned.items() if k not in base}
-        return {**rest, "layer": [base, *extra]}
-    return {**cleaned, "layer": extra}
-
-
 def render_molplot_element(
     source: str,
     *,
@@ -765,11 +451,10 @@ def render_molplot_element(
     width: str | None = None,
     aspect: str | None = None,
 ) -> str:
-    """Build the ``<molplot-chart>`` HTML for a Vega-Lite ``source`` spec.
+    """YAML/JSON Vega-Lite fence body → ``<molplot-chart>`` Web Component.
 
-    Docs default to ``aspect="16:10"`` unless the fence header overrides.
-    Top-level ``annotations`` are expanded to complete artists (``|-|`` /
-    arrows) before the payload is embedded.
+    The fence **is** a Vega-Lite spec. This formatter only parses it, applies
+    docs type defaults, and embeds the JSON. No geometry / annotation DSL.
     """
     try:
         spec = _load_molplot_spec(source)
@@ -777,7 +462,6 @@ def render_molplot_element(
         message = escape(f"molplot: invalid Vega-Lite spec — {exc}")
         return f'<div class="molplot-error">{message}</div>'
 
-    spec = _expand_molplot_annotations(spec)
     spec = _apply_docs_type_scale(spec)
 
     # Docs default: 16:10 — room for side legends without crushing the plot.
@@ -827,7 +511,7 @@ def molplot_fence(
     md: Any,
     **kwargs: Any,
 ) -> str:
-    """Emit a ``molplot-chart`` Web Component from a Vega-Lite fence body."""
+    """Parse fence YAML as Vega-Lite and emit ``<molplot-chart>``."""
     del language, css_class, md, kwargs
     _stage_local_molplot_bundle()
     return render_molplot_element(
