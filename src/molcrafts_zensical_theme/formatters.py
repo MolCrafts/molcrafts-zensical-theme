@@ -392,39 +392,30 @@ _SERIF_STACK = (
     "Times New Roman, Times, STIX Two Text, STIXGeneral, "
     "Latin Modern Roman, serif"
 )
-# Screen / docs type scale + paper-like Times/math serif for axis labels.
+# Docs type: Times/math serif only. Font *sizes* come from molplot
+# fontScaleForWidth (2× paper at design width, tracks host) — do not freeze
+# labelFontSize/titleFontSize here or dynamic 200% scaling is lost.
 _MOLPLOT_DOCS_TYPE: dict[str, Any] = {
-    "padding": {"left": 12, "right": 12, "top": 10, "bottom": 12},
+    "padding": {"left": 14, "right": 14, "top": 12, "bottom": 14},
     "font": _SERIF_STACK,
     "axis": {
-        "labelFontSize": 14,
-        "titleFontSize": 15,
-        "titlePadding": 10,
-        "labelPadding": 4,
-        "labelLimit": 180,
-        "titleLimit": 220,
-        "tickSize": 5,
+        "titleFontStyle": "normal",
+        "labelFontStyle": "normal",
+        "titleFont": _SERIF_STACK,
+        "labelFont": _SERIF_STACK,
         "labelOverlap": True,
         "labelFlush": True,
-        "titleFontStyle": "italic",
-        "titleFont": _SERIF_STACK,
-        "labelFont": _SERIF_STACK,
+        "titlePadding": 12,
+        "labelPadding": 6,
+        "labelLimit": 280,
+        "titleLimit": 320,
     },
     "legend": {
-        "labelFontSize": 13,
-        "titleFontSize": 13,
-        "titleLimit": 160,
-        "labelLimit": 120,
-        "padding": 6,
-        "offset": 8,
-        "rowPadding": 2,
-        "columnPadding": 6,
-        "symbolSize": 64,
         "labelFont": _SERIF_STACK,
         "titleFont": _SERIF_STACK,
     },
-    "title": {"fontSize": 16, "font": _SERIF_STACK},
-    "text": {"font": _SERIF_STACK},
+    "title": {"font": _SERIF_STACK, "fontStyle": "normal"},
+    "text": {"font": _SERIF_STACK, "fontStyle": "normal"},
 }
 
 
