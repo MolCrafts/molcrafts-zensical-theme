@@ -97,7 +97,15 @@ GALLERY_ATTRIBUTES = {
 #   data: {$url: https://…}               → {url: "https://…"}
 # Named datasets: datasets: {curve: {$file: data/curve.json}}
 
-MOLPLOT_OPTIONS = ("preset", "theme", "type", "width", "aspect", "root")
+MOLPLOT_OPTIONS = (
+    "preset",
+    "theme",
+    "type",
+    "width",
+    "aspect",
+    "root",
+    "interactive",
+)
 
 
 def _tokens(value: str) -> set[str]:
@@ -420,29 +428,25 @@ def _load_molplot_spec(source: str) -> Any:
     return yaml.safe_load(text)
 
 
-_SERIF_STACK = (
+# Docs axis type: Times New Roman + math fonts (τ, Å², subscripts). Sizes still
+# come from the host chart's fontScale — never freeze *FontSize / *Limit here.
+_SERIF_MATH = (
     "Times New Roman, Times, STIX Two Text, STIXGeneral, "
-    "Latin Modern Roman, serif"
+    "Latin Modern Roman, Cambria Math, serif"
 )
-# Docs defaults only (font family). Sizes come from molplot host fontScale.
 _MOLPLOT_DOCS_CONFIG: dict[str, Any] = {
-    "padding": {"left": 14, "right": 14, "top": 12, "bottom": 14},
-    "font": _SERIF_STACK,
+    "font": _SERIF_MATH,
     "axis": {
         "titleFontStyle": "normal",
         "labelFontStyle": "normal",
-        "titleFont": _SERIF_STACK,
-        "labelFont": _SERIF_STACK,
+        "titleFont": _SERIF_MATH,
+        "labelFont": _SERIF_MATH,
         "labelOverlap": True,
         "labelFlush": True,
-        "titlePadding": 12,
-        "labelPadding": 6,
-        "labelLimit": 280,
-        "titleLimit": 320,
     },
-    "legend": {"labelFont": _SERIF_STACK, "titleFont": _SERIF_STACK},
-    "title": {"font": _SERIF_STACK, "fontStyle": "normal"},
-    "text": {"font": _SERIF_STACK, "fontStyle": "normal"},
+    "legend": {"labelFont": _SERIF_MATH, "titleFont": _SERIF_MATH},
+    "title": {"font": _SERIF_MATH, "fontStyle": "normal"},
+    "text": {"font": _SERIF_MATH, "fontStyle": "normal"},
 }
 
 
@@ -601,6 +605,7 @@ def render_molplot_element(
     theme: str | None = None,
     width: str | None = None,
     aspect: str | None = None,
+    interactive: str | None = None,
     docs_dir: Path | None = None,
 ) -> str:
     """YAML/JSON Vega-Lite → ``<molplot-chart>`` (parse, resolve data, embed)."""
@@ -624,6 +629,10 @@ def render_molplot_element(
     if width:
         attrs += f' width="{escape(width, quote=True)}"'
     attrs += f' aspect="{escape(resolved_aspect, quote=True)}"'
+    # Textbook figures: pin the domain (interactive="false") so pan/zoom cannot
+    # leave the chart on a nonsense scale (e.g. MSD y → 1e-10).
+    if interactive is not None and str(interactive).strip() != "":
+        attrs += f' interactive="{escape(str(interactive).strip(), quote=True)}"'
 
     payload = json.dumps(spec, ensure_ascii=False)
     return (
@@ -668,6 +677,7 @@ def molplot_fence(
         theme=options.get("theme"),
         width=options.get("width"),
         aspect=options.get("aspect"),
+        interactive=options.get("interactive"),
         docs_dir=_docs_dir(md, options),
     )
 

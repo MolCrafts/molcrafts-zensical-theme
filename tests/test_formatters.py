@@ -172,8 +172,24 @@ def test_molplot_fence_embeds_vega_lite_json() -> None:
     assert 'aspect="16:10"' in html
     assert '"x": 1' in html
     assert "application/json" in html
-    # Docs config supplies font family; sizes come from the host chart.
+    # Docs config pins Times + math fonts for axis labels; sizes still scale
+    # from the host chart at runtime.
+    assert "labelFlush" in html
     assert "Times New Roman" in html
+    assert "STIX Two Text" in html
+
+
+def test_molplot_fence_interactive_attr() -> None:
+    html = molplot_fence(
+        "mark: point\ndata:\n  values:\n    - {x: 1, y: 2}\n"
+        "encoding:\n  x: {field: x, type: quantitative}\n"
+        "  y: {field: y, type: quantitative}\n",
+        "molplot",
+        "molplot",
+        {"preset": "molplot", "interactive": "false"},
+        None,
+    )
+    assert 'interactive="false"' in html
 
 
 def test_molplot_fence_resolves_dollar_file_data(

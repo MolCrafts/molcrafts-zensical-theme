@@ -109,11 +109,10 @@ custom_fences = [
 ```
 
 **MolVis:** `format="xyz"` etc.; gallery accepts `src`, `npts`,
-`rotation-speed`. **MolPlot:** fence body is a Vega-Lite spec (YAML or JSON);
-header options `preset` / `theme` / `width` / `aspect` (default **`4:3`**).
-Optional top-level `annotations:` (molplot extension: `scaleBar` / `arrow`) is
-passed through to the browser; `@molcrafts/molplot` expands it into ordinary
-Vega-Lite `rule`/`text` layers so marks pan/zoom with the chart.
+`rotation-speed`. **MolPlot:** fence body is a plain Vega-Lite spec (YAML or
+JSON); header options `preset` / `theme` / `width` / `aspect` / `interactive`
+(default aspect **`16:10`**). Use native VL `layer` + `mark: text|rule` for
+labels — there is no molplot annotation extension.
 In docs the theme caps chart width (~36rem) and `@molcrafts/molplot` scales
 type with container width so paper-preset fonts stay readable on screen.
 
