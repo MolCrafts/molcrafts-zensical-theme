@@ -1730,11 +1730,13 @@
 /* Docs host for <molplot-chart>.
 
    Standalone fences cap width; figure cards fill the card (see below).
-   Type size is owned by @molcrafts/molplot fontScale — do not override SVG text. */
+   Axis type is Times + math fonts (set in VL config / molplot theme).
+   Ink colour tracks the page; do not !important-override SVG text sizes. */
 .md-typeset molplot-chart,
 .md-typeset [data-molplot-chart]{
   --molplot-width: min(100%, 36rem);
   --molplot-aspect: 4 / 3;
+  --molplot-margin: 0.75rem; /* equal air on all four sides */
   display: block;
   position: relative;
   box-sizing: border-box;
@@ -1742,15 +1744,18 @@
   max-width: 36rem;
   margin-inline: auto;
   aspect-ratio: var(--molplot-aspect, 4 / 3);
+  /* Equal host margin so the plot is not flush to the card chrome. */
+  padding: var(--molplot-margin);
   /* visible: axis titles / legends must not clip against the host edge */
   overflow: visible;
-  background: #fff;
-  color: #14271d;
+  background: transparent;
+  color: var(--md-default-fg-color, var(--molcrafts-ink, #14271d));
+  font-family: "Times New Roman", Times, "STIX Two Text", STIXGeneral, serif;
+  font-size: inherit;
 }
 
-/* Surface fills the host; SVG must match the laid-out box (no height:auto).
-   height:auto previously let the intrinsic SVG reflow under the aspect-ratio
-   host and stacked axis titles / action icons on top of the plot. */
+/* Surface fills the *content* box (host padding already provides equal air).
+   Do NOT also inset by --molplot-margin (that doubles the margin). */
 .md-typeset molplot-chart .vega-embed,
 .md-typeset [data-molplot-chart] .vega-embed,
 .md-typeset molplot-chart .molplot-chart__surface,
@@ -1758,8 +1763,8 @@
   position: absolute;
   inset: 0;
   box-sizing: border-box;
-  width: 100%;
-  height: 100%;
+  width: auto;
+  height: auto;
   min-width: 0;
   min-height: 0;
   overflow: visible;
@@ -1855,10 +1860,16 @@
   display: block;
   width: 100%;
   margin: 0;
+  /* molvis stays clipped; molplot must not clip axis titles / bottom legends */
   overflow: hidden;
   border: none;
   border-radius: 0;
   box-shadow: none;
+}
+
+.md-typeset figure.molcrafts-figure molplot-chart,
+.md-typeset .molcrafts-figure__body molplot-chart{
+  overflow: visible;
 }
 
 .md-typeset figure.molcrafts-figure molvis-viewer,
@@ -1868,7 +1879,8 @@
 
 .md-typeset figure.molcrafts-figure molplot-chart,
 .md-typeset .molcrafts-figure__body molplot-chart{
-  background: #fff;
+  /* Same paper as the figure card so the chart is not a white island. */
+  background: var(--molcrafts-paper, transparent);
 }
 
 /* Caption chin: same size as body copy (.md-typeset ≈ 0.8rem), paper figure type.
@@ -1924,17 +1936,22 @@
 }
 
 /*
- * Chart body: generous inset so axis titles / legends are not flush to the
- * card edge. Chart host is full width of the card (no 36rem cap).
+ * Chart body: equal inset on all four sides between the figure card chrome
+ * and the plot host. Must beat `figure > .molcrafts-figure__body { padding: 0 }`.
  */
-.md-typeset .molcrafts-figure__body--chart{
+.md-typeset figure.molcrafts-figure > .molcrafts-figure__body--chart{
   display: block;
   width: 100%;
   min-height: auto;
-  /* Air between card chrome and the white plot surface. */
-  padding: 1rem 1rem 0.75rem;
+  /* Equal margin around the chart on every side. */
+  padding: 1rem !important;
   background: var(--molcrafts-paper);
   box-sizing: border-box;
+  overflow: visible;
+}
+
+.md-typeset figure.molcrafts-figure:has(.molcrafts-figure__body--chart){
+  overflow: visible;
 }
 
 .md-typeset .molcrafts-figure__body--chart .molplot,
@@ -1945,26 +1962,34 @@
 }
 
 /*
- * Multi-legend docs charts need width more than height (legends sit on the
- * right). 16/10 gives the plot room without the 4/3 tall empty chin.
+ * Multi-series docs charts prefer a wide frame (16/10). Equal --molplot-margin
+ * on the host keeps air around the SVG consistent on all four sides.
  */
 .md-typeset .molcrafts-figure__body--chart molplot-chart,
 .md-typeset figure.molcrafts-figure molplot-chart{
   --molplot-width: 100%;
   --molplot-aspect: 16 / 10;
+  --molplot-margin: 0.65rem;
   width: 100%;
   max-width: none;
   margin: 0;
   aspect-ratio: 16 / 10;
-  padding: 0.5rem !important;
+  padding: var(--molplot-margin);
   box-sizing: border-box;
-  background: #fff;
+  background: var(--molcrafts-paper, transparent);
   border-radius: var(--molcrafts-radius-sm);
+  overflow: visible;
+  color: var(--md-default-fg-color, var(--molcrafts-ink, #14271d));
+  font-family: "Times New Roman", Times, "STIX Two Text", STIXGeneral, serif;
+  font-size: inherit;
 }
 
 .md-typeset .molcrafts-figure__body--chart molplot-chart > .molplot-chart__surface,
 .md-typeset figure.molcrafts-figure molplot-chart > .molplot-chart__surface{
-  inset: 0.5rem !important;
+  /* Fill the content box; equal air comes from host padding only. */
+  inset: 0 !important;
+  width: auto !important;
+  height: auto !important;
 }
 
 /* Optional multi-figure row (side-by-side panels). */
