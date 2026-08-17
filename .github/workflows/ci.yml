@@ -27,6 +27,8 @@ jobs:
       - uses: astral-sh/setup-uv@v6
       - name: Install theme
         run: uv sync --extra dev
+      - name: Install Doxygen (mkdocstrings C++ example)
+        run: sudo apt-get update && sudo apt-get install -y doxygen
       - name: Build example site
         run: uv run zensical build -f examples/zensical.toml
         env:
