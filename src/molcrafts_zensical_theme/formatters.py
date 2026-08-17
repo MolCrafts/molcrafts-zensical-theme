@@ -9,16 +9,17 @@ Packages follow the **same contract**:
 2. **Run time (browser):** the corresponding npm CDN / staged bundle upgrades
    the custom element. Sites load it once via ``extra_javascript``.
 
-MolVis is **two** npm packages after the monorepo split:
+MolVis docs load **two** viewer packages (not the engines):
 
-- ``@molcrafts/molvis-stage`` — 3D (CDN entry ``dist/viewer.js``)
-- ``@molcrafts/molvis-sketch`` — 2D (CDN entry ``dist/index.js``)
+- ``@molcrafts/molvis-stage-viewer`` — 3D custom elements (``dist/main.js``)
+- ``@molcrafts/molvis-sketch-viewer`` — 2D custom element (``dist/main.js``)
 
 Optional local staging (monorepo / ``npm link``) uses:
 
 1. ``$ENV_*_DIR`` override
 2. ``node_modules/@molcrafts/<package>/dist`` (must contain the entry file)
-3. otherwise leave the CDN path alone
+3. sibling ``molvis/stage-viewer/dist`` / ``molvis/sketch-viewer/dist``
+4. otherwise leave the CDN path alone
 
 Never stage monorepo-relative engine paths (``stage/dist``, ``sketch/dist``).
 """
@@ -136,7 +137,7 @@ def _stage_npm_bundle(
 ) -> None:
     """Stage ``@molcrafts/<npm_package>/dist`` under ``docs/assets/<asset_subdir>``.
 
-    ``entry_file`` is the marker that must exist in ``dist`` (e.g. ``viewer.js``,
+    ``entry_file`` is the marker that must exist in ``dist`` (e.g. ``main.js``,
     ``index.js``, ``elements.js``) so incomplete installs are skipped.
     """
     cwd = Path.cwd()
@@ -147,6 +148,18 @@ def _stage_npm_bundle(
         monorepo = [
             cwd / "molplot" / "core" / "dist",
             cwd.parent / "molplot" / "core" / "dist",
+        ]
+    elif npm_package == "molvis-stage-viewer":
+        monorepo = [
+            cwd / "stage-viewer" / "dist",
+            cwd.parent / "molvis" / "stage-viewer" / "dist",
+            cwd.parent / "stage-viewer" / "dist",
+        ]
+    elif npm_package == "molvis-sketch-viewer":
+        monorepo = [
+            cwd / "sketch-viewer" / "dist",
+            cwd.parent / "molvis" / "sketch-viewer" / "dist",
+            cwd.parent / "sketch-viewer" / "dist",
         ]
     candidates = [
         Path(configured).expanduser() if configured else None,
@@ -194,30 +207,30 @@ def _stage_npm_bundle(
     )
 
 
-def _stage_local_molvis_stage_bundle() -> None:
-    """Stage ``@molcrafts/molvis-stage`` into ``docs/assets/molvis-stage``."""
+def _stage_local_molvis_stage_viewer_bundle() -> None:
+    """Stage ``@molcrafts/molvis-stage-viewer`` into ``docs/assets/molvis-stage-viewer``."""
     _stage_npm_bundle(
-        env_var="MOLVIS_STAGE_DIR",
-        npm_package="molvis-stage",
-        asset_subdir="molvis-stage",
-        entry_file="viewer.js",
+        env_var="MOLVIS_STAGE_VIEWER_DIR",
+        npm_package="molvis-stage-viewer",
+        asset_subdir="molvis-stage-viewer",
+        entry_file="main.js",
     )
 
 
-def _stage_local_molvis_sketch_bundle() -> None:
-    """Stage ``@molcrafts/molvis-sketch`` into ``docs/assets/molvis-sketch``."""
+def _stage_local_molvis_sketch_viewer_bundle() -> None:
+    """Stage ``@molcrafts/molvis-sketch-viewer`` into ``docs/assets/molvis-sketch-viewer``."""
     _stage_npm_bundle(
-        env_var="MOLVIS_SKETCH_DIR",
-        npm_package="molvis-sketch",
-        asset_subdir="molvis-sketch",
-        entry_file="index.js",
+        env_var="MOLVIS_SKETCH_VIEWER_DIR",
+        npm_package="molvis-sketch-viewer",
+        asset_subdir="molvis-sketch-viewer",
+        entry_file="main.js",
     )
 
 
 def _stage_local_molvis_bundle() -> None:
-    """Stage both MolVis product packages (3D stage + 2D sketch)."""
-    _stage_local_molvis_stage_bundle()
-    _stage_local_molvis_sketch_bundle()
+    """Stage MolVis docs viewer packages (3D + 2D)."""
+    _stage_local_molvis_stage_viewer_bundle()
+    _stage_local_molvis_sketch_viewer_bundle()
 
 
 def _stage_local_molplot_bundle() -> None:
@@ -694,7 +707,7 @@ __all__ = [
     "molplot_validator",
     "render_molplot_element",
     "_stage_local_molvis_bundle",
-    "_stage_local_molvis_stage_bundle",
-    "_stage_local_molvis_sketch_bundle",
+    "_stage_local_molvis_stage_viewer_bundle",
+    "_stage_local_molvis_sketch_viewer_bundle",
     "_stage_local_molplot_bundle",
 ]

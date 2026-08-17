@@ -21,6 +21,33 @@ def test_theme_directory_ships_the_theme_files() -> None:
     assert (theme_dir / "assets" / "stylesheets" / "molcrafts.css").is_file()
 
 
+def test_embeds_guard_reports_unregistered_molplot_in_console() -> None:
+    """A 404'd elements.js must not stay silent — guard names the tag and hint."""
+    root = Path(__file__).resolve().parents[1]
+    templates = root / "src" / "molcrafts_zensical_theme" / "templates"
+    guard = (templates / "assets" / "javascripts" / "embeds-guard.js").read_text(
+        encoding="utf-8"
+    )
+    main = (templates / "main.html").read_text(encoding="utf-8")
+    assert "customElements.get('molplot-chart')" in guard
+    assert "console.error" in guard
+    assert "assets/molplot/elements.js" in guard
+    assert "enable_molplot" in guard
+    assert "whenDefined" in guard
+    assert "embeds-guard.js" in main
+
+
+def test_theme_injects_molplot_from_enable_flag() -> None:
+    """Products only flip extra.molcrafts.enable_molplot; theme owns the URLs."""
+    root = Path(__file__).resolve().parents[1]
+    main = (
+        root / "src" / "molcrafts_zensical_theme" / "templates" / "main.html"
+    ).read_text(encoding="utf-8")
+    assert "enable_molplot" in main
+    assert "assets/molplot/elements.js" in main
+    assert "cdn.jsdelivr.net/npm/@molcrafts/molplot" in main
+
+
 def test_theme_directory_ships_no_package_code() -> None:
     """Zensical copies every non-template file from the theme directory into the
     built site, so package modules must live outside it — only the `__init__.py`
