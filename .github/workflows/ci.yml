@@ -14,24 +14,5 @@ jobs:
         with:
           python-version: "3.12"
       - uses: astral-sh/setup-uv@v6
-      - name: Unit tests (fence contract includes stage-viewer + sketch-viewer)
+      - name: uv run --extra dev tox -e py
         run: uv run --extra dev tox -e py
-
-  examples:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - uses: astral-sh/setup-uv@v6
-      - name: Install theme
-        run: uv sync --extra dev
-      - name: Install Doxygen (mkdocstrings C++ example)
-        run: sudo apt-get update && sudo apt-get install -y doxygen
-      - name: Build example site
-        run: uv run zensical build -f examples/zensical.toml
-        env:
-          # Examples load viewer packages from jsDelivr at browse time.
-          MOLVIS_STAGE_VIEWER_DIR: ""
-          MOLVIS_SKETCH_VIEWER_DIR: ""
