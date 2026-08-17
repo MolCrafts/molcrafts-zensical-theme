@@ -91,12 +91,14 @@ on this theme (+ zensical):
 | Run-time Web Component | npm package on CDN (or staged `node_modules`) | nothing in Python |
 
 ```toml
+[project.extra.molcrafts]
+enable_molplot = true   # theme loads staged local assets/molplot/elements.js, then the npm CDN
+
 extra_javascript = [
   # 3D viewer Web Components
-  { path = "https://cdn.jsdelivr.net/npm/@molcrafts/molvis-stage@latest/dist/viewer.js", type = "module" },
-  # 2D sketch engine (when docs embed sketch demos)
-  { path = "https://cdn.jsdelivr.net/npm/@molcrafts/molvis-sketch@latest/dist/index.js", type = "module" },
-  { path = "https://cdn.jsdelivr.net/npm/@molcrafts/molplot@latest/dist/elements.js", type = "module" },
+  { path = "https://cdn.jsdelivr.net/npm/@molcrafts/molvis-stage-viewer@0.2.0/dist/main.js", type = "module" },
+  # 2D sketch custom element (when docs embed sketch demos)
+  { path = "https://cdn.jsdelivr.net/npm/@molcrafts/molvis-sketch-viewer@0.2.0/dist/main.js", type = "module" },
 ]
 
 [project.markdown_extensions.pymdownx.superfences]
@@ -121,13 +123,13 @@ Local staging (optional): formatters copy each package `dist/` into
 
 | Package | Entry | Staged as | Extra monorepo probe |
 |---------|-------|-----------|----------------------|
-| `@molcrafts/molvis-stage` | `viewer.js` | `docs/assets/molvis-stage/` | — |
-| `@molcrafts/molvis-sketch` | `index.js` | `docs/assets/molvis-sketch/` | — |
+| `@molcrafts/molvis-stage-viewer` | `main.js` | `docs/assets/molvis-stage-viewer/` | `../molvis/stage-viewer/dist` |
+| `@molcrafts/molvis-sketch-viewer` | `main.js` | `docs/assets/molvis-sketch-viewer/` | `../molvis/sketch-viewer/dist` |
 | `@molcrafts/molplot` | `elements.js` | `docs/assets/molplot/` | `../molplot/core/dist` |
 
 Treat `docs/assets/molplot/` as **generated** (gitignore in the consumer).
 Staging skips `*.d.ts`, `*.map`, and `*.test.js`. Overrides:
-`MOLVIS_STAGE_DIR`, `MOLVIS_SKETCH_DIR`, `MOLPLOT_ELEMENTS_DIR`,
+`MOLVIS_STAGE_VIEWER_DIR`, `MOLVIS_SKETCH_VIEWER_DIR`, `MOLPLOT_ELEMENTS_DIR`,
 `MOLCRAFTS_DOCS_ASSET_DIR`.
 
 The paper-charting Python package (`molcrafts-molplot`) does **not** ship a

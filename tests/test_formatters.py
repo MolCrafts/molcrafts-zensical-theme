@@ -7,8 +7,8 @@ import pytest
 from molcrafts_zensical_theme.formatters import (
     _stage_local_molplot_bundle,
     _stage_local_molvis_bundle,
-    _stage_local_molvis_sketch_bundle,
-    _stage_local_molvis_stage_bundle,
+    _stage_local_molvis_sketch_viewer_bundle,
+    _stage_local_molvis_stage_viewer_bundle,
     molplot_fence,
     molplot_validator,
     molvis_fence,
@@ -76,63 +76,85 @@ def test_gallery_fence_rejects_unknown_representation() -> None:
         )
 
 
-def test_molvis_stage_bundle_is_staged(
+def test_molvis_stage_viewer_bundle_is_staged(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Stage only from npm package path (or MOLVIS_STAGE_DIR)."""
+    """Stage only from npm package path (or MOLVIS_STAGE_VIEWER_DIR)."""
     bundle = (
-        tmp_path / "node_modules" / "@molcrafts" / "molvis-stage" / "dist"
+        tmp_path / "node_modules" / "@molcrafts" / "molvis-stage-viewer" / "dist"
     )
     bundle.mkdir(parents=True)
-    (bundle / "viewer.js").write_text("export {};", encoding="utf-8")
-    (bundle / "runtime.js").write_text("export {};", encoding="utf-8")
+    (bundle / "main.js").write_text("export {};", encoding="utf-8")
+    (bundle / "1~lib-babylonjs.js").write_text("export {};", encoding="utf-8")
     monkeypatch.chdir(tmp_path)
 
-    _stage_local_molvis_stage_bundle()
+    _stage_local_molvis_stage_viewer_bundle()
 
-    staged = tmp_path / "docs" / "assets" / "molvis-stage"
-    assert (staged / "viewer.js").read_text(encoding="utf-8") == "export {};"
-    assert (staged / "runtime.js").is_file()
+    staged = tmp_path / "docs" / "assets" / "molvis-stage-viewer"
+    assert (staged / "main.js").read_text(encoding="utf-8") == "export {};"
+    assert (staged / "1~lib-babylonjs.js").is_file()
 
 
-def test_molvis_sketch_bundle_is_staged(
+def test_molvis_sketch_viewer_bundle_is_staged(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     bundle = (
-        tmp_path / "node_modules" / "@molcrafts" / "molvis-sketch" / "dist"
+        tmp_path / "node_modules" / "@molcrafts" / "molvis-sketch-viewer" / "dist"
     )
     bundle.mkdir(parents=True)
-    (bundle / "index.js").write_text("export {};", encoding="utf-8")
+    (bundle / "main.js").write_text("export {};", encoding="utf-8")
     monkeypatch.chdir(tmp_path)
 
-    _stage_local_molvis_sketch_bundle()
+    _stage_local_molvis_sketch_viewer_bundle()
 
-    staged = tmp_path / "docs" / "assets" / "molvis-sketch"
-    assert (staged / "index.js").read_text(encoding="utf-8") == "export {};"
+    staged = tmp_path / "docs" / "assets" / "molvis-sketch-viewer"
+    assert (staged / "main.js").read_text(encoding="utf-8") == "export {};"
 
 
-def test_molvis_bundle_stages_stage_and_sketch(
+def test_molvis_bundle_stages_both_viewer_packages(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    stage = tmp_path / "node_modules" / "@molcrafts" / "molvis-stage" / "dist"
-    sketch = tmp_path / "node_modules" / "@molcrafts" / "molvis-sketch" / "dist"
-    stage.mkdir(parents=True)
-    sketch.mkdir(parents=True)
-    (stage / "viewer.js").write_text("stage", encoding="utf-8")
-    (sketch / "index.js").write_text("sketch", encoding="utf-8")
+    stage_viewer = (
+        tmp_path / "node_modules" / "@molcrafts" / "molvis-stage-viewer" / "dist"
+    )
+    sketch_viewer = (
+        tmp_path / "node_modules" / "@molcrafts" / "molvis-sketch-viewer" / "dist"
+    )
+    stage_viewer.mkdir(parents=True)
+    sketch_viewer.mkdir(parents=True)
+    (stage_viewer / "main.js").write_text("stage", encoding="utf-8")
+    (sketch_viewer / "main.js").write_text("sketch", encoding="utf-8")
     monkeypatch.chdir(tmp_path)
 
     _stage_local_molvis_bundle()
 
     assert (
-        tmp_path / "docs" / "assets" / "molvis-stage" / "viewer.js"
+        tmp_path / "docs" / "assets" / "molvis-stage-viewer" / "main.js"
     ).read_text(encoding="utf-8") == "stage"
     assert (
-        tmp_path / "docs" / "assets" / "molvis-sketch" / "index.js"
+        tmp_path / "docs" / "assets" / "molvis-sketch-viewer" / "main.js"
     ).read_text(encoding="utf-8") == "sketch"
+
+
+def test_molvis_stage_viewer_sibling_dist_is_staged(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A molvis checkout next to the docs root stages stage-viewer/dist."""
+    docs_root = tmp_path / "docs-root"
+    docs_root.mkdir()
+    sibling = tmp_path / "molvis" / "stage-viewer" / "dist"
+    sibling.mkdir(parents=True)
+    (sibling / "main.js").write_text("sibling", encoding="utf-8")
+    monkeypatch.chdir(docs_root)
+
+    _stage_local_molvis_stage_viewer_bundle()
+
+    staged = docs_root / "docs" / "assets" / "molvis-stage-viewer" / "main.js"
+    assert staged.read_text(encoding="utf-8") == "sibling"
 
 
 def test_legacy_core_dist_and_old_package_name_are_not_used(
@@ -153,7 +175,10 @@ def test_legacy_core_dist_and_old_package_name_are_not_used(
 
     assert not (tmp_path / "docs" / "assets" / "molvis-core").exists()
     assert not (tmp_path / "docs" / "assets" / "molvis-stage").exists()
+    assert not (tmp_path / "docs" / "assets" / "molvis-viewer").exists()
+    assert not (tmp_path / "docs" / "assets" / "molvis-stage-viewer").exists()
     assert not (tmp_path / "docs" / "assets" / "molvis-sketch").exists()
+    assert not (tmp_path / "docs" / "assets" / "molvis-sketch-viewer").exists()
 
 
 def test_molplot_fence_embeds_vega_lite_json() -> None:

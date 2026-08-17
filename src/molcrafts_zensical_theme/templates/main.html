@@ -196,6 +196,24 @@
 {% endblock %}
 
 {% block scripts %}
+  {#
+    Product zensical.toml only flips extra.molcrafts.enable_molplot.
+    Theme owns the URLs: staged local first (monorepo / zensical serve),
+    then the published npm CDN so production still works when
+    docs/assets/molplot/ is gitignored.
+  #}
+  {% if config.extra.molcrafts and config.extra.molcrafts.enable_molplot %}
+  <script type="module">
+    const local = "{{ 'assets/molplot/elements.js' | url }}";
+    const cdn = "https://cdn.jsdelivr.net/npm/@molcrafts/molplot@latest/dist/elements.js";
+    try {
+      await import(local);
+    } catch (err) {
+      console.warn("[molcrafts] local molplot bundle failed; using CDN", local, err);
+      await import(cdn);
+    }
+  </script>
+  {% endif %}
   {{ super() }}
   {#
     Instant navigation (navigation.instant) swaps page content without a full
@@ -245,4 +263,10 @@
       }
     })();
   </script>
+  {#
+    type=module so this waits for the loader's top-level await import().
+    A classic script would run at the first await, stamp a false error
+    banner, then the chart would mount underneath it.
+  #}
+  <script type="module" src="{{ 'assets/javascripts/embeds-guard.js' | url }}"></script>
 {% endblock %}

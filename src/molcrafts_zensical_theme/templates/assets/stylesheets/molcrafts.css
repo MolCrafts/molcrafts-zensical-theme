@@ -1718,13 +1718,19 @@
   animation: molcrafts-component-loading 1.8s ease-in-out infinite;
 }
 
-.md-typeset .molvis-style-gallery__error{
+.md-typeset .molvis-style-gallery__error,
+.md-typeset .molplot-error,
+.md-typeset .molcrafts-embed-error,
+.md-typeset molplot-chart[data-state="error"] .molplot-chart__surface{
+  box-sizing: border-box;
   padding: 1rem;
   border: 1px solid color-mix(in srgb, #b42318 45%, transparent);
   border-radius: var(--molcrafts-radius);
   background: color-mix(in srgb, #b42318 8%, var(--molcrafts-paper));
   color: #b42318;
   font-size: 0.76rem;
+  text-align: left;
+  white-space: pre-wrap;
 }
 
 /* Docs host for <molplot-chart>.

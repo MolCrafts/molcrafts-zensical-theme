@@ -7,9 +7,7 @@ docs_dir = "docs"
 site_dir = "site"
 copyright = "Copyright &copy; 2026 MolCrafts"
 extra_javascript = [
-  { path = "https://cdn.jsdelivr.net/npm/@molcrafts/molvis-stage@latest/dist/viewer.js", type = "module" },
-  { path = "https://cdn.jsdelivr.net/npm/@molcrafts/molvis-sketch@latest/dist/index.js", type = "module" },
-  { path = "https://cdn.jsdelivr.net/npm/@molcrafts/molplot@latest/dist/elements.js", type = "module" },
+  { path = "https://cdn.jsdelivr.net/npm/@molcrafts/molvis-stage-viewer@0.2.0/dist/main.js", type = "module" },
   # Theme injects MathJax config + document$ re-typeset; only the library is needed here.
   "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
 ]
@@ -85,6 +83,7 @@ name = "molcrafts"
 product = "molpy"
 accent = "#0284c7"
 accent_soft = "rgba(2, 132, 199, 0.14)"
+enable_molplot = true
 
 [[project.extra.social]]
 icon = "fontawesome/brands/github"
