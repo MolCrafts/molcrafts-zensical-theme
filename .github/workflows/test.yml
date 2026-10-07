@@ -1,0 +1,49 @@
+name: test
+
+# The suite against the built wheel, so package-data is tested as shipped.
+# Two tiers (`tier` decides):
+#
+#   fast  a feature-branch push to MolCrafts: Python 3.12.
+#   full  everything else -- dev/master, pull requests, dispatches, and every
+#         push to a fork: Python 3.12, 3.13 and 3.14.
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [dev, master, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: test-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/dev' && github.ref != 'refs/heads/master' && github.ref != 'refs/heads/main' }}
+
+jobs:
+  tier:
+    name: test / tier
+    # A pull request inside a fork was already built by its push.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository || github.repository_owner == 'MolCrafts'
+    runs-on: ubuntu-latest
+    outputs:
+      full: ${{ steps.tier.outputs.full }}
+    steps:
+      - id: tier
+        run: echo "full=${{ !(github.repository_owner == 'MolCrafts' && github.event_name == 'push' && startsWith(github.ref, 'refs/heads/') && github.ref != 'refs/heads/dev' && github.ref != 'refs/heads/master' && github.ref != 'refs/heads/main') }}" | tee -a "$GITHUB_OUTPUT"
+
+  python:
+    name: test / python (${{ matrix.python }})
+    needs: tier
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ${{ fromJSON(needs.tier.outputs.full == 'true' && '["3.12","3.13","3.14"]' || '["3.12"]') }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-python
+        with:
+          python-version: ${{ matrix.python }}
+      - run: uv build --wheel
+      - run: uv run --isolated --no-project --python ${{ matrix.python }} --with dist/*.whl --with pytest pytest -q

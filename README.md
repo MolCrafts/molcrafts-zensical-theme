@@ -347,3 +347,15 @@ src/molcrafts_zensical_theme/
     ├── partials/
     └── assets/
 ```
+
+## CI
+
+| workflow | jobs | runs |
+| --- | --- | --- |
+| `lint.yml` | `lint / hooks`: every commit-stage hook in `.pre-commit-config.yaml` (hygiene, ruff check) | every push, PRs into master |
+| `test.yml` | `test / python (3.12)`, plus `3.13` and `3.14` on the full tier: pytest against the built wheel | every push, PRs into master |
+| `release.yml` | `release / build`, `release / pypi`, `release / github` | `v*` tags; `workflow_dispatch` is a build-only dry run; upload is MolCrafts-only |
+
+The full tier runs on `master`, on pull requests and on every fork push; a
+feature-branch push to MolCrafts gets 3.12 only. The example site is not built
+in CI: its C++ handler needs Doxygen, which is optional.
