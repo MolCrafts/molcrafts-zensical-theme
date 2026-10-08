@@ -353,10 +353,12 @@ src/molcrafts_zensical_theme/
 | workflow | jobs | runs |
 | --- | --- | --- |
 | `lint.yml` | `lint / hooks`: every commit-stage hook in `.pre-commit-config.yaml` (hygiene, ruff check) | every push, PRs into dev/master/main |
-| `test.yml` | `test / tier`, `test / python (3.12)`, plus `3.13` and `3.14` on the full tier: pytest against the built wheel | every push, PRs into dev/master/main |
+| `test.yml` | `test / context`, `test / python (3.12)`, plus `3.13` and `3.14` on the full tier: pytest against the built wheel | every push, PRs into dev/master/main |
 | `release.yml` | `release / guard`, lint + test, `release / build`, `release / pypi`, `release / github` | `v*` tags; `workflow_dispatch` is a build-only dry run; upload is MolCrafts-only |
 
 The full tier runs on every fork push, on `master` on MolCrafts, on pull
 requests, tags and dispatches; a feature-branch push to MolCrafts gets 3.12
-only. Shared setup comes from `MolCrafts/molcrafts-ci/actions`. The example site is not built
+only. Each workflow's first job, `<file> / context`, runs
+`MolCrafts/molcrafts-ci/actions/ci-context`, and the other jobs gate on its
+outputs. Shared setup comes from `MolCrafts/molcrafts-ci/actions`. The example site is not built
 in CI: its C++ handler needs Doxygen, which is optional.
