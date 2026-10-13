@@ -1568,7 +1568,7 @@
 
 /* Browser-native MolCrafts embeds. The element rules are useful in any docs
    page; the card/grid rules provide an optional catalog-style presentation. */
-.md-typeset :is(molvis-viewer, molplot-chart){
+.md-typeset :is(molvis-viewer, :is(molplot-chart, molcrafts-chart)){
   display: block;
   box-sizing: border-box;
   max-width: 100%;
@@ -1721,7 +1721,7 @@
 .md-typeset .molvis-style-gallery__error,
 .md-typeset .molplot-error,
 .md-typeset .molcrafts-embed-error,
-.md-typeset molplot-chart[data-state="error"] .molplot-chart__surface{
+.md-typeset :is(molplot-chart, molcrafts-chart)[data-state="error"] :is(.molplot-chart__surface, .molcrafts-chart__surface){
   box-sizing: border-box;
   padding: 1rem;
   border: 1px solid color-mix(in srgb, #b42318 45%, transparent);
@@ -1738,8 +1738,8 @@
    Standalone fences cap width; figure cards fill the card (see below).
    Axis type is Times + math fonts (set in VL config / molplot theme).
    Ink colour tracks the page; do not !important-override SVG text sizes. */
-.md-typeset molplot-chart,
-.md-typeset [data-molplot-chart]{
+.md-typeset :is(molplot-chart, molcrafts-chart),
+.md-typeset :is([data-molplot-chart], [data-molcrafts-chart]){
   --molplot-width: min(100%, 36rem);
   --molplot-aspect: 4 / 3;
   --molplot-margin: 0.75rem; /* equal air on all four sides */
@@ -1762,10 +1762,10 @@
 
 /* Surface fills the *content* box (host padding already provides equal air).
    Do NOT also inset by --molplot-margin (that doubles the margin). */
-.md-typeset molplot-chart .vega-embed,
-.md-typeset [data-molplot-chart] .vega-embed,
-.md-typeset molplot-chart .molplot-chart__surface,
-.md-typeset [data-molplot-chart] .molplot-chart__surface{
+.md-typeset :is(molplot-chart, molcrafts-chart) .vega-embed,
+.md-typeset :is([data-molplot-chart], [data-molcrafts-chart]) .vega-embed,
+.md-typeset :is(molplot-chart, molcrafts-chart) :is(.molplot-chart__surface, .molcrafts-chart__surface),
+.md-typeset :is([data-molplot-chart], [data-molcrafts-chart]) :is(.molplot-chart__surface, .molcrafts-chart__surface){
   position: absolute;
   inset: 0;
   box-sizing: border-box;
@@ -1776,8 +1776,8 @@
   overflow: visible;
 }
 
-.md-typeset molplot-chart .vega-embed > svg,
-.md-typeset [data-molplot-chart] .vega-embed > svg{
+.md-typeset :is(molplot-chart, molcrafts-chart) .vega-embed > svg,
+.md-typeset :is([data-molplot-chart], [data-molcrafts-chart]) .vega-embed > svg{
   display: block;
   width: 100%;
   height: 100%;
@@ -1785,8 +1785,8 @@
 }
 
 /* Vega action menu (⋯) sits in the plot corner — keep it from covering labels. */
-.md-typeset molplot-chart .vega-embed summary,
-.md-typeset [data-molplot-chart] .vega-embed summary{
+.md-typeset :is(molplot-chart, molcrafts-chart) .vega-embed summary,
+.md-typeset :is([data-molplot-chart], [data-molcrafts-chart]) .vega-embed summary{
   right: 0.15rem;
   top: 0.15rem;
 }
@@ -1797,7 +1797,7 @@
   margin-inline: auto;
 }
 
-.md-typeset :is(molvis-viewer, molplot-chart)[data-state="loading"]{
+.md-typeset :is(molvis-viewer, :is(molplot-chart, molcrafts-chart))[data-state="loading"]{
   background:
     linear-gradient(100deg, transparent 20%, var(--molcrafts-product-accent-soft) 45%, transparent 70%),
     var(--molcrafts-paper-elevated);
@@ -1861,8 +1861,8 @@
  * Embed fills the card face: drop the standalone embed chrome so we do not
  * get a card-in-card (outer figure frame + inner viewer border).
  */
-.md-typeset figure.molcrafts-figure :is(molvis-viewer, molplot-chart),
-.md-typeset .molcrafts-figure__body :is(molvis-viewer, molplot-chart){
+.md-typeset figure.molcrafts-figure :is(molvis-viewer, :is(molplot-chart, molcrafts-chart)),
+.md-typeset .molcrafts-figure__body :is(molvis-viewer, :is(molplot-chart, molcrafts-chart)){
   display: block;
   width: 100%;
   margin: 0;
@@ -1873,8 +1873,8 @@
   box-shadow: none;
 }
 
-.md-typeset figure.molcrafts-figure molplot-chart,
-.md-typeset .molcrafts-figure__body molplot-chart{
+.md-typeset figure.molcrafts-figure :is(molplot-chart, molcrafts-chart),
+.md-typeset .molcrafts-figure__body :is(molplot-chart, molcrafts-chart){
   overflow: visible;
 }
 
@@ -1883,8 +1883,8 @@
   background: transparent;
 }
 
-.md-typeset figure.molcrafts-figure molplot-chart,
-.md-typeset .molcrafts-figure__body molplot-chart{
+.md-typeset figure.molcrafts-figure :is(molplot-chart, molcrafts-chart),
+.md-typeset .molcrafts-figure__body :is(molplot-chart, molcrafts-chart){
   /* Same paper as the figure card so the chart is not a white island. */
   background: var(--molcrafts-paper, transparent);
 }
@@ -1971,8 +1971,8 @@
  * Multi-series docs charts prefer a wide frame (16/10). Equal --molplot-margin
  * on the host keeps air around the SVG consistent on all four sides.
  */
-.md-typeset .molcrafts-figure__body--chart molplot-chart,
-.md-typeset figure.molcrafts-figure molplot-chart{
+.md-typeset .molcrafts-figure__body--chart :is(molplot-chart, molcrafts-chart),
+.md-typeset figure.molcrafts-figure :is(molplot-chart, molcrafts-chart){
   --molplot-width: 100%;
   --molplot-aspect: 16 / 10;
   --molplot-margin: 0.65rem;
@@ -1990,8 +1990,8 @@
   font-size: inherit;
 }
 
-.md-typeset .molcrafts-figure__body--chart molplot-chart > .molplot-chart__surface,
-.md-typeset figure.molcrafts-figure molplot-chart > .molplot-chart__surface{
+.md-typeset .molcrafts-figure__body--chart :is(molplot-chart, molcrafts-chart) > :is(.molplot-chart__surface, .molcrafts-chart__surface),
+.md-typeset figure.molcrafts-figure :is(molplot-chart, molcrafts-chart) > :is(.molplot-chart__surface, .molcrafts-chart__surface){
   /* Fill the content box; equal air comes from host padding only. */
   inset: 0 !important;
   width: auto !important;
@@ -2196,7 +2196,7 @@
     grid-row: auto;
   }
 
-  .md-typeset :is(molvis-viewer, molplot-chart) {
+  .md-typeset :is(molvis-viewer, :is(molplot-chart, molcrafts-chart)) {
     border-radius: var(--molcrafts-radius-sm);
   }
 
@@ -2212,7 +2212,7 @@
 }
 
 @media (prefers-reduced-motion: reduce){
-  .md-typeset :is(molvis-viewer, molplot-chart)[data-state="loading"],
+  .md-typeset :is(molvis-viewer, :is(molplot-chart, molcrafts-chart))[data-state="loading"],
   .md-typeset molvis-style-gallery[data-state="loading"] .molvis-style-gallery__preview {
     animation: none;
   }
@@ -2223,8 +2223,8 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .md-typeset molplot-chart,
-  .md-typeset [data-molplot-chart],
+  .md-typeset :is(molplot-chart, molcrafts-chart),
+  .md-typeset :is([data-molplot-chart], [data-molcrafts-chart]),
   .md-typeset .molplot {
     max-width: 100%;
     width: 100%;

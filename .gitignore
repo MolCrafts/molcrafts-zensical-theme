@@ -21,6 +21,7 @@ site/
 examples/*/site/
 # Locally staged npm Web Component bundles (formatter copies these when present)
 examples/docs/assets/molplot/
+examples/docs/assets/molcrafts-chart/
 examples/docs/assets/molvis-core/
 # Accidental stage when tests/import run with package root as cwd
 /docs/
