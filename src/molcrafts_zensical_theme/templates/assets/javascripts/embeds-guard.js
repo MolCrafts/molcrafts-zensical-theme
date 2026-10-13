@@ -81,6 +81,26 @@
     );
   }
 
+  function reportChart() {
+    var count = document.getElementsByTagName("molcrafts-chart").length;
+    if (!count || customElementDefined("molcrafts-chart")) return;
+    var srcs = scriptSrcs(/molcrafts-chart/i);
+    var hint =
+      srcs.length === 0
+        ? "Load assets/molcrafts-chart/browser.js (the @molcrafts/ui-vega-lite browser bundle)."
+        : "Scripts that look like the chart bundle: " + srcs.join(", ");
+    console.error(
+      "[molcrafts] found " +
+        count +
+        " <molcrafts-chart> element(s) but customElements.get('molcrafts-chart') is undefined. " +
+        hint,
+    );
+    markUnupgraded(
+      "molcrafts-chart",
+      "molcrafts-chart: custom element is not defined -- the chart bundle failed to load.",
+    );
+  }
+
   function reportMolvis() {
     var count = document.getElementsByTagName("molvis-viewer").length;
     if (!count || customElementDefined("molvis-viewer")) return;
@@ -137,6 +157,7 @@
 
   function check() {
     waitThen("molplot-chart", reportMolplot);
+    waitThen("molcrafts-chart", reportChart);
     waitThen("molvis-viewer", reportMolvis);
   }
 
