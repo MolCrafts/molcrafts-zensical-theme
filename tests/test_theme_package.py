@@ -30,8 +30,10 @@ def test_embeds_guard_reports_unregistered_molplot_in_console() -> None:
     )
     main = (templates / "main.html").read_text(encoding="utf-8")
     assert "customElements.get('molplot-chart')" in guard
+    assert "customElements.get('molcrafts-chart')" in guard
     assert "console.error" in guard
     assert "assets/molplot/elements.js" in guard
+    assert "assets/molcrafts-chart/browser.js" in guard
     assert "enable_molplot" in guard
     assert "whenDefined" in guard
     assert "embeds-guard.js" in main
