@@ -142,12 +142,12 @@ def _stage_npm_bundle(
     """
     cwd = Path.cwd()
     configured = os.environ.get(env_var)
-    # Monorepo sibling layouts (e.g. molpy next to molplot/core/dist).
+    # Monorepo sibling layouts (e.g. molpy next to molcrafts-ui).
     monorepo = []
-    if npm_package == "molplot":
+    if npm_package == "ui-vega-lite":
         monorepo = [
-            cwd / "molplot" / "core" / "dist",
-            cwd.parent / "molplot" / "core" / "dist",
+            cwd / "molcrafts-ui" / "packages" / "vega-lite" / "dist" / "browser",
+            cwd.parent / "molcrafts-ui" / "packages" / "vega-lite" / "dist" / "browser",
         ]
     elif npm_package == "molvis-stage-viewer":
         monorepo = [
@@ -161,9 +161,12 @@ def _stage_npm_bundle(
             cwd.parent / "molvis" / "sketch-viewer" / "dist",
             cwd.parent / "sketch-viewer" / "dist",
         ]
+    package_dist = cwd / "node_modules" / "@molcrafts" / npm_package / "dist"
+    if npm_package == "ui-vega-lite":
+        package_dist = package_dist / "browser"
     candidates = [
         Path(configured).expanduser() if configured else None,
-        cwd / "node_modules" / "@molcrafts" / npm_package / "dist",
+        package_dist,
         *monorepo,
     ]
     source = next(
@@ -233,13 +236,13 @@ def _stage_local_molvis_bundle() -> None:
     _stage_local_molvis_sketch_viewer_bundle()
 
 
-def _stage_local_molplot_bundle() -> None:
-    """Stage ``@molcrafts/molplot`` into ``docs/assets/molplot``."""
+def _stage_local_chart_bundle() -> None:
+    """Stage ``@molcrafts/ui-vega-lite`` browser bundle into ``docs/assets/molcrafts-chart``."""
     _stage_npm_bundle(
-        env_var="MOLPLOT_ELEMENTS_DIR",
-        npm_package="molplot",
-        asset_subdir="molplot",
-        entry_file="elements.js",
+        env_var="MOLCRAFTS_CHART_DIR",
+        npm_package="ui-vega-lite",
+        asset_subdir="molcrafts-chart",
+        entry_file="browser.js",
     )
 
 
@@ -621,7 +624,7 @@ def render_molplot_element(
     interactive: str | None = None,
     docs_dir: Path | None = None,
 ) -> str:
-    """YAML/JSON Vega-Lite → ``<molplot-chart>`` (parse, resolve data, embed)."""
+    """YAML/JSON Vega-Lite → ``<molcrafts-chart>`` (parse, resolve data, embed)."""
     try:
         spec = _load_molplot_spec(source)
         if not isinstance(spec, dict):
@@ -648,11 +651,13 @@ def render_molplot_element(
         attrs += f' interactive="{escape(str(interactive).strip(), quote=True)}"'
 
     payload = json.dumps(spec, ensure_ascii=False)
+    # The figure caption is the visible title. label-hidden keeps an accessible
+    # name without drawing a second title into the plot.
     return (
         f'<div class="molplot">'
-        f"<molplot-chart{attrs}>"
+        f'<molcrafts-chart{attrs} label="Chart" label-hidden>'
         f'<script type="application/json">{payload}</script>'
-        f"</molplot-chart>"
+        f"</molcrafts-chart>"
         f"</div>"
     )
 
@@ -683,7 +688,7 @@ def molplot_fence(
 ) -> str:
     """Parse fence YAML as Vega-Lite, resolve ``$file`` data, emit chart."""
     del language, css_class, kwargs
-    _stage_local_molplot_bundle()
+    _stage_local_chart_bundle()
     return render_molplot_element(
         source,
         preset=options.get("preset"),
@@ -697,7 +702,7 @@ def molplot_fence(
 
 # Stage bundles at import time so zensical's static-asset scan sees them.
 _stage_local_molvis_bundle()
-_stage_local_molplot_bundle()
+_stage_local_chart_bundle()
 
 
 __all__ = [
@@ -709,5 +714,5 @@ __all__ = [
     "_stage_local_molvis_bundle",
     "_stage_local_molvis_stage_viewer_bundle",
     "_stage_local_molvis_sketch_viewer_bundle",
-    "_stage_local_molplot_bundle",
+    "_stage_local_chart_bundle",
 ]

@@ -11,7 +11,9 @@
     <section class="molcrafts-home-hero" aria-labelledby="molcrafts-home-hero-title">
       <div class="molcrafts-home-hero__inner md-grid">
         <div class="molcrafts-home-hero__copy">
-          <p class="molcrafts-home-hero__kicker">{{ hero.kicker | d("Manual", true) }}</p>
+          {% if hero.kicker %}
+            <p class="molcrafts-home-hero__kicker">{{ hero.kicker }}</p>
+          {% endif %}
           <h1 id="molcrafts-home-hero-title">{{ hero.title | d(config.site_name, true) }}</h1>
           {% if hero.description %}
             <p class="molcrafts-home-hero__description">{{ hero.description }}</p>
@@ -65,6 +67,7 @@
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
                         </button>
                       </div>
+                      <p class="molcrafts-home-hero__install-status" aria-live="polite"></p>
                     </div>
                   {% endfor %}
                 {% else %}
@@ -76,6 +79,7 @@
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
                     </button>
                   </div>
+                  <p class="molcrafts-home-hero__install-status" aria-live="polite"></p>
                 {% endif %}
               </div>
             {% endif %}
@@ -130,10 +134,29 @@
 
             for (const btn of document.querySelectorAll(".molcrafts-home-hero__install-copy")) {
               btn.addEventListener("click", function () {
-                navigator.clipboard.writeText(this.dataset.molcraftsCopy).then(() => {
+                const status = this.parentElement.parentElement.querySelector(".molcrafts-home-hero__install-status");
+                const command = this.dataset.molcraftsCopy;
+                const done = () => {
                   this.classList.add("molcrafts-home-hero__install-copy--done");
-                  setTimeout(() => this.classList.remove("molcrafts-home-hero__install-copy--done"), 1600);
-                });
+                  this.setAttribute("aria-label", "Copied");
+                  if (status) status.textContent = "Copied.";
+                  setTimeout(() => {
+                    this.classList.remove("molcrafts-home-hero__install-copy--done");
+                    this.setAttribute("aria-label", "Copy install command");
+                    if (status) status.textContent = "";
+                  }, 1600);
+                };
+                const failed = () => {
+                  this.classList.remove("molcrafts-home-hero__install-copy--done");
+                  this.setAttribute("aria-label", "Copy failed");
+                  if (status) status.textContent = "Copy failed. Select the command and copy it.";
+                };
+                const clipboard = navigator.clipboard;
+                if (!clipboard || !command) {
+                  failed();
+                  return;
+                }
+                clipboard.writeText(command).then(done, failed);
               });
             }
           </script>

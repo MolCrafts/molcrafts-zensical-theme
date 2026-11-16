@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 
 from molcrafts_zensical_theme.formatters import (
-    _stage_local_molplot_bundle,
+    _stage_local_chart_bundle,
     _stage_local_molvis_bundle,
     _stage_local_molvis_sketch_viewer_bundle,
     _stage_local_molvis_stage_viewer_bundle,
@@ -191,7 +191,10 @@ def test_molplot_fence_embeds_vega_lite_json() -> None:
         {"preset": "molplot", "theme": "auto"},
         None,
     )
-    assert "<molplot-chart" in html
+    assert "<molcrafts-chart" in html
+    assert "<molplot-chart" not in html
+    assert 'label="Chart"' in html
+    assert "label-hidden" in html
     assert 'preset="molplot"' in html
     assert 'theme="auto"' in html
     assert 'aspect="16:10"' in html
@@ -320,20 +323,20 @@ def test_molplot_validator_rejects_unknown_options() -> None:
     )
 
 
-def test_molplot_npm_package_bundle_is_staged(
+def test_chart_bundle_is_staged(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    bundle = tmp_path / "node_modules" / "@molcrafts" / "molplot" / "dist"
+    bundle = tmp_path / "node_modules" / "@molcrafts" / "ui-vega-lite" / "dist" / "browser"
     bundle.mkdir(parents=True)
-    (bundle / "elements.js").write_text("export {};", encoding="utf-8")
-    (bundle / "raw_chart.interactive.test.js").write_text("// no", encoding="utf-8")
+    (bundle / "browser.js").write_text("export {};", encoding="utf-8")
+    (bundle / "browser.test.js").write_text("// no", encoding="utf-8")
     (bundle / "index.d.ts").write_text("export {};", encoding="utf-8")
     monkeypatch.chdir(tmp_path)
 
-    _stage_local_molplot_bundle()
+    _stage_local_chart_bundle()
 
-    staged = tmp_path / "docs" / "assets" / "molplot"
-    assert (staged / "elements.js").read_text(encoding="utf-8") == "export {};"
-    assert not (staged / "raw_chart.interactive.test.js").exists()
+    staged = tmp_path / "docs" / "assets" / "molcrafts-chart"
+    assert (staged / "browser.js").read_text(encoding="utf-8") == "export {};"
+    assert not (staged / "browser.test.js").exists()
     assert not (staged / "index.d.ts").exists()

@@ -115,8 +115,8 @@ custom_fences = [
 JSON); header options `preset` / `theme` / `width` / `aspect` / `interactive`
 (default aspect **`16:10`**). Use native VL `layer` + `mark: text|rule` for
 labels — there is no molplot annotation extension.
-In docs the theme caps chart width (~36rem) and `@molcrafts/molplot` scales
-type with container width so paper-preset fonts stay readable on screen.
+In docs the theme caps chart width (~36rem). `<molcrafts-chart>` scales
+type with container width so the scienceplots preset stays readable on screen.
 
 Local staging (optional): formatters copy each package `dist/` into
 `docs/assets/` when a source is found (env override → `node_modules` → monorepo):
@@ -125,11 +125,11 @@ Local staging (optional): formatters copy each package `dist/` into
 |---------|-------|-----------|----------------------|
 | `@molcrafts/molvis-stage-viewer` | `main.js` | `docs/assets/molvis-stage-viewer/` | `../molvis/stage-viewer/dist` |
 | `@molcrafts/molvis-sketch-viewer` | `main.js` | `docs/assets/molvis-sketch-viewer/` | `../molvis/sketch-viewer/dist` |
-| `@molcrafts/molplot` | `elements.js` | `docs/assets/molplot/` | `../molplot/core/dist` |
+| `@molcrafts/ui-vega-lite` | `browser.js` | `docs/assets/molcrafts-chart/` | `../molcrafts-ui/packages/vega-lite/dist/browser` |
 
-Treat `docs/assets/molplot/` as **generated** (gitignore in the consumer).
-Staging skips `*.d.ts`, `*.map`, and `*.test.js`. Overrides:
-`MOLVIS_STAGE_VIEWER_DIR`, `MOLVIS_SKETCH_VIEWER_DIR`, `MOLPLOT_ELEMENTS_DIR`,
+Treat `docs/assets/molcrafts-chart/` as **generated** (gitignore in the consumer).
+The fence emits `<molcrafts-chart>`. Staging skips `*.d.ts`, `*.map`, and `*.test.js`.
+Overrides: `MOLVIS_STAGE_VIEWER_DIR`, `MOLVIS_SKETCH_VIEWER_DIR`, `MOLCRAFTS_CHART_DIR`,
 `MOLCRAFTS_DOCS_ASSET_DIR`.
 
 The paper-charting Python package (`molcrafts-molplot`) does **not** ship a
@@ -218,15 +218,15 @@ not have. It has two parts: a **hero** driven by page front-matter, and a set of
 
 Set a `hero` mapping in the home page's front-matter; the theme's `main.html`
 renders it above the content. Every field is optional except that a hero only
-renders when the `hero` key is present. The eyebrow above the title defaults to
-"Manual" and can be changed with `hero.kicker`.
+renders when the `hero` key is present. The hero's title is the page's only
+h1. `hero.kicker` puts an eyebrow above the title; omit it and none is shown.
 
 ```yaml
 ---
 title: molpack
 hide: [navigation, toc]
 hero:
-  kicker: Manual
+  kicker: Manual                  # optional eyebrow above the title
   title: molpack                  # defaults to site_name if omitted
   description: One or two sentences of positioning.
   actions:                        # buttons; style "primary" fills, else outline
