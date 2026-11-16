@@ -1,0 +1,5 @@
+# Where molcrafts-zensical-theme publishes (molcrafts-ci release contract).
+[pypi]
+packages = ["molcrafts-zensical-theme"]
+
+[github-release]

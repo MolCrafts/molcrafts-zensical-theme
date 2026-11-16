@@ -1,6 +1,6 @@
 name: release
 
-# A `v*` tag on MolCrafts: guard -> lint + the full test tier -> build ->
+# A `v*` tag on MolCrafts: guard -> test.yml (hooks, workflows, full tier) -> build ->
 # PyPI (trusted publishing, environment `pypi`) -> GitHub release notes.
 # A dispatch is the dry run, on any branch, fork or upstream: the same gates
 # and the build, no upload. Only a tag push on MolCrafts uploads.
@@ -18,19 +18,12 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Where this run happens, decided once: MolCrafts/molcrafts-ci/actions/ci-context.
+  # Where this run happens, decided once: MolCrafts/molcrafts-ci context.yml.
   context:
-    name: release / context
-    runs-on: ubuntu-latest
-    outputs:
-      tier: ${{ steps.context.outputs.tier }}
-      upstream: ${{ steps.context.outputs.upstream }}
-      integration: ${{ steps.context.outputs.integration }}
-      skip-pr: ${{ steps.context.outputs.skip-pr }}
-      publish: ${{ steps.context.outputs.publish }}
-    steps:
-      - id: context
-        uses: MolCrafts/molcrafts-ci/actions/ci-context@master
+    permissions:
+      contents: read
+    name: release
+    uses: MolCrafts/molcrafts-ci/.github/workflows/context.yml@3cc26f4ff1b8b6d09365d677c4a05cc8cbb70a76
 
   guard:
     name: release / guard
@@ -45,21 +38,18 @@ jobs:
           version=$(python3 -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])')
           [ "$GITHUB_REF_NAME" = "v$version" ] || { echo "::error::tag $GITHUB_REF_NAME is not v$version"; exit 1; }
 
-  lint:
-    needs: guard
-    uses: ./.github/workflows/lint.yml
-
   test:
     needs: guard
     uses: ./.github/workflows/test.yml
+    secrets: inherit
 
   build:
     name: release / build
-    needs: [lint, test]
+    needs: [test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: MolCrafts/molcrafts-ci/actions/setup-python@master
+      - uses: MolCrafts/molcrafts-ci/actions/setup-python@3cc26f4ff1b8b6d09365d677c4a05cc8cbb70a76
       - run: uv build
       - run: uvx twine check --strict dist/*
       - uses: actions/upload-artifact@v7
