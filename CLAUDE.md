@@ -38,10 +38,10 @@ uv run --extra dev tox -e py   # includes token contract + optional index identi
 1. Stay Jinja + static assets; never add a React/shadcn runtime.
 2. Consumers set `[project.theme] name = "molcrafts"` only; defaults own features/palette.
 3. Version in `pyproject.toml`; release with `v*` tag → PyPI workflow.
-4. MolVis/MolPlot fences: theme owns Markdown→HTML. MolPlot runtime: product
-   sets `extra.molcrafts.enable_molplot = true`; theme loads staged local
-   `assets/molplot/elements.js` then the npm CDN. Do not list molplot in
-   product `extra_javascript`.
+4. MolVis/MolPlot fences: theme owns Markdown→HTML. The molplot fence emits
+   `<molcrafts-chart>` and stages `assets/molcrafts-chart/browser.js` from
+   `@molcrafts/ui-vega-lite`. MolVis is unchanged. `enable_molplot` still loads
+   the older MolPlot element for products that have not switched their script tag.
 5. **Iron law — product docs do not own visual system CSS.** Hero, manual-home,
    sections, workflow-list, feature-matrix, doc-map, tile-grid, link-list,
    palette, and figures are theme-only. Product `extra.css` is only for that

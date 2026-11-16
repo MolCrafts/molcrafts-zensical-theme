@@ -115,8 +115,8 @@ custom_fences = [
 JSON); header options `preset` / `theme` / `width` / `aspect` / `interactive`
 (default aspect **`16:10`**). Use native VL `layer` + `mark: text|rule` for
 labels — there is no molplot annotation extension.
-In docs the theme caps chart width (~36rem) and `@molcrafts/molplot` scales
-type with container width so paper-preset fonts stay readable on screen.
+In docs the theme caps chart width (~36rem). `<molcrafts-chart>` scales
+type with container width so the scienceplots preset stays readable on screen.
 
 Local staging (optional): formatters copy each package `dist/` into
 `docs/assets/` when a source is found (env override → `node_modules` → monorepo):
@@ -125,11 +125,11 @@ Local staging (optional): formatters copy each package `dist/` into
 |---------|-------|-----------|----------------------|
 | `@molcrafts/molvis-stage-viewer` | `main.js` | `docs/assets/molvis-stage-viewer/` | `../molvis/stage-viewer/dist` |
 | `@molcrafts/molvis-sketch-viewer` | `main.js` | `docs/assets/molvis-sketch-viewer/` | `../molvis/sketch-viewer/dist` |
-| `@molcrafts/molplot` | `elements.js` | `docs/assets/molplot/` | `../molplot/core/dist` |
+| `@molcrafts/ui-vega-lite` | `browser.js` | `docs/assets/molcrafts-chart/` | `../molcrafts-ui/packages/vega-lite/dist/browser` |
 
-Treat `docs/assets/molplot/` as **generated** (gitignore in the consumer).
-Staging skips `*.d.ts`, `*.map`, and `*.test.js`. Overrides:
-`MOLVIS_STAGE_VIEWER_DIR`, `MOLVIS_SKETCH_VIEWER_DIR`, `MOLPLOT_ELEMENTS_DIR`,
+Treat `docs/assets/molcrafts-chart/` as **generated** (gitignore in the consumer).
+The fence emits `<molcrafts-chart>`. Staging skips `*.d.ts`, `*.map`, and `*.test.js`.
+Overrides: `MOLVIS_STAGE_VIEWER_DIR`, `MOLVIS_SKETCH_VIEWER_DIR`, `MOLCRAFTS_CHART_DIR`,
 `MOLCRAFTS_DOCS_ASSET_DIR`.
 
 The paper-charting Python package (`molcrafts-molplot`) does **not** ship a
