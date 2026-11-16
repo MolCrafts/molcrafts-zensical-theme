@@ -59,16 +59,17 @@
   --md-code-bg-color--light: rgba(243, 233, 203, 0.9);
   --md-code-bg-color--lighter: rgba(243, 233, 203, 0.54);
   --md-code-hl-color: rgba(242, 218, 157, 0.45);
-  --md-code-hl-number-color: #a15c09;
+  --md-code-hl-number-color: #965607;
   --md-code-hl-special-color: #0f766e;
   --md-code-hl-function-color: #1d5f3a;
   --md-code-hl-constant-color: #7c3aed;
   --md-code-hl-keyword-color: #0b7285;
-  --md-code-hl-string-color: #2f7d46;
+  --md-code-hl-string-color: #2a7342;
   --md-code-hl-name-color: var(--molcrafts-ink);
   --md-code-hl-operator-color: #4b6356;
   --md-code-hl-punctuation-color: #4b6356;
-  --md-code-hl-comment-color: #7b857c;
+  /* Every token clears 4.5:1 on the code background (#f3e9cb). */
+  --md-code-hl-comment-color: #5f6a61;
   --md-code-hl-generic-color: #4b6356;
   --md-code-hl-variable-color: #8a5a14;
   --md-typeset-a-color: #1f6b43;
@@ -129,7 +130,7 @@
   --md-code-hl-name-color: #eef5ec;
   --md-code-hl-operator-color: #9ead9f;
   --md-code-hl-punctuation-color: #9ead9f;
-  --md-code-hl-comment-color: #7b8b7c;
+  --md-code-hl-comment-color: #8a9a8b;
   --md-code-hl-generic-color: #9ead9f;
   --md-code-hl-variable-color: var(--molcrafts-sand);
   --md-typeset-a-color: #8ecfa0;
@@ -492,12 +493,19 @@
   display: grid;
   gap: 0.7rem;
   /* The kicker is .875rem tall with a 1.15rem bottom margin. Offset the
-     fixed-width aside by that total so the card starts on the h1's top edge. */
-  width: 23rem;
+     fixed-width aside by that total so the card starts on the h1's top edge.
+     Wide enough for the install command and three badges on one line each. */
+  flex: 0 0 auto;
+  width: 25rem;
   min-width: 0;
-  max-width: 23rem;
+  max-width: 25rem;
   margin-top: 2.025rem;
   margin-left: auto;
+}
+
+/* Without a kicker the card already starts on the h1's top edge. */
+.molcrafts-home-hero__inner:not(:has(.molcrafts-home-hero__kicker)) .molcrafts-home-hero__aside{
+  margin-top: 0;
 }
 
 .molcrafts-home-hero__install{
@@ -635,9 +643,33 @@
   color: var(--molcrafts-product-accent);
 }
 
+.molcrafts-home-hero__install-status{
+  margin: 0.4rem 0 0;
+  color: var(--md-primary-fg-color);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* The live region stays in the accessibility tree but takes no line while it
+   is empty or says "Copied." (the button's check mark shows that). Only a
+   failure, which tells the reader what to do, is shown. */
+.molcrafts-home-hero__install-status:empty,
+.molcrafts-home-hero__install-row:has(.molcrafts-home-hero__install-copy--done) + .molcrafts-home-hero__install-status{
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .molcrafts-home-hero__badges{
   display: flex;
   flex-wrap: wrap;
+  /* Flush with the install card's right edge. */
+  justify-content: flex-end;
   gap: 0.42rem;
   padding-top: 0.1rem;
 }
@@ -851,6 +883,32 @@
   padding: 2.1rem 1.35rem 0.5rem;
 }
 
+/* With the navigation hidden the content spans the hero's grid, inset 0.8rem;
+   the hero copy is inset 1.6rem. The body takes the difference so both share
+   one left and one right edge. Narrower steps follow the hero's padding. */
+.md-sidebar--primary[hidden] ~ .md-content .molcrafts-manual-home{
+  max-width: none;
+  padding-inline: 0.8rem;
+}
+
+@media screen and (max-width: 60em){
+  .md-sidebar--primary[hidden] ~ .md-content .molcrafts-manual-home {
+    padding-inline: 0.2rem;
+  }
+}
+
+@media screen and (max-width: 36em){
+  .md-sidebar--primary[hidden] ~ .md-content .molcrafts-manual-home {
+    padding-inline: 0;
+  }
+}
+
+/* One h1 per page: the hero's. Hide the page-title h1 Zensical inserts into
+   the content of a page that renders a hero. */
+body:has(#molcrafts-home-hero-title) .md-content__inner > h1{
+  display: none;
+}
+
 .md-typeset .molcrafts-manual-section{
   position: relative;
   display: grid;
@@ -923,6 +981,23 @@
   font-size: 1.38rem;
   line-height: 1.22;
   letter-spacing: -0.018em;
+}
+
+/* The hidden permalink (¶) would wrap onto its own line whenever the title
+   fills its line, leaving a blank gap under it. Keep it out of the line box. */
+.md-typeset .molcrafts-manual-section__header h2 .headerlink{
+  position: absolute;
+}
+
+/* A figure in a section starts on the header's top edge, as code does. */
+.md-typeset .molcrafts-manual-section > figure.molcrafts-figure{
+  margin: 0;
+}
+
+/* The camera-mode readout ("Persp") is for exploring a structure, not for
+   showing one on the home page. */
+.md-typeset .molcrafts-manual-home molvis-viewer .molvis-view-panel{
+  display: none;
 }
 
 .md-typeset .molcrafts-manual-section__header p{
@@ -1384,7 +1459,7 @@
 .md-typeset .molcrafts-link-list dt{
   margin: 0;
   color: var(--md-default-fg-color);
-  font-size: 0.76rem;
+  font-size: 0.8rem;
   font-weight: 850;
   line-height: 1.32;
 }
@@ -1404,13 +1479,24 @@
 .md-typeset .molcrafts-link-list dd{
   margin: 0;
   color: var(--md-default-fg-color--light);
-  font-size: 0.66rem;
+  font-size: 0.74rem;
   line-height: 1.5;
 }
 
 @media screen and (max-width: 60em){
   .md-typeset .molcrafts-tile-grid{
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* The search dialog is display:none below 60em. The header icon still
+     toggles #__search; open the dialog when that box is checked. */
+  #__search:checked ~ .md-header .md-search{
+    display: flex;
+    position: fixed;
+    z-index: 4;
+    inset: 3.6rem 0 0;
+    padding: 0.8rem 1rem 1rem;
+    background: var(--md-default-bg-color);
   }
 }
 
@@ -2137,6 +2223,15 @@
 
   .molcrafts-home-hero__inner {
     padding: 2.2rem 0.75rem 2.1rem;
+  }
+
+  /* Three badges still fit one line on a phone. */
+  .molcrafts-home-hero__badges {
+    gap: 0.3rem;
+  }
+
+  .molcrafts-home-hero__badges img {
+    height: 1rem;
   }
 
   .molcrafts-home-hero h1 {

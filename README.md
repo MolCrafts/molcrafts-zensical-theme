@@ -218,15 +218,15 @@ not have. It has two parts: a **hero** driven by page front-matter, and a set of
 
 Set a `hero` mapping in the home page's front-matter; the theme's `main.html`
 renders it above the content. Every field is optional except that a hero only
-renders when the `hero` key is present. The eyebrow above the title defaults to
-"Manual" and can be changed with `hero.kicker`.
+renders when the `hero` key is present. The hero's title is the page's only
+h1. `hero.kicker` puts an eyebrow above the title; omit it and none is shown.
 
 ```yaml
 ---
 title: molpack
 hide: [navigation, toc]
 hero:
-  kicker: Manual
+  kicker: Manual                  # optional eyebrow above the title
   title: molpack                  # defaults to site_name if omitted
   description: One or two sentences of positioning.
   actions:                        # buttons; style "primary" fills, else outline
